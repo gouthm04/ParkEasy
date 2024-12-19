@@ -4,6 +4,10 @@ from. models import*
 # Create your views here.
 
 def Home(request):
-    data=DriverRegistration.objects.all()
-    return render(request,'ParkEasy/index.html',context={"Data":data})
+    
+    return render(request,'ParkEasy/index.html')
+
+def login(request):
+    return render(request,'ParkEasy/login.html')
+    
     
