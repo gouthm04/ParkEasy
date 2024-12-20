@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login ,logout
 from .models import *  # If you have any models to import
 
 # Home view
@@ -26,3 +26,6 @@ def login_view(request):
 
     return render(request, 'ParkEasy/login.html')
 
+def logout_user(request):
+    logout(request)  # Logs out the user
+    return redirect('login')  # Redirect to the login page after logout

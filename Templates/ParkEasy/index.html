@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ParkEasy - Find Parking Made Easy</title>
-    
-    {% load static %}  <!-- Load static files before referencing them -->
+
+    {% load static %} <!-- Load static files before referencing them -->
 
     <!-- Link to static CSS file -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 
 </head>
+
 <body>
     <!-- Header -->
     <header>
@@ -31,7 +33,13 @@
                 </li>
                 <li><a href="#parking-slots">Parking Slots</a></li>
                 <li><a href="#list-space">List Your Space</a></li>
-                <li><a href="{% url 'login' %}">Login/Sign Up</a></li>
+                {% if user.is_authenticated %}
+                <!-- Show Logout button if user is logged in -->
+                <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                <!-- Show Login button if user is not logged in -->
+                <a href="{% url 'login' %}">Login/Sign Up</a>
+                {% endif %}
             </ul>
         </nav>
     </header>
@@ -79,7 +87,8 @@
     <!-- Getting Started -->
     <section class="getting-started" id="getting-started">
         <h2>Getting Started</h2>
-        <p>It’s quick and easy to get started! Whether you're a driver looking for parking or a host with a space to share, ParkEasy makes it simple.</p>
+        <p>It’s quick and easy to get started! Whether you're a driver looking for parking or a host with a space to
+            share, ParkEasy makes it simple.</p>
         <div class="cta">
             <a href="#parking-slots" class="cta-btn">Find Parking</a>
             <a href="#list-space" class="cta-btn">List Your Space</a>
@@ -129,4 +138,5 @@
 
     <script src="js/app.js"></script>
 </body>
+
 </html>
