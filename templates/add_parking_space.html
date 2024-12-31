@@ -1,19 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Parking Space</title>
+
+    <!-- Ensure the path to the static CSS is correct -->
     <link rel="stylesheet" href="{% static 'css/add_parking_style.css' %}">
 </head>
-
 <body>
-    {% block content %}
-    <h2>Add Parking Space</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Add Parking Space</button>
-    </form>
-    {% endblock %}
+
+    <!-- Main Content Section -->
+    <main>
+        {% block content %}
+        <h2>Add Parking Space</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Add Parking Space</button>
+        </form>
+        {% endblock %}
+    </main>
+
 </body>
+</html>

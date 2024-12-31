@@ -5,9 +5,6 @@
     box-sizing: border-box;
 }
 
-
-
-
 /* Global body styling */
 body {
     font-family: 'Poppins', sans-serif;
@@ -15,10 +12,21 @@ body {
     padding: 0;
     overflow-x: hidden;
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes full height of viewport */
+}
+
+/* Wrapper for header and main content */
+.wrapper {
+    flex: 1; /* Fills remaining space between header and footer */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Styles */
 header {
+    width: 100%;
     background-color: black;
     color: white;
     padding: 15px 50px;
@@ -211,12 +219,12 @@ header nav ul li.dropdown:hover .fas {
     }
 }
 
-
-/* Footer (Optional) */
+/* Footer Styles */
 footer {
     background-color: #333;
     color: white;
     text-align: center;
     padding: 10px;
-    margin-top: 40px;
+    margin-top: auto; /* Pushes footer to the bottom */
+    width: 100%; /* Ensure footer spans full width */
 }

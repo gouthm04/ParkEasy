@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="{% static 'css/add_parking_style.css' %}">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
@@ -86,12 +88,14 @@
     </header>
 
 
-    <!-- Main Content Section -->
+
+        
     <main>
         {% block content %}
         <!-- Specific content for the page will be injected here -->
         {% endblock %}
     </main>
+
 
     <!-- Footer Section -->
     <footer>
