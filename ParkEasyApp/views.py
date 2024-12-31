@@ -216,23 +216,3 @@ def contact(request):
 
 
 
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from .models import ParkingHost, Driver  # Assume you have these models in your app
-
-@login_required
-def dashboard(request):
-    # Fetch data related to the driver or host
-    if request.user.is_driver:
-        # Retrieve driver-related information
-        driver_data = Driver.objects.filter(user=request.user).first()  # Example of fetching driver-specific data
-        return render(request, 'dashboard/driver_dashboard.html', {'driver_data': driver_data})
-    elif request.user.is_parking_host:
-        # Retrieve parking host-related information
-        parking_host_data = ParkingHost.objects.filter(user=request.user).first()  # Example of fetching host-specific data
-        return render(request, 'dashboard/host_dashboard.html', {'host_data': parking_host_data})
-    else:
-        # Redirect to login or a custom page if the user doesn't fit into the driver/host categories
-        return redirect('login')
