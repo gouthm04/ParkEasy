@@ -1,69 +1,222 @@
-/* Styling for the message container */
-.messages {
-    position: fixed;
-    top: 20px;  /* Adjust based on how much space you want from the top */
-    left: 50%;
-    transform: translateX(-50%);  /* Center the message */
-    z-index: 1000;  /* Ensure it stays on top of other content */
-    width: 90%;  /* Adjust width */
-    max-width: 500px;  /* Limit the width */
-    padding: 12px;  /* Reduced padding for a more compact look */
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Softer shadow */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease, visibility 0s 0.5s;  /* Fade-in effect */
+/* Base CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Display the message container when there are messages */
-.messages.show {
-    opacity: 0.9;  /* Slight opacity to make it more subtle */
-    visibility: visible;
-    transition: opacity 0.5s ease, visibility 0s 0s;  /* Make it visible */
+
+
+
+/* Global body styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    line-height: 1.6;
 }
 
-/* Message types (success, error, info, etc.) */
-.alert {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    font-size: 15px;  /* Slightly smaller text for a more refined look */
+/* Header Styles */
+header {
+    background-color: #333;
     color: white;
-    font-weight: 500;  /* Medium weight for text */
-    background-color: rgba(0, 0, 0, 0.1);  /* Light, neutral background */
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-/* Softened color scheme */
-.alert.success {
-    background-color: rgba(76, 175, 80, 0.8);  /* Soft green */
+/* Logo Styles */
+header .logo {
+    display: flex;
+    align-items: center;
 }
 
-.alert.error {
-    background-color: rgba(231, 76, 60, 0.8);  /* Soft red */
+header .logo img {
+    height: 50px;
+    max-width: 100%;
+    display: block;
+    float: left;
 }
 
-.alert.info {
-    background-color: rgba(52, 152, 219, 0.8);  /* Soft blue */
+header .logo-text {
+    float: left;
+    text-decoration: none;
+    margin-left: -10px;
+    margin-top: 8px;
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
 }
 
-.alert.warning {
-    background-color: rgba(243, 156, 18, 0.8);  /* Soft yellow */
+/* Navigation Styles */
+header nav {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: center;
+    margin-top: 10px;
+    box-sizing: border-box;
 }
 
-/* Animation to make the message fade out */
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin-left: 20px;
+    position: relative;
+    margin-top: 10px;
+}
+
+header nav ul li:first-child {
+    margin-left: 0;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown Styles */
+header nav ul li.dropdown .dropdown-content {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    color: white;
+    z-index: 20;
+    padding: 15px;
+    min-width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: visibility 0s linear 0.3s, opacity 0.3s ease;
+    margin-left: -150px;
+}
+
+/* Show dropdown content on hover */
+header nav ul li.dropdown:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+/* Table Styling inside Dropdown */
+header nav ul li.dropdown .dropdown-content table {
+    min-width: 800px;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+header nav ul li.dropdown .dropdown-content table td {
+    color: rgba(255, 255, 255, 0.817);
+    padding: 8px 16px;
+    text-align: left;
+    vertical-align: top;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+/* Links inside Table */
+header nav ul li.dropdown .dropdown-content table td a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 0;
+}
+
+header nav ul li.dropdown .dropdown-content table td a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown arrow icon */
+header nav ul li.dropdown .fas {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+/* Flip the arrow icon when hovering */
+header nav ul li.dropdown:hover .fas {
+    transform: rotate(180deg);
+}
+
+/* Login Button Styles */
+#login_button {
+    background-color: white;
+    color: #000;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-weight: bold;
+    border: 2px solid #fff;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 150px;
+    margin-top: -10px;
+}
+
+#login_button:hover {
+    background-color: #e0e0e0;
+    color: #555;
+    border: 2px solid #e0e0e0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    header {
+        padding: 10px 20px;
     }
-    80% {
-        opacity: 1;
+
+    header nav ul {
+        flex-direction: column;
+        background-color: #333;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        display: none;
     }
-    100% {
-        opacity: 0;
-        visibility: hidden;
+
+    header nav ul.show {
+        display: flex;
+    }
+
+    header nav ul li {
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    #login_button {
+        right: 20px;
+        top: 10px;
     }
 }
 
-.messages.fade-out {
-    animation: fadeOut 3s forwards; /* Fade out after 3 seconds */
+
+/* Footer (Optional) */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 40px;
 }

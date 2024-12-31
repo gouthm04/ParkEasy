@@ -1,68 +1,38 @@
 {% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - ParkEasy</title>
-    <link rel="stylesheet" href="{% static 'css/home_style.css' %}">
-</head>
-<body>
-
-    {% block content %}
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="{% url 'home' %}" class="logo">ParkEasy</a>
-            <ul class="nav-links">
-                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                <li><a href="{% url 'about' %}">About Us</a></li>
-                <li><a href="{% url 'contact' %}">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Welcome to ParkEasy</h1>
-            <p>Find and share parking spaces easily in your neighborhood.</p>
-            <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <h2>Features</h2>
-            <div class="feature-cards">
-                <div class="feature-card">
-                    <h3>Find Parking</h3>
-                    <p>Search for available parking spaces near you.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Rent Your Spot</h3>
-                    <p>Offer your parking space to others and earn money.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Easy Booking</h3>
-                    <p>Reserve parking spaces in advance for a hassle-free experience.</p>
-                </div>
+{% block content %}
+<main>
+    <!-- Search Parking Section -->
+    <section class="search-parking">
+        <div class="search-parking-content">
+            <!-- Left Side: Image (Driver Searching for Parking) -->
+            <div class="search-parking-image">
+                <img src="https://via.placeholder.com/500x300?text=Driver+Searching+for+Parking" alt="Driver searching for parking">
+            </div>
+            <!-- Right Side: Heading and Description -->
+            <div class="search-parking-text">
+                <h2>Find Parking Space <br>Near You</h2>
+                <p>Searching for a parking space has never been easier. With ParkEasy, drivers can quickly locate available parking spots and make reservations from the comfort of their car.</p>
+                <button id="get_started_button">Book your Space</button>
             </div>
         </div>
     </section>
 
-    <!-- Call to Action Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Ready to get started?</h2>
-            <p>Join our community of parking space owners and drivers today!</p>
-            <a href="{% url 'register' %}" class="btn btn-primary">Sign Up Now</a>
+    <!-- Parking Host Section -->
+    <section class="parking-host">
+        <div class="parking-host-content">
+            <!-- Left Side: Description -->
+            <div class="parking-host-text">
+                <h2>Host a <br> Parking Space</h2>
+                <p>Earn extra income by offering your parking space to others. ParkEasy connects parking hosts with drivers looking for convenient places to park.</p>
+                <button id="get_started_button">Get Started</button>
+            </div>
+            <!-- Right Side: Image (Parking Host Offering Space) -->
+            <div class="parking-host-image">
+                <img src="https://via.placeholder.com/500x300?text=Parking+Host+Offering+Space" alt="Parking host offering space">
+            </div>
         </div>
     </section>
-    {% endblock %}
-
-</body>
-</html>
+</main>
+{% endblock %}

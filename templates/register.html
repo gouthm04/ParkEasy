@@ -1,118 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <style>
-        /* Centering and background */
-        .container {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
     
-        /* Form styling */
-        .form {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            width: 450px;
-            text-align: left;
-        }
-    
-        .form h2 {
-            color: #4CAF50;
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-    
-        .form label {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-            display: block;
-        }
-    
-        .form input[type="email"], .form input[type="password"], .form input[type="text"], .form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 5px; /* Reduced margin to make help text closer */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-    
-        .form input:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
-    
-        .form button[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-    
-        .form button[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    
-        .form p {
-            margin-top: 15px;
-            text-align: center;
-        }
-    
-        .form p a {
-            text-decoration: none;
-            color: #4CAF50;
-            font-size: 16px;
-        }
-    
-        .form p a:hover {
-            text-decoration: underline;
-        }
-    
-        /* Help text styling */
-        .form .helptext {
-            font-size: 12px;
-            color: #666;
-            margin-top: -5px; /* Negative margin to bring closer to the input */
-            margin-bottom: 10px;
-            transition: opacity 0.3s ease, height 0.3s ease;
-            overflow: hidden;
-            opacity: 0;
-            height: 0;
-        }
-    
-        .form input:focus + .helptext,
-        .form input:hover + .helptext {
-            height: auto;
-            opacity: 1;
-        }
-    
-        /* Validation error styling */
-        .form .error {
-            font-size: 12px;
-            color: #e74c3c;
-            display: block;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
-    </style>
     
     
 </head>

@@ -1,68 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
-
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ParkEasy</title>
-    <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
     <link rel="stylesheet" href="{% static 'css/home_style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/add_parking_style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/host_dashboard.css' %}">
-
-
-
-
+    <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
-
 <body>
-    <!-- Header or Navigation -->
+
+    <!-- Header Section -->
     <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="{% static 'img/P1 logoo.png' %}" alt="Placeholder Logo">
+                <span class="logo-text">ParkEasy</span>
+            </a>
+        </div>
         <nav>
-            <!-- Navigation links here -->
+            <ul class="menu">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" id="how-it-works">How It Works <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content" id="dropdown-table">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#">For Drivers</a></td>
+                                    <td><a href="#">For Hosts</a></td>
+                                    <td><a href="#">How to Make a Booking</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="faded">Drivers can find available parking spots and book them easily via the app.</td>
+                                    <td class="faded">Hosts can offer their parking spaces for drivers to book, earning extra income.</td>
+                                    <td class="faded">Learn how to search for and reserve parking spaces quickly using our simple booking system.</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">FAQ</a></td>
+                                    <td><a href="#">Safety & Security</a></td>
+                                    <td><a href="#">Contact Support</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="faded">Find answers to frequently asked questions about the service.</td>
+                                    <td class="faded">Information about the safety measures in place for both drivers and hosts.</td>
+                                    <td class="faded">Get in touch with our support team for assistance.</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Terms and Conditions</a></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="faded">Review the terms and conditions of using the service.</td>
+                                    <td class="faded"></td>
+                                    <td class="faded"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </li>
+                <li><a href="#">Search Parking Space</a></li>
+                <li><a href="#">List Your Parking Space</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#" id="login_button">Login/Signup</a></li>
+            </ul>
         </nav>
     </header>
 
-    <!-- Message Display -->
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div class="alert {{ message.tags }}">
-            {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- Main content that will change per page -->
+    <!-- Main Content Section -->
     <main>
         {% block content %}
-        <!-- Page-specific content will go here -->
+        <!-- Specific content for the page will be injected here -->
         {% endblock %}
     </main>
 
-    <!-- Footer -->
+    <!-- Footer Section -->
     <footer>
-        <!-- Footer content here -->
+        <p>&copy; 2024 ParkEasy. All Rights Reserved.</p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const messages = document.querySelector('.messages');
-
-            if (messages) {
-                // Show the message container with a fade-in effect
-                messages.classList.add('show');
-
-                // Fade out the message after 3 seconds
-                setTimeout(function () {
-                    messages.classList.add('fade-out');
-                }, 3000);
-            }
-        });
-    </script>
 </body>
-
 </html>
