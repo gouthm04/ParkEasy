@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - ParkEasy</title>
+    <link rel="stylesheet" href="{% static 'css/home_style.css' %}">
+</head>
+<body>
+
+    {% block content %}
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="{% url 'home' %}" class="logo">ParkEasy</a>
+            <ul class="nav-links">
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to ParkEasy</h1>
+            <p>Find and share parking spaces easily in your neighborhood.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2>Features</h2>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <h3>Find Parking</h3>
+                    <p>Search for available parking spaces near you.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Rent Your Spot</h3>
+                    <p>Offer your parking space to others and earn money.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Easy Booking</h3>
+                    <p>Reserve parking spaces in advance for a hassle-free experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to get started?</h2>
+            <p>Join our community of parking space owners and drivers today!</p>
+            <a href="{% url 'register' %}" class="btn btn-primary">Sign Up Now</a>
+        </div>
+    </section>
+    {% endblock %}
+
+</body>
+</html>

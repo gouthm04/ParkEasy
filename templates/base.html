@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEasy</title>
+    <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/add_parking_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/host_dashboard.css' %}">
+
+
+
+
+
+</head>
+
+<body>
+    <!-- Header or Navigation -->
+    <header>
+        <nav>
+            <!-- Navigation links here -->
+        </nav>
+    </header>
+
+    <!-- Message Display -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content that will change per page -->
+    <main>
+        {% block content %}
+        <!-- Page-specific content will go here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <!-- Footer content here -->
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const messages = document.querySelector('.messages');
+
+            if (messages) {
+                // Show the message container with a fade-in effect
+                messages.classList.add('show');
+
+                // Fade out the message after 3 seconds
+                setTimeout(function () {
+                    messages.classList.add('fade-out');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+
+</html>

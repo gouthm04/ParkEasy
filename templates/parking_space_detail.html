@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Space Details</title>
+</head>
+<body>
+    {% extends "base.html" %}
+    {% block content %}
+    <h2>Parking Space Details</h2>
+    <p><strong>Location:</strong> {{ parking_space.location }}</p>
+    <p><strong>Price per Hour:</strong> ₹{{ parking_space.price_per_hour }}</p>
+    <p><strong>Amenities:</strong> {{ parking_space.amenities|default:"None" }}</p>
+    <p><strong>Availability:</strong> 
+        {% if parking_space.availability %}
+            Available
+        {% else %}
+            Not Available
+        {% endif %}
+    </p>
+    <a href="{% url 'edit_parking_space' parking_space.id %}" class="btn btn-success">Edit</a>
+    <a href="{% url 'delete_parking_space' parking_space.id %}" class="btn btn-danger">Delete</a>
+    {% endblock %}
+</body>
+</html>

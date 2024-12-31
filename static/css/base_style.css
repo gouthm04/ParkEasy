@@ -1,0 +1,69 @@
+/* Styling for the message container */
+.messages {
+    position: fixed;
+    top: 20px;  /* Adjust based on how much space you want from the top */
+    left: 50%;
+    transform: translateX(-50%);  /* Center the message */
+    z-index: 1000;  /* Ensure it stays on top of other content */
+    width: 90%;  /* Adjust width */
+    max-width: 500px;  /* Limit the width */
+    padding: 12px;  /* Reduced padding for a more compact look */
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Softer shadow */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0s 0.5s;  /* Fade-in effect */
+}
+
+/* Display the message container when there are messages */
+.messages.show {
+    opacity: 0.9;  /* Slight opacity to make it more subtle */
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0s 0s;  /* Make it visible */
+}
+
+/* Message types (success, error, info, etc.) */
+.alert {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 15px;  /* Slightly smaller text for a more refined look */
+    color: white;
+    font-weight: 500;  /* Medium weight for text */
+    background-color: rgba(0, 0, 0, 0.1);  /* Light, neutral background */
+}
+
+/* Softened color scheme */
+.alert.success {
+    background-color: rgba(76, 175, 80, 0.8);  /* Soft green */
+}
+
+.alert.error {
+    background-color: rgba(231, 76, 60, 0.8);  /* Soft red */
+}
+
+.alert.info {
+    background-color: rgba(52, 152, 219, 0.8);  /* Soft blue */
+}
+
+.alert.warning {
+    background-color: rgba(243, 156, 18, 0.8);  /* Soft yellow */
+}
+
+/* Animation to make the message fade out */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+.messages.fade-out {
+    animation: fadeOut 3s forwards; /* Fade out after 3 seconds */
+}
