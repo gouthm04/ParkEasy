@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/about.css' %}">
     <link rel="stylesheet" href="{% static 'css/add_parking_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/parking_space_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my_listed_parking_spaces.css' %}">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -76,11 +78,11 @@
                 <li><a href="{% url 'about' %}">About</a></li>
                 <li>
                     {% if user.is_authenticated %}
-                         <a href="{% url 'logout' %}" id="login_button">Log Out</a>
+                    <a href="{% url 'logout' %}" id="login_button">Log Out</a>
                     {% else %}
-                          <a href="{% url 'login' %}" id="login_button">Log In</a>
-                          <!-- Optional: Add a Sign Up link if needed -->
-                          <a href="{% url 'register' %}" id="signup_button">Sign Up</a>
+                    <a href="{% url 'login' %}" id="login_button">Log In</a>
+                    <!-- Optional: Add a Sign Up link if needed -->
+                    <a href="{% url 'register' %}" id="signup_button">Sign Up</a>
                     {% endif %}
                 </li>
             </ul>
@@ -89,13 +91,13 @@
 
 
 
-        
-    <main>
-        {% block content %}
-        <!-- Specific content for the page will be injected here -->
-        {% endblock %}
-    </main>
-
+    <div class="wrapper">
+        <main>
+            {% block content %}
+            <!-- Specific content for the page will be injected here -->
+            {% endblock %}
+        </main>
+    </div>
 
     <!-- Footer Section -->
     <footer>

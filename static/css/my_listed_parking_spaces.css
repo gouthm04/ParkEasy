@@ -1,0 +1,114 @@
+/* Ensure that main content is not affected by flexbox */
+.main-content {
+    width: 80%;
+    max-width: 1200px;
+    margin: 60px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: block; /* Ensure block-level display, preventing flex issues */
+    visibility: visible;
+}
+
+/* Header Styles (Modify spacing if needed) */
+h1 {
+    font-size: 2.5em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Paragraph Styling (Update margin if necessary) */
+p {
+    font-size: 1.2em;
+    color: #555;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* List Styling */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Parking Item Container Styling */
+.parking-item-container {
+    padding: 20px;
+    margin: 15px 0;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Parking Item Heading */
+.parking-item-container strong {
+    font-size: 1.4em;
+    color: #333;
+}
+
+/* Paragraph Inside Parking Item */
+.parking-item-container p {
+    font-size: 1.1em;
+    color: #666;
+    margin-top: 8px;
+}
+
+/* Link Styling */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Add Parking Space Link Styling */
+.main-content a {
+    display: block;
+    margin-top: 30px;
+    font-size: 1.2em;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Add Parking Space Link Hover Effect */
+.main-content a:hover {
+    color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2.2em;
+    }
+
+    p {
+        font-size: 1.1em;
+    }
+
+    .parking-item-container {
+        padding: 15px;
+    }
+}
+
+/* Adjust Flexbox Issues for Header and Footer */
+body {
+    display: block; /* Prevents full flex behavior in body */
+    overflow-x: hidden;
+}
+
+/* If wrapper affects content flow */
+.wrapper {
+    flex: initial; /* Prevent wrapper from stretching to fill the remaining space */
+}

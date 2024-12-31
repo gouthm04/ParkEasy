@@ -1,0 +1,116 @@
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Global body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.heading {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Search Form Styling */
+.search-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-form .form-control {
+    width: 300px; /* You can adjust this width as per your design preference */
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-form .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px; /* Ensure the button aligns properly with the input */
+}
+
+.search-form .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Parking Space List Styling */
+ul.list-group {
+    list-style: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+ul.list-group li {
+    background-color: white;
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+ul.list-group li:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+}
+
+ul.list-group li .space-link {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+ul.list-group li .space-link:hover {
+    color: #0056b3;
+}
+
+/* Empty List Styling */
+ul.list-group li.empty {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-form .form-control {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .search-form .btn {
+        width: 100%;
+    }
+}

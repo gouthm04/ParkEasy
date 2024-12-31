@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% extends "base.html" %}
+    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parking Space Details</title>
+    <link rel="stylesheet" href="{% static 'css/parking_space_detail.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
 </head>
 <body>
-    {% extends "base.html" %}
+    
     {% block content %}
     <h2>Parking Space Details</h2>
     <p><strong>Location:</strong> {{ parking_space.location }}</p>

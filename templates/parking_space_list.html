@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    {% extends "base.html" %}
+    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Available Parking Spaces</title>
+    <link rel="stylesheet" href="{% static 'css/parking_space_list.css' %}">
 </head>
 
 <body>
-    {% extends "base.html" %}
     {% block content %}
-    <h2>Available Parking Spaces</h2>
-    <form method="get" class="mb-4">
+    <h2 class="heading">Available Parking Spaces</h2>
+    <form method="get" class="search-form">
         <input type="text" name="q" value="{{ query }}" placeholder="Search by location" class="form-control">
-        <button type="submit" class="btn btn-primary mt-2">Search</button>
+        <button type="submit" class="btn btn-primary">Search</button>
     </form>
     <ul class="list-group">
         {% for space in parking_spaces %}
         <li class="list-group-item">
-            <a href="{% url 'parking_space_detail' space.id %}">{{ space.location }}</a>
+            <a href="{% url 'parking_space_detail' space.id %}" class="space-link">{{ space.location }}</a>
             - ₹{{ space.price_per_hour }}/hour
         </li>
         {% empty %}
-        <li class="list-group-item">No parking spaces available.</li>
+        <li class="list-group-item empty">No parking spaces available.</li>
         {% endfor %}
     </ul>
     {% endblock %}
-
 </body>
 
 </html>

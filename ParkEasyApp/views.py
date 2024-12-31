@@ -175,24 +175,24 @@ def delete_parking_space_view(request, space_id):
     })
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-@login_required
-def dashboard(request):
-    user = request.user
+# from django.shortcuts import render
+# from django.contrib.auth.decorators import login_required
+# @login_required
+# def dashboard(request):
+#     user = request.user
 
-    # Try to get the ParkEasyUser instance
-    try:
-        parkeasy_user = ParkEasyUser.objects.get(user=user)
-    except ParkEasyUser.DoesNotExist:
-        # Create ParkEasyUser instance if not found
-        parkeasy_user = ParkEasyUser.objects.create(user=user, role='driver')  # Default role, can be updated later
-        messages.success(request, "Your profile has been created. You can now add parking spaces.")
+#     # Try to get the ParkEasyUser instance
+#     try:
+#         parkeasy_user = ParkEasyUser.objects.get(user=user)
+#     except ParkEasyUser.DoesNotExist:
+#         # Create ParkEasyUser instance if not found
+#         parkeasy_user = ParkEasyUser.objects.create(user=user, role='driver')  # Default role, can be updated later
+#         messages.success(request, "Your profile has been created. You can now add parking spaces.")
 
-    parking_spaces = ParkingSpace.objects.filter(host=parkeasy_user)
+#     parking_spaces = ParkingSpace.objects.filter(host=parkeasy_user)
 
-    # Render the dashboard with the parking spaces
-    return render(request, 'parkeasy/dashboard.html', {'parking_spaces': parking_spaces})
+#     # Render the dashboard with the parking spaces
+#     return render(request, 'parkeasy/dashboard.html', {'parking_spaces': parking_spaces})
 
 
 
@@ -221,3 +221,27 @@ def dashboard(request):
     user_name = request.user.username if request.user.is_authenticated else "Guest"
     context = {"user_name": user_name}
     return render(request, 'dashboard.html', context)
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import ParkingSpace, ParkEasyUser  # Ensure ParkEasyUser is imported
+
+@login_required
+def my_listed_parking_spaces(request):
+    try:
+        # Fetch the ParkEasyUser instance related to the logged-in User
+        user_profile = ParkEasyUser.objects.get(user=request.user)  # Assuming ParkEasyUser has a ForeignKey to the User model
+        
+        # Fetch all parking spaces listed by the logged-in user (host)
+        parking_spaces = ParkingSpace.objects.filter(host=user_profile)  # Use the ParkEasyUser instance as the filter
+        
+        # If no parking spaces are found
+        if not parking_spaces:
+            return render(request, 'my_listed_parking_spaces.html', {'message': 'You haven\'t listed any parking spaces yet.'})
+        
+        # If parking spaces are found
+        return render(request, 'my_listed_parking_spaces.html', {'parking_spaces': parking_spaces})
+
+    except ParkEasyUser.DoesNotExist:
+        # Handle case where ParkEasyUser profile doesn't exist
+        return render(request, 'error.html', {'message': 'User profile not found.'})

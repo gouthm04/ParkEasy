@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ParkEasy Dashboard</title>
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-
 </head>
 
 <body>
@@ -29,6 +28,7 @@
       <button class="dropdown-btn">Parking Host Options</button>
       <div class="dropdown-content">
         <a href="{% url 'add_parking_space' %}">Add Parking Space</a>
+        <a href="{% url 'my_listed_parking_spaces' %}">View Your Parking Space</a> <!-- New option for viewing parking spaces -->
         <a href="#">Manage Reservations</a>
         <a href="#">Manage Time Extensions</a>
         <a href="#">View Reviews</a> <!-- Changed Manage Reviews to View Reviews -->

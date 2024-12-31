@@ -161,3 +161,21 @@ class Earnings(models.Model):
             models.Index(fields=['host', 'date_earned']),
         ]
 
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import ParkingSpace
+
+@login_required
+def listed_parking_spaces(request):
+    # Ensure the logged-in user is a host
+    try:
+        user_profile = request.user.parkeasyuser
+        if user_profile.role != 'host' and user_profile.role != 'both':
+            return render(request, 'error.html', {'message': 'You do not have access to this page.'})
+        
+        parking_spaces = ParkingSpace.objects.filter(host=user_profile)  # Fetch all parking spaces listed by the host
+        return render(request, 'listed_parking_spaces.html', {'parking_spaces': parking_spaces})
+
+    except ParkEasyUser.DoesNotExist:
+        return render(request, 'error.html', {'message': 'User profile not found.'})

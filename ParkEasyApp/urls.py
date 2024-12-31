@@ -19,6 +19,8 @@ urlpatterns = [
     path('parking-spaces/add/', views.add_parking_space_view, name='add_parking_space'),
     path('parking-spaces/edit/<int:space_id>/', views.edit_parking_space_view, name='edit_parking_space'),
     path('parking-spaces/delete/<int:space_id>/', views.delete_parking_space_view, name='delete_parking_space'),
+    path('listed-parking-spaces/', views.my_listed_parking_spaces, name='my_listed_parking_spaces')
+
 
 ]
 
