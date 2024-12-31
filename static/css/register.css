@@ -1,112 +1,134 @@
- /* Centering and background */
-        .container {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+/* Centering and background */
+.container {
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: black;
+}
 
-        /* Form styling */
-        .form {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            width: 450px;
-            text-align: left;
-        }
+/* Form styling */
+.form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 450px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
 
-        .form h2 {
-            color: #4CAF50;
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+/* Heading style */
+.form h2 {
+    color: black;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        .form label {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-            display: block;
-        }
+/* Label and input styling */
+.form label {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
 
-        .form input[type="email"],
-        .form input[type="password"],
-        .form input[type="text"],
-        .form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 5px;
-            /* Reduced margin to make help text closer */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
+.form input[type="email"],
+.form input[type="password"],
+.form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
 
-        .form input:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
+.form input:focus {
+    border-color: black;
+    outline: none;
+}
 
-        .form button[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
+/* Button styling */
+.form button[type="submit"] {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
 
-        .form button[type="submit"]:hover {
-            background-color: #45a049;
-        }
+.form button[type="submit"]:hover {
+    background-color: #444;
+}
 
-        .form p {
-            margin-top: 15px;
-            text-align: center;
-        }
+/* Register text styling */
+.form p {
+    margin-top: 15px;
+    text-align: center;
+}
 
-        .form p a {
-            text-decoration: none;
-            color: #4CAF50;
-            font-size: 16px;
-        }
+.form p a {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
 
-        .form p a:hover {
-            text-decoration: underline;
-        }
+.form p a:hover {
+    text-decoration: underline;
+}
 
-        /* Help text styling */
-        .form .helptext {
-            font-size: 12px;
-            color: #666;
-            margin-top: -5px;
-            /* Negative margin to bring closer to the input */
-            margin-bottom: 10px;
-            transition: opacity 0.3s ease, height 0.3s ease;
-            overflow: hidden;
-            opacity: 0;
-            height: 0;
-        }
+/* Home icon styling */
+.home-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    display: inline-block;
+}
 
-        .form input:focus+.helptext,
-        .form input:hover+.helptext {
-            height: auto;
-            opacity: 1;
-        }
+.home-icon img {
+    width: 30px; /* Adjust size of the home icon */
+    height: 30px;
+    transition: transform 0.3s ease;
+}
 
-        /* Validation error styling */
-        .form .error {
-            font-size: 12px;
-            color: #e74c3c;
-            display: block;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
+.home-icon:hover img {
+    transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
+
+/* Help text styling */
+.form .helptext {
+    font-size: 12px;
+    color: #666;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    opacity: 0;
+    height: 0;
+    transition: opacity 0.3s ease, height 0.3s ease;
+    overflow: hidden;
+}
+
+.form input:focus + .helptext,
+.form input:hover + .helptext {
+    height: auto;
+    opacity: 1;
+}
+
+/* Validation error styling */
+.form .error {
+    font-size: 12px;
+    color: #e74c3c;
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}

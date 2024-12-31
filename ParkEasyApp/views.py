@@ -204,10 +204,9 @@ def home(request):
     return render(request, 'home.html')  # Render the home page
 
 
-from django.shortcuts import render
 
 def about(request):
-    return render(request, 'parkeasy/about.html')
+    return render(request, 'about.html')
 
 
 def contact(request):
@@ -216,3 +215,9 @@ def contact(request):
 
 
 
+from django.shortcuts import render
+
+def dashboard(request):
+    user_name = request.user.username if request.user.is_authenticated else "Guest"
+    context = {"user_name": user_name}
+    return render(request, 'dashboard.html', context)

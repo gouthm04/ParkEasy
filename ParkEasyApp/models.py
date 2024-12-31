@@ -160,3 +160,4 @@ class Earnings(models.Model):
         indexes = [
             models.Index(fields=['host', 'date_earned']),
         ]
+

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <section class="about-introduction">
+        <h1>About ParkEasy</h1>
+        <p>ParkEasy is a community-driven platform designed to solve the parking challenge in neighborhoods. We aim to make parking more accessible by connecting drivers with available parking spaces hosted by local residents. Whether you're a driver looking for a spot or a homeowner with space to offer, ParkEasy simplifies parking and makes it easier for everyone.</p>
+    </section>
+
+    <section class="about-how-it-works">
+        <h2>How It Works</h2>
+        <div class="process">
+            <div class="process-step">
+                <h3>For Drivers</h3>
+                <p>Search for nearby parking spaces, book them, and make payments all from the convenience of the app. Save time and reduce the hassle of finding a parking spot!</p>
+            </div>
+            <div class="process-step">
+                <h3>For Hosts</h3>
+                <p>Offer your available parking spots to drivers and earn income by managing the bookings effortlessly. Help your neighbors and make use of your unused space.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-mission">
+        <h2>Our Mission</h2>
+        <p>Our mission is to make parking easier, more efficient, and eco-friendly by connecting drivers with available parking spaces in their neighborhood, reducing the time spent searching for parking, and optimizing unused spaces. We believe in creating a sustainable, community-oriented solution that benefits both drivers and hosts.</p>
+    </section>
+
+    <section class="about-benefits">
+        <h2>Why Choose ParkEasy?</h2>
+        <p>ParkEasy offers a number of benefits to both drivers and hosts:</p>
+        <ul>
+            <li><strong>For Drivers:</strong> Quick access to available parking, saving time and reducing stress. No more endless circling around the block!</li>
+            <li><strong>For Hosts:</strong> Opportunity to earn extra income by renting out parking spaces that are otherwise unused. It’s a great way to make some passive income.</li>
+            <li><strong>Community-Friendly:</strong> By using ParkEasy, you contribute to a more efficient and connected neighborhood, helping both drivers and homeowners.</li>
+        </ul>
+    </section>
+
+    <section class="about-testimonials">
+        <h2>User Testimonials</h2>
+        <blockquote>
+            "ParkEasy has made parking so much easier! I can now find parking spaces near my work without the hassle." – John D.
+        </blockquote>
+        <blockquote>
+            "I love how easy it is to rent out my parking space and earn extra income every month!" – Sarah L.
+        </blockquote>
+        <blockquote>
+            "As a busy driver, I used to spend so much time searching for parking. ParkEasy saved me time and energy!" – Emma W.
+        </blockquote>
+    </section>
+
+    <section class="about-cta">
+        <h2>Get Started Today!</h2>
+        <p>Sign up to start using ParkEasy or become a parking host today. It's quick, easy, and free! Join our growing community and start enjoying the benefits of convenient parking today.</p>
+        <a href="{% url 'register' %}" class="btn-primary">Sign Up Now</a>
+    </section>
+
+{% endblock %}

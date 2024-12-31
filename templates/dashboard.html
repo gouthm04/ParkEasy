@@ -1,34 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ParkEasy Dashboard</title>
-  <link rel="stylesheet" href="dashboard.css">
-</head>
-<body>
-  <div class="dashboard-container">
-    <!-- Sidebar Section (40%) -->
-    <div class="sidebar">
-      <div class="logo">
-        <h2>ParkEasy</h2>
-      </div>
-      <ul class="nav-links">
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">Available Parking</a></li>
-        <li><a href="#">Booking History</a></li>
-        <li><a href="#">Payments</a></li>
-        <li><a href="#">Profile</a></li>
-        <li><a href="#">Logout</a></li>
-      </ul>
-    </div>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 
-    <!-- Content Section (60%) -->
-    <div class="content">
-      <h1>Welcome to ParkEasy Dashboard</h1>
-      <p>Here's where you'll manage your bookings and parking spaces.</p>
-      <!-- Add more content as needed -->
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-item">
+      <a href="{% url 'home' %}" class="home-btn">Home</a>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">Driver Options</button>
+      <div class="dropdown-content">
+        <a href="#">Search Parking</a>
+        <a href="#">Booking History</a>
+        <a href="#">Notifications</a>
+        <a href="#">Account Settings</a>
+        <a href="#">Manage Reviews</a> <!-- Added Manage Reviews option for Driver -->
+      </div>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">Parking Host Options</button>
+      <div class="dropdown-content">
+        <a href="#">List Parking</a>
+        <a href="#">Manage Reservations</a>
+        <a href="#">Manage Time Extensions</a>
+        <a href="#">View Reviews</a> <!-- Changed Manage Reviews to View Reviews -->
+        <a href="#">View Earnings</a> <!-- Added View Earnings option for Parking Hosts -->
+        <a href="#">Account Settings</a>
+      </div>
+    </div>
+    <!-- Help & Support and Log Out links at the bottom -->
+    <div class="sidebar-footer">
+      <a href="#">Help & Support</a>
+      <a href="{% url 'logout' %}">Log Out</a>
     </div>
   </div>
+
+  <div class="main-content">
+    <h1>Hi {{ user_name }}!</h1>
+    <h2>Welcome to Your ParkEasy Dashboard</h2>
+    <div class="dashboard-grid">
+      <!-- Section 1: Search Parking -->
+      <div class="dashboard-section">
+        <h3>Search Parking</h3>
+        <p>Quickly find available parking spots in your area. Start your search today!</p>
+        <button>Search Now</button>
+      </div>
+
+      <!-- Section 2: Booking History -->
+      <div class="dashboard-section">
+        <h3>Booking History</h3>
+        <p>View your past bookings and manage your parking records effortlessly.</p>
+        <button>View History</button>
+      </div>
+
+      <!-- Section 3: List Parking -->
+      <div class="dashboard-section">
+        <h3>List Parking</h3>
+        <p>List your available parking spaces for others to book easily.</p>
+        <button>List Parking</button>
+      </div>
+
+      <!-- Section 4: Account Overview -->
+      <div class="dashboard-section">
+        <h3>Account Overview</h3>
+        <p>Manage your profile, payment methods, and settings with ease.</p>
+        <button>Go to Settings</button>
+      </div>
+    </div>
+
+    <div class="footer">© 2024 ParkEasy</div>
+  </div>
+
 </body>
+
 </html>

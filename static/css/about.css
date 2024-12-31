@@ -1,0 +1,197 @@
+/* General Styles for About Page */
+.about-introduction,
+.about-features,
+.about-how-it-works,
+.about-technology,
+.about-mission,
+.about-team,
+.about-benefits,
+.about-testimonials,
+.about-cta {
+    margin: 2rem 0;
+    padding: 2rem;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-introduction h1,
+.about-features h2,
+.about-how-it-works h2,
+.about-technology h2,
+.about-mission h2,
+.about-team h2,
+.about-benefits h2,
+.about-testimonials h2,
+.about-cta h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.about-introduction p,
+.about-features ul,
+.about-how-it-works .process,
+.about-technology ul,
+.about-mission p,
+.about-team ul,
+.about-benefits ul,
+.about-testimonials blockquote {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Features Section */
+.about-features ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-features li {
+    margin-bottom: 1rem;
+}
+
+/* How It Works Section */
+.process {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+.process-step {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    text-align: center;
+}
+
+.process-step h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.process-step p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Technology Section */
+.about-technology ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-technology li {
+    margin-bottom: 1rem;
+}
+
+/* Mission Section */
+.about-mission p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+/* Team Section */
+.about-team ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-team li {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+/* Testimonials Section */
+.about-testimonials blockquote {
+    font-style: italic;
+    margin: 1rem 0;
+    padding-left: 2rem;
+    border-left: 4px solid #ccc;
+    color: #555;
+}
+
+/* Call to Action Section */
+.about-cta {
+    background-color: #3e8e41;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.about-cta h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.about-cta p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.about-cta .btn-primary {
+    background-color: #ffffff;
+    color: #3e8e41;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.about-cta .btn-primary:hover {
+    background-color: #f4f4f4;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .process {
+        flex-direction: column;
+    }
+
+    .process-step {
+        margin-bottom: 1.5rem;
+    }
+
+    .about-introduction,
+    .about-features,
+    .about-how-it-works,
+    .about-technology,
+    .about-mission,
+    .about-team,
+    .about-benefits,
+    .about-testimonials,
+    .about-cta {
+        padding: 1.5rem;
+    }
+
+    .about-introduction h1 {
+        font-size: 1.8rem;
+    }
+
+    .about-features h2,
+    .about-how-it-works h2,
+    .about-technology h2,
+    .about-mission h2,
+    .about-team h2,
+    .about-benefits h2,
+    .about-testimonials h2,
+    .about-cta h2 {
+        font-size: 1.8rem;
+    }
+
+    .about-features ul,
+    .about-technology ul,
+    .about-team ul {
+        font-size: 1rem;
+    }
+
+    .about-testimonials blockquote {
+        font-size: 1rem;
+        padding-left: 1.5rem;
+    }
+}

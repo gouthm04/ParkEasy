@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="{% static 'css/home_style.css' %}">
     <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
+
 <body>
 
     <!-- Header Section -->
@@ -24,7 +26,7 @@
         </div>
         <nav>
             <ul class="menu">
-                <li><a href="index.html">Home</a></li>
+                <li><a href="{% url 'home' %}">Home</a></li>
                 <li class="dropdown">
                     <a href="#" id="how-it-works">How It Works <i class="fas fa-chevron-down"></i></a>
                     <div class="dropdown-content" id="dropdown-table">
@@ -36,9 +38,12 @@
                                     <td><a href="#">How to Make a Booking</a></td>
                                 </tr>
                                 <tr>
-                                    <td class="faded">Drivers can find available parking spots and book them easily via the app.</td>
-                                    <td class="faded">Hosts can offer their parking spaces for drivers to book, earning extra income.</td>
-                                    <td class="faded">Learn how to search for and reserve parking spaces quickly using our simple booking system.</td>
+                                    <td class="faded">Drivers can find available parking spots and book them easily via
+                                        the app.</td>
+                                    <td class="faded">Hosts can offer their parking spaces for drivers to book, earning
+                                        extra income.</td>
+                                    <td class="faded">Learn how to search for and reserve parking spaces quickly using
+                                        our simple booking system.</td>
                                 </tr>
                                 <tr>
                                     <td><a href="#">FAQ</a></td>
@@ -47,7 +52,8 @@
                                 </tr>
                                 <tr>
                                     <td class="faded">Find answers to frequently asked questions about the service.</td>
-                                    <td class="faded">Information about the safety measures in place for both drivers and hosts.</td>
+                                    <td class="faded">Information about the safety measures in place for both drivers
+                                        and hosts.</td>
                                     <td class="faded">Get in touch with our support team for assistance.</td>
                                 </tr>
                                 <tr>
@@ -64,13 +70,21 @@
                         </table>
                     </div>
                 </li>
-                <li><a href="#">Search Parking Space</a></li>
-                <li><a href="#">List Your Parking Space</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#" id="login_button">Login/Signup</a></li>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li> <!-- Added Dashboard link -->
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li>
+                    {% if user.is_authenticated %}
+                         <a href="{% url 'logout' %}" id="login_button">Log Out</a>
+                    {% else %}
+                          <a href="{% url 'login' %}" id="login_button">Log In</a>
+                          <!-- Optional: Add a Sign Up link if needed -->
+                          <a href="{% url 'register' %}" id="signup_button">Sign Up</a>
+                    {% endif %}
+                </li>
             </ul>
         </nav>
     </header>
+
 
     <!-- Main Content Section -->
     <main>
@@ -85,4 +99,5 @@
     </footer>
 
 </body>
+
 </html>
