@@ -12,7 +12,9 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('profile/', views.profile_view, name='profile'),
     path('about/', views.about, name='about'),  # Ensure 'about' view is correctly defined here
-
+    path('help-support/', views.help_support, name='help_support'),
+    path('faq/', views.faq, name='faq'),
+    path('terms_conditions/', views.terms_conditions, name='terms_conditions'),
     # Parking Space URLs
     path('parking-spaces/', views.parking_space_list_view, name='parking_space_list'),
     path('parking-spaces/<int:space_id>/', views.parking_space_detail_view, name='parking_space_detail'),

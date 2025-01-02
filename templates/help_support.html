@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="help-support-container">
+    <!-- Help Header Section -->
+    <div class="help-header">
+        <h1>Help & Support Center</h1>
+        <p>We're here to assist you with any questions or issues you may have.</p>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <h3>How do I book a parking space?</h3>
+            <p>To book a parking space, search for available spaces in your area, select a space, and complete the booking process.</p>
+        </div>
+        <div class="faq-item">
+            <h3>How do I list my parking space?</h3>
+            <p>You can list your parking space by navigating to the "List Parking" section in your dashboard and providing the necessary details.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Who do I contact for payment issues?</h3>
+            <p>If you encounter any payment-related issues, please use the contact form below to reach out to us.</p>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="contact-section">
+        <h2>Contact Support</h2>
+        <form action="#" method="POST">
+            {% csrf_token %}
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" placeholder="Describe your issue or question" required></textarea>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Resources Section -->
+    <div class="resources-section">
+        <h2>Helpful Resources</h2>
+        <ul>
+            <li><a href="{% url 'faq' %}">FAQ Page</a></li>
+            <li><a href="{% url 'terms_conditions' %}">Terms and Conditions</a></li>
+            <li><a href="#">Safety & Security Guidelines</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

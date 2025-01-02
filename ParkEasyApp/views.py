@@ -245,3 +245,19 @@ def my_listed_parking_spaces(request):
     except ParkEasyUser.DoesNotExist:
         # Handle case where ParkEasyUser profile doesn't exist
         return render(request, 'error.html', {'message': 'User profile not found.'})
+
+
+from django.shortcuts import render
+
+def help_support(request):
+    return render(request, 'help_support.html')
+
+from django.shortcuts import render
+
+def faq(request):
+    return render(request, 'FAQ_Page.html')
+
+
+# Create a view for the Terms & Conditions page
+def terms_conditions(request):
+    return render(request, 'terms_conditions.html')

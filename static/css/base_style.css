@@ -14,7 +14,7 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure body takes full height of viewport */
+    min-height: 400px; /* Ensure body takes full height of viewport */
 }
 
 /* Wrapper for header and main content */
@@ -100,6 +100,7 @@ header nav ul li a {
 
 header nav ul li a:hover {
     background-color: rgba(255, 255, 255, 0.305);
+    text-decoration: none;
 }
 
 /* Dropdown Styles */
@@ -222,9 +223,9 @@ header nav ul li.dropdown:hover .fas {
 /* Footer Styles */
 footer {
     background-color: #333;
-    color: white;
+    color: rgba(255, 255, 255, 0.826);
     text-align: center;
     padding: 10px;
-    margin-top: auto; /* Pushes footer to the bottom */
-    width: 100%; /* Ensure footer spans full width */
+    margin-top: auto; /* Ensures footer stays at the bottom */
+    width: 100%; /* Ensures footer spans full width */
 }

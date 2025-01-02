@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="faq-container">
+    <h1 class="faq-header">Frequently Asked Questions</h1>
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>How do I book a parking space?</span>
+            <i class="fa fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+            <p>To book a parking space, search for available spaces, select one, and follow the booking process.</p>
+        </div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>How do I list my parking space?</span>
+            <i class="fa fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+            <p>Go to the "List Parking" section in your dashboard and provide the required details.</p>
+        </div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>What are the payment methods available?</span>
+            <i class="fa fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+            <p>We accept credit/debit cards, net banking, and UPI payments for bookings.</p>
+        </div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>Can I cancel a booking?</span>
+            <i class="fa fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+            <p>Yes, you can cancel a booking via the "My Bookings" section. Cancellation fees may apply.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const faqItems = document.querySelectorAll(".faq-item");
+
+        faqItems.forEach(item => {
+            const question = item.querySelector(".faq-question");
+            const answer = item.querySelector(".faq-answer");
+
+            question.addEventListener("click", () => {
+                const isActive = answer.style.display === "block";
+                document.querySelectorAll(".faq-answer").forEach(a => a.style.display = "none");
+                document.querySelectorAll(".faq-question i").forEach(icon => icon.style.transform = "rotate(0deg)");
+                
+                if (!isActive) {
+                    answer.style.display = "block";
+                    question.querySelector("i").style.transform = "rotate(180deg)";
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

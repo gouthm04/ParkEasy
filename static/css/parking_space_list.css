@@ -7,7 +7,7 @@
 
 /* Global body styling */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     background-color: #f4f4f4;
     padding: 20px;
@@ -29,6 +29,7 @@ body {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    margin-left: 34%;
 }
 
 .search-form .form-control {
@@ -37,11 +38,13 @@ body {
     font-size: 1rem;
     border: 2px solid #ccc;
     border-radius: 4px;
+    height: 42px;
 }
 
 .search-form .btn {
     background-color: #007bff;
     color: white;
+    height: 42px;
     padding: 10px 20px;
     font-size: 1rem;
     border: none;
@@ -55,48 +58,58 @@ body {
     background-color: #0056b3;
 }
 
-/* Parking Space List Styling */
-ul.list-group {
-    list-style: none;
-    padding: 0;
-    max-width: 800px;
+/* Parking Space Grid Layout */
+.parking-space-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 10px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-ul.list-group li {
+/* Parking Space Card Styling */
+.parking-space-card {
     background-color: white;
-    padding: 15px;
-    margin: 10px 0;
+    padding: 20px;
+    border-radius: 8px;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-ul.list-group li:hover {
-    background-color: #f1f1f1;
-    transform: scale(1.02);
+.parking-space-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-ul.list-group li .space-link {
+.parking-space-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.parking-space-card p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Link Styling */
+.parking-space-card .space-link {
     text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    color: inherit;
 }
 
-ul.list-group li .space-link:hover {
-    color: #0056b3;
+.parking-space-card .space-link:hover {
+    color: #007bff;
 }
 
 /* Empty List Styling */
-ul.list-group li.empty {
+.empty-message {
     text-align: center;
     font-size: 1.2rem;
     color: #888;
+    grid-column: span 4; /* Ensures the empty message spans across the entire grid */
 }
 
 /* Responsive Adjustments */
@@ -112,5 +125,9 @@ ul.list-group li.empty {
 
     .search-form .btn {
         width: 100%;
+    }
+
+    .parking-space-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 }

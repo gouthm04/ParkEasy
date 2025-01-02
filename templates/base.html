@@ -11,9 +11,14 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/about.css' %}">
     <link rel="stylesheet" href="{% static 'css/add_parking_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/parking_space_list.css' %}">
+
     <link rel="stylesheet" href="{% static 'css/parking_space_detail.css' %}">
     <link rel="stylesheet" href="{% static 'css/my_listed_parking_spaces.css' %}">
+    <link rel="stylesheet" href="{% static 'css/help_support.css' %}">
+    <link rel="stylesheet" href="{% static 'css/terms_conditions.css' %}">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
@@ -23,7 +28,7 @@
     <!-- Header Section -->
     <header>
         <div class="logo">
-            <a href="index.html">
+            <a href="{% url 'home' %}">
                 <img src="{% static 'img/P1 logoo.png' %}" alt="Placeholder Logo">
                 <span class="logo-text">ParkEasy</span>
             </a>
@@ -50,7 +55,7 @@
                                         our simple booking system.</td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#">FAQ</a></td>
+                                    <td><a href="{% url 'faq' %}">FAQ</a></td>
                                     <td><a href="#">Safety & Security</a></td>
                                     <td><a href="#">Contact Support</a></td>
                                 </tr>
@@ -61,7 +66,7 @@
                                     <td class="faded">Get in touch with our support team for assistance.</td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#">Terms and Conditions</a></td>
+                                    <td><a href="{% url 'terms_conditions' %}">Terms & Conditions</a></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -95,6 +100,10 @@
         <main>
             {% block content %}
             <!-- Specific content for the page will be injected here -->
+            {% endblock %}
+
+            {% block scripts %}
+            <!-- Optional default scripts -->
             {% endblock %}
         </main>
     </div>
