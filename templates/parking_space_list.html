@@ -1,14 +1,15 @@
+<!-- In parking_space_list.html -->
 {% extends "base.html" %}
 {% load static %}
 
-
-
 {% block content %}
 <h2 class="heading">Available Parking Spaces</h2>
+
 <form method="get" class="search-form">
     <input type="text" name="q" value="{{ query }}" placeholder="Search by location" class="form-control">
     <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
 <div class="parking-space-grid">
     {% for space in parking_spaces %}
     <div class="parking-space-card">
@@ -16,6 +17,7 @@
             <h3>{{ space.location }}</h3>
             <p>₹{{ space.price_per_hour }}/hour</p>
         </a>
+        <a href="{% url 'create_booking' parking_space_id=space.id %}" class="btn btn-success">Book Parking</a>
     </div>
     {% empty %}
     <div class="empty-message">

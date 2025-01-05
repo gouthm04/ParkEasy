@@ -1,0 +1,22 @@
+<!-- In create_booking.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="heading">Book Parking for {{ parking_space.location }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Renders the form as paragraphs -->
+    <div>
+        {% for field in form %}
+            <p>{{ field.errors }}</p>  <!-- Show errors for each field -->
+        {% endfor %}
+    </div>
+    <button type="submit">Create Booking</button>
+</form>
+
+
+
+
+{% endblock %}

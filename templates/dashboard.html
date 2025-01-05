@@ -18,7 +18,7 @@
       <button class="dropdown-btn">Driver Options</button>
       <div class="dropdown-content">
         <a href="{% url 'parking_space_list' %}">Search Parking</a>
-        <a href="#">Booking History</a>
+        <a href="{% url 'my_bookings' %}">Booking History</a>
         <a href="#">Notifications</a>
         <a href="#">Account Settings</a>
         <a href="#">Manage Reviews</a> <!-- Added Manage Reviews option for Driver -->
@@ -51,28 +51,29 @@
       <div class="dashboard-section">
         <h3>Search Parking</h3>
         <p>Quickly find available parking spots in your area. Start your search today!</p>
-        <button>Search Now</button>
+        <a href="{% url 'parking_space_list' %}"><button>Search Now</button></a>
       </div>
 
       <!-- Section 2: Booking History -->
       <div class="dashboard-section">
         <h3>Booking History</h3>
         <p>View your past bookings and manage your parking records effortlessly.</p>
-        <button>View History</button>
+        <a href="{% url 'my_bookings' %}"><button>View History</button></a>
+      
       </div>
 
       <!-- Section 3: List Parking -->
       <div class="dashboard-section">
         <h3>List Parking</h3>
         <p>List your available parking spaces for others to book easily.</p>
-        <button>List Parking</button>
+        <a href="{% url 'add_parking_space' %}"><button>List Parking</button></a>
       </div>
 
       <!-- Section 4: Account Overview -->
       <div class="dashboard-section">
         <h3>Account Overview</h3>
         <p>Manage your profile, payment methods, and settings with ease.</p>
-        <button>Go to Settings</button>
+        <a href="#"><button>Go to Settings</button></a>
       </div>
     </div>
 

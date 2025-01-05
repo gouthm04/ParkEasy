@@ -1,0 +1,55 @@
+/* Table styling */
+.bookings-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.bookings-table th, .bookings-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.bookings-table th {
+    background-color: #000000;
+    color: white;
+    font-weight: bold;
+}
+
+.booking-row:hover {
+    background-color: #f1f1f1;
+}
+
+/* Pagination styling */
+.pagination-links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.step-links a.pagination-btn {
+    padding: 8px 12px;
+    margin: 0 5px;
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+}
+
+.step-links a.pagination-btn:hover {
+    background-color: #0056b3;
+}
+
+.current-page {
+    font-weight: bold;
+    padding: 8px 12px;
+}
+
+.step-links .pagination-btn:focus {
+    outline: none;
+}
+
+.step-links span {
+    padding: 8px 12px;
+}

@@ -138,3 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # myproject/settings.py
 
 LOGIN_URL = '/parkeasy/login/'  # Adjust based on the URL pattern of your login view
+
+# settings.py
+USE_TZ = True  # Enable timezone support
+TIME_ZONE = 'UTC'  # Default time zone (you can change this based on your server or application requirements)
+
+

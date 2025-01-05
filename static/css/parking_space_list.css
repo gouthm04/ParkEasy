@@ -33,7 +33,7 @@ body {
 }
 
 .search-form .form-control {
-    width: 300px; /* You can adjust this width as per your design preference */
+    width: 300px; /* Adjustable width */
     padding: 10px;
     font-size: 1rem;
     border: 2px solid #ccc;
@@ -42,7 +42,7 @@ body {
 }
 
 .search-form .btn {
-    background-color: #007bff;
+    background-color: #000000;
     color: white;
     height: 42px;
     padding: 10px 20px;
@@ -51,11 +51,11 @@ body {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left: 10px; /* Ensure the button aligns properly with the input */
+    margin-left: 10px; /* Proper alignment with input */
 }
 
 .search-form .btn:hover {
-    background-color: #0056b3;
+    background-color: #000000;
 }
 
 /* Parking Space Grid Layout */
@@ -68,66 +68,59 @@ body {
     margin: 0 auto;
 }
 
-/* Parking Space Card Styling */
 .parking-space-card {
-    background-color: white;
-    padding: 20px;
+    background: white;
+    padding: 15px;
     border-radius: 8px;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
 }
 
 .parking-space-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.parking-space-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.parking-space-card p {
-    font-size: 1.2rem;
-    color: #555;
-}
-
-/* Link Styling */
-.parking-space-card .space-link {
+.space-link {
     text-decoration: none;
     color: inherit;
 }
 
-.parking-space-card .space-link:hover {
-    color: #007bff;
+.space-link h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
 }
 
-/* Empty List Styling */
+.space-link p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Empty Message Styling */
 .empty-message {
     text-align: center;
+    color: #666;
     font-size: 1.2rem;
-    color: #888;
-    grid-column: span 4; /* Ensures the empty message spans across the entire grid */
+    margin-top: 20px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .search-form {
-        flex-direction: column;
-    }
 
-    .search-form .form-control {
-        width: 100%;
-        margin-bottom: 10px;
-    }
+/* Book Button Styling */
+.book-btn {
+    display: block;
+    margin: 10px auto 0; /* Center button and add margin */
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #000000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
-    .search-form .btn {
-        width: 100%;
-    }
-
-    .parking-space-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
+.book-btn:hover {
+    background-color: #000000;
+    transform: scale(1.05);
 }
