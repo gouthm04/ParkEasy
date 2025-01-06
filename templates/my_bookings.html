@@ -3,7 +3,7 @@
 {% block content %}
     <h2>My Bookings</h2>
 
-    {% if page_obj %}
+    {% if page_obj and page_obj.object_list %}
         <table class="bookings-table">
             <thead>
                 <tr>
@@ -19,38 +19,31 @@
                 {% for booking in page_obj %}
                     <tr class="booking-row">
                         <td>{{ booking.id }}</td>
-                        <td>{{ booking.start_date }}  : {{ booking.start_time }}</td>
+                        <td>{{ booking.start_date }} : {{ booking.start_time }}</td>
                         <td>{{ booking.end_date }} : {{ booking.end_time }}</td>
                         <td>{{ booking.parking_space.location }}</td>
                         <td>{{ booking.status }}</td>
                         <td>{{ booking.price_paid }}</td>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="6">No bookings found.</td>
-                    </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <!-- Pagination Links -->
+        <!-- Pagination -->
         <div class="pagination-links">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1" class="pagination-btn">&laquo; First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">Previous</a>
-                {% endif %}
-                <span class="current-page">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">Next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-btn">Last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
 
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </div>
     {% else %}
-        <p>You have no bookings yet.</p>
+        <p>No bookings found.</p>
     {% endif %}
 {% endblock %}

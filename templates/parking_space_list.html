@@ -17,12 +17,17 @@
             <h3>{{ space.location }}</h3>
             <p>₹{{ space.price_per_hour }}/hour</p>
         </a>
+        {% if space.host.user != request.user %}
         <a href="{% url 'create_booking' parking_space_id=space.id %}" class="btn btn-success">Book Parking</a>
+        {% else %}
+        <p class="text-muted">This is your parking space</p>
+        {% endif %}
     </div>
     {% empty %}
     <div class="empty-message">
         <p>No parking spaces available.</p>
     </div>
     {% endfor %}
+
 </div>
 {% endblock %}

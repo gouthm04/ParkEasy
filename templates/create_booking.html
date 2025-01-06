@@ -1,22 +1,99 @@
-<!-- In create_booking.html -->
 {% extends "base.html" %}
 {% load static %}
 
 {% block content %}
 <h2 class="heading">Book Parking for {{ parking_space.location }}</h2>
 
-<form method="POST">
+<form method="POST" action="{% url 'create_booking' parking_space.id %}">
     {% csrf_token %}
-    {{ form.as_p }}  <!-- Renders the form as paragraphs -->
     <div>
-        {% for field in form %}
-            <p>{{ field.errors }}</p>  <!-- Show errors for each field -->
-        {% endfor %}
+        <label for="id_start_date">Start Date:</label>
+        <input type="date" name="start_date" id="id_start_date" class="form-control" value="{{ form.start_date.value }}">
+        <div class="error-message">{{ form.start_date.errors }}</div>
     </div>
-    <button type="submit">Create Booking</button>
+
+    <div>
+        <label for="id_start_time">Start Time:</label>
+        <input type="time" name="start_time" id="id_start_time" class="form-control" value="{{ form.start_time.value }}">
+        <div class="error-message">{{ form.start_time.errors }}</div>
+    </div>
+
+    <div>
+        <label for="id_end_date">End Date:</label>
+        <input type="date" name="end_date" id="id_end_date" class="form-control" value="{{ form.end_date.value }}">
+        <div class="error-message">{{ form.end_date.errors }}</div>
+    </div>
+
+    <div>
+        <label for="id_end_time">End Time:</label>
+        <input type="time" name="end_time" id="id_end_time" class="form-control" value="{{ form.end_time.value }}">
+        <div class="error-message">{{ form.end_time.errors }}</div>
+    </div>
+
+    <div>
+        <label for="id_payment_method">Payment Method:</label>
+        <select name="payment_method" id="id_payment_method" class="form-control">
+            <option value="" selected disabled>Choose a payment method</option>
+            <option value="credit">Credit</option>
+            <option value="debit">Debit</option>
+            <option value="cash">Cash</option>
+        </select>
+        <div class="error-message">{{ form.payment_method.errors }}</div>
+    </div>
+
+    <div>
+        <label for="id_price_paid">Price (Calculated):</label>
+        <input type="number" name="price_paid" id="id_price_paid" class="form-control" readonly data-price-per-hour="{{ parking_space.price_per_hour }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Booking</button>
 </form>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const startDateInput = document.getElementById('id_start_date');
+        const startTimeInput = document.getElementById('id_start_time');
+        const endDateInput = document.getElementById('id_end_date');
+        const endTimeInput = document.getElementById('id_end_time');
+        const priceInput = document.getElementById('id_price_paid');
 
+        const pricePerHour = parseFloat(priceInput.dataset.pricePerHour);
 
+        function calculatePrice() {
+            const startDate = startDateInput.value;
+            const startTime = startTimeInput.value;
+            const endDate = endDateInput.value;
+            const endTime = endTimeInput.value;
+
+            if (startDate && startTime && endDate && endTime) {
+                const start = new Date(`${startDate}T${startTime}`);
+                const end = new Date(`${endDate}T${endTime}`);
+
+                if (end > start) {
+                    const durationInHours = (end - start) / (1000 * 3600); // Convert milliseconds to hours
+                    const totalPrice = (durationInHours * pricePerHour).toFixed(2);
+                    priceInput.value = totalPrice;
+                } else {
+                    priceInput.value = 0; // Invalid time range
+                }
+            }
+        }
+
+        startDateInput.addEventListener('change', calculatePrice);
+        startTimeInput.addEventListener('change', calculatePrice);
+        endDateInput.addEventListener('change', calculatePrice);
+        endTimeInput.addEventListener('change', calculatePrice);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', (event) => {
+                console.log("Form Submitted"); // Debug message
+                // event.preventDefault(); // Ensure this isn't blocking submission
+            });
+        });
+
+    });
+</script>
 {% endblock %}

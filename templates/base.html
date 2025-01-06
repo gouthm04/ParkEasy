@@ -93,13 +93,15 @@
                     <a href="{% url 'register' %}" id="signup_button">Sign Up</a>
                     {% endif %}
                 </li>
+                <li style="margin-left:100px ;"><h4>{{ request.user.username }}</h4></li>
+
             </ul>
         </nav>
     </header>
 
 
 
-    <div class="wrapper">
+    <div class="wrapper" style=" min-height: 500px; ">
         <main>
             {% block content %}
             <!-- Specific content for the page will be injected here -->
