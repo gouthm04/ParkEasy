@@ -1,29 +1,65 @@
 {% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Parking Space</title>
+{% block content %}
+    <div style="font-family: Arial, sans-serif; background-color: #0d0d0d; min-height: 90vh; display: flex; justify-content: center; align-items: center; padding: 40px 20px;">
+        <main style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(248, 245, 245, 0.1); width: 100%; max-width: 1000px; display: flex; flex-wrap: wrap; gap: 30px; box-sizing: border-box;">
 
-    <!-- Ensure the path to the static CSS is correct -->
-    <link rel="stylesheet" href="{% static 'css/add_parking_style.css' %}">
-</head>
-<body>
+            <!-- Form Column -->
+            <div style="flex: 1 1 45%; min-width: 400px;">
+                <h2 style="text-align: center; margin-bottom: 20px; font-size: 24px; color: #333;">Add Parking Space</h2>
+                <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+                    {% csrf_token %}
+                    {{ form.as_p }}
 
-    <!-- Main Content Section -->
-    <main>
-        {% block content %}
-        <h2>Add Parking Space</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Add Parking Space</button>
-        </form>
-        {% endblock %}
-    </main>
+                    <!-- Hidden input fields to store coordinates -->
+                    <input type="hidden" name="latitude" id="latitude">
+                    <input type="hidden" name="longitude" id="longitude">
 
-</body>
-</html>
+                    <button type="submit" class="btn" style="padding: 12px 20px; border: none; border-radius: 5px; background-color: #007bff; color: white; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
+                        Add Parking Space
+                    </button>
+                </form>
+            </div>
+
+            <!-- Map Column -->
+            <div style="flex: 1 1 45%; min-width: 400px;  border-radius: 10px; background-color: #eee; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);margin-top: 50px;">
+                <div id="map" style="height: 100%; border-radius: 10px;"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map with default coordinates for Kerala
+        const latitude = 10.8505;  // Latitude for Kerala
+        const longitude = 76.2711; // Longitude for Kerala
+        
+        // Initialize the map
+        const map = L.map('map').setView([latitude, longitude], 13);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add a marker to the map
+        const marker = L.marker([latitude, longitude]).addTo(map)
+            .bindPopup('Your location')
+            .openPopup();
+
+        // Event listener for map click to get selected location
+        map.on('click', function(event) {
+            const selectedLatitude = event.latlng.lat;
+            const selectedLongitude = event.latlng.lng;
+
+            // Move the marker to the clicked location
+            marker.setLatLng([selectedLatitude, selectedLongitude]);
+            marker.bindPopup(`Selected location: ${selectedLatitude}, ${selectedLongitude}`).openPopup();
+
+            // Update the hidden input fields with the selected coordinates
+            document.getElementById('latitude').value = selectedLatitude;
+            document.getElementById('longitude').value = selectedLongitude;
+        });
+    </script>
+{% endblock %}

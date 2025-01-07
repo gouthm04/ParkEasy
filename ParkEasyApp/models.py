@@ -18,6 +18,8 @@ class ParkingSpace(models.Model):
     amenities = models.TextField(blank=True, null=True)  # Optional description of amenities
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)  # Average rating by users
     created_at = models.DateTimeField(auto_now_add=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
     def __str__(self):
         return f"Parking Space {self.id} at {self.location}"

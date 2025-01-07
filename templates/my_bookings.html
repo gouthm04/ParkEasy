@@ -13,6 +13,7 @@
                     <th>Location</th>
                     <th>Status</th>
                     <th>Amount Paid</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +25,10 @@
                         <td>{{ booking.parking_space.location }}</td>
                         <td>{{ booking.status }}</td>
                         <td>{{ booking.price_paid }}</td>
+                        <td>
+                            <button class="btn"><a href="">Extend Time</a></button>
+                             <button class="btn " style="background-color: yellow;"><a href="{% url 'cancel_booking' booking.id %}">{% if booking.status != 'cancelled'  %}Cancel {% else %}Cancelled {% endif %}</a></button> 
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

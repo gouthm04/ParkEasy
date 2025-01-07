@@ -2,53 +2,56 @@
 {% load static %}
 
 {% block content %}
-<h2 class="heading">Book Parking for {{ parking_space.location }}</h2>
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4;">
+    <main style="background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px; box-sizing: border-box;">
+        <h2 class="heading" style="text-align: center; margin-bottom: 20px;">Book Parking for {{ parking_space.location }}</h2>
 
-<form method="POST" action="{% url 'create_booking' parking_space.id %}">
-    {% csrf_token %}
-    <div>
-        <label for="id_start_date">Start Date:</label>
-        <input type="date" name="start_date" id="id_start_date" class="form-control" value="{{ form.start_date.value }}">
-        <div class="error-message">{{ form.start_date.errors }}</div>
-    </div>
+        <form method="POST" action="{% url 'create_booking' parking_space.id %}">
+            {% csrf_token %}
+            <div>
+                <label for="id_start_date">Start Date:</label>
+                <input type="date" name="start_date" id="id_start_date" class="form-control" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" value="{{ form.start_date.value }}">
+                <div class="error-message" style="color: red; font-size: 14px;">{{ form.start_date.errors }}</div>
+            </div>
 
-    <div>
-        <label for="id_start_time">Start Time:</label>
-        <input type="time" name="start_time" id="id_start_time" class="form-control" value="{{ form.start_time.value }}">
-        <div class="error-message">{{ form.start_time.errors }}</div>
-    </div>
+            <div>
+                <label for="id_start_time">Start Time:</label>
+                <input type="time" name="start_time" id="id_start_time" class="form-control" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" value="{{ form.start_time.value }}">
+                <div class="error-message" style="color: red; font-size: 14px;">{{ form.start_time.errors }}</div>
+            </div>
 
-    <div>
-        <label for="id_end_date">End Date:</label>
-        <input type="date" name="end_date" id="id_end_date" class="form-control" value="{{ form.end_date.value }}">
-        <div class="error-message">{{ form.end_date.errors }}</div>
-    </div>
+            <div>
+                <label for="id_end_date">End Date:</label>
+                <input type="date" name="end_date" id="id_end_date" class="form-control" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" value="{{ form.end_date.value }}">
+                <div class="error-message" style="color: red; font-size: 14px;">{{ form.end_date.errors }}</div>
+            </div>
 
-    <div>
-        <label for="id_end_time">End Time:</label>
-        <input type="time" name="end_time" id="id_end_time" class="form-control" value="{{ form.end_time.value }}">
-        <div class="error-message">{{ form.end_time.errors }}</div>
-    </div>
+            <div>
+                <label for="id_end_time">End Time:</label>
+                <input type="time" name="end_time" id="id_end_time" class="form-control" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" value="{{ form.end_time.value }}">
+                <div class="error-message" style="color: red; font-size: 14px;">{{ form.end_time.errors }}</div>
+            </div>
 
-    <div>
-        <label for="id_payment_method">Payment Method:</label>
-        <select name="payment_method" id="id_payment_method" class="form-control">
-            <option value="" selected disabled>Choose a payment method</option>
-            <option value="credit">Credit</option>
-            <option value="debit">Debit</option>
-            <option value="cash">Cash</option>
-        </select>
-        <div class="error-message">{{ form.payment_method.errors }}</div>
-    </div>
+            <div>
+                <label for="id_payment_method">Payment Method:</label>
+                <select name="payment_method" id="id_payment_method" class="form-control" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="" selected disabled>Choose a payment method</option>
+                    <option value="credit">Credit</option>
+                    <option value="debit">Debit</option>
+                    <option value="cash">Cash</option>
+                </select>
+                <div class="error-message" style="color: red; font-size: 14px;">{{ form.payment_method.errors }}</div>
+            </div>
 
-    <div>
-        <label for="id_price_paid">Price (Calculated):</label>
-        <input type="number" name="price_paid" id="id_price_paid" class="form-control" readonly data-price-per-hour="{{ parking_space.price_per_hour }}">
-    </div>
+            <div>
+                <label for="id_price_paid">Price (Calculated):</label>
+                <input type="number" name="price_paid" id="id_price_paid" class="form-control" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" readonly data-price-per-hour="{{ parking_space.price_per_hour }}">
+            </div>
 
-    <button type="submit" class="btn btn-primary">Create Booking</button>
-</form>
-
+            <button type="submit" class="btn" style="width: 100%; padding: 10px; border: none; border-radius: 5px; background-color: #007bff; color: white; font-size: 16px; cursor: pointer;">Create Booking</button>
+        </form>
+    </main>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -84,16 +87,6 @@
         startTimeInput.addEventListener('change', calculatePrice);
         endDateInput.addEventListener('change', calculatePrice);
         endTimeInput.addEventListener('change', calculatePrice);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.querySelector('form');
-
-            form.addEventListener('submit', (event) => {
-                console.log("Form Submitted"); // Debug message
-                // event.preventDefault(); // Ensure this isn't blocking submission
-            });
-        });
-
     });
 </script>
 {% endblock %}

@@ -63,17 +63,14 @@ def profile_view(request):
     
     return render(request, 'profile.html')
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from .models import ParkingSpace
-from .forms import ParkingSpaceForm
+
+
 
 # Parking Space List View
 def parking_space_list_view(request):
     query = request.GET.get('q', '')
     parking_spaces = ParkingSpace.objects.filter(
-        Q(location__icontains=query) & Q(availability=True)
+        Q(location__icontains=query) & Q(availability=True) & ~Q(host__user=request.user)
     ).order_by('-created_at')
     return render(request, 'parking_space_list.html', {'parking_spaces': parking_spaces, 'query': query})
 
@@ -91,12 +88,17 @@ def parking_space_detail_view(request, space_id):
 @login_required
 def add_parking_space_view(request):
     if request.method == 'POST':
+        print(request.POST)
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
         form = ParkingSpaceForm(request.POST)
         if form.is_valid():
             parking_space = form.save(commit=False)
-            parking_space.host = request.user.parkeasyuser  # Link the logged-in user as the host
+            parking_space.host = request.user.parkeasyuser
+            parking_space.latitude = latitude 
+            parking_space.longitude = longitude 
             parking_space.save()
-            return redirect('parking_space_list')
+            return redirect('my_listed_parking_spaces')
     else:
         form = ParkingSpaceForm()
     return render(request, 'add_parking_space.html', {'form': form})
@@ -163,10 +165,6 @@ def terms_conditions(request):
 # BOOKING VIEWS
 
 from django.utils.timezone import make_aware, get_current_timezone
-from datetime import datetime
-from django.utils.timezone import make_aware
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import ParkingSpace, Booking, ParkEasyUser
 from .forms import BookingForm
@@ -231,3 +229,41 @@ def my_bookings_view(request):
     return render(request, 'my_bookings.html', {'page_obj': page_obj})
 
 
+from django.utils.timezone import now
+from django.db.models import Sum
+import json
+
+def earnings_view(request):
+    total_earnings = Booking.objects.aggregate(total=Sum('price_paid'))['total']
+    current_year = now().year
+
+    monthly_earnings = []
+    for month_offset in range(6):  
+        month = (now().month - 1 - month_offset) % 12 + 1
+        year = current_year if now().month - 1 - month_offset >= 0 else current_year - 1
+
+        earnings = Booking.objects.filter(
+            booking_time__year=year,
+            booking_time__month=month
+        ).aggregate(total=Sum('price_paid'))['total']
+        
+        monthly_earnings.append(float(earnings) if earnings else 0.0)
+
+    earnings_data = json.dumps(monthly_earnings)
+
+    context = {
+        'earnings_data': earnings_data,
+        'total_earnings': float(total_earnings) if total_earnings else 0.0,
+        'monthly_earnings': sum(monthly_earnings) or 0.0,
+    }
+    
+    return render(request, 'view_earnings.html', context)
+
+
+def map(request,space_id):
+    space=get_object_or_404(ParkingSpace,id=space_id)
+    context = {
+        'latitude': space.latitude,
+        'longitude': space.longitude
+    }
+    return render(request, 'map.html', context)

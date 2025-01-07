@@ -2,27 +2,40 @@
 {% load static %}
 
 {% block content %}
-    <div class="main-content">
-        <h1>My Listed Parking Spaces</h1>
-        <p>Below are the parking spaces you have listed on ParkEasy. Manage your listings easily from here.</p>
+    <div style="padding: 20px; font-family: Arial, sans-serif;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 20px;">My Listed Parking Spaces</h1>
+        <p style="margin-bottom: 30px; color: #555;">Below are the parking spaces you have listed on ParkEasy. Manage your listings easily from here.</p>
         
         {% if parking_spaces %}
-            <ul>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
                 {% for space in parking_spaces %}
-                    <li>
-                        <div class="parking-item-container">
-                            <strong>{{ space.location }}</strong> - ${{ space.price_per_hour }} per hour
-                            <p>Availability: {% if space.availability %} Available {% else %} Not Available {% endif %}</p>
-                            <p>Amenities: {{ space.amenities }}</p>
-                            <p>Rating: {{ space.rating }} / 5</p>
-                            <p><a href="#">Edit Listing</a>  <a href="#">Delete Listing</a></p>
+                    <div style="background-color: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 20px; width: calc(33.333% - 20px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 10px;">{{ space.location }}</h2>
+                        <p style="color: #333; margin-bottom: 10px;"><strong>Price:</strong> ${{ space.price_per_hour }} per hour</p>
+                        <p style="color: #333; margin-bottom: 10px;">
+                            <strong>Availability:</strong> 
+                            {% if space.availability %} 
+                                <span style="color: green;">Available</span> 
+                            {% else %} 
+                                <span style="color: red;">Not Available</span> 
+                            {% endif %}
+                        </p>
+                        <p style="color: #333; margin-bottom: 10px;"><strong>Amenities:</strong> {{ space.amenities }}</p>
+                        <p style="color: #333; margin-bottom: 10px;"><strong>Rating:</strong> {{ space.rating }} / 5</p>
+                        <div style="margin-top: 15px;">
+                            <a href="#" style="color: #007bff; text-decoration: none; margin-right: 10px;">Edit Listing</a>
+                            <a href="#" style="color: #dc3545; text-decoration: none;">Delete Listing</a>
                         </div>
-                    </li>
+                    </div>
                 {% endfor %}
-                <p><a href="{% url 'add_parking_space' %}">Add a Parking Space</a></p>
-            </ul>
+            </div>
+            <div style="margin-top: 30px;">
+                <a href="{% url 'add_parking_space' %}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                    Add a Parking Space
+                </a>
+            </div>
         {% elif message %}
-            <p>{{ message }} <a href="{% url 'add_parking_space' %}">Add a Parking Space !</a> now!</p>
+            <p>{{ message }} <a href="{% url 'add_parking_space' %}" style="color: #007bff; text-decoration: none;">Add a Parking Space</a> now!</p>
         {% endif %}
     </div>
 {% endblock %}
