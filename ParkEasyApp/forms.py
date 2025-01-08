@@ -96,3 +96,12 @@ class BookingForm(forms.ModelForm):
             cleaned_data['price_paid'] = total_price  # Setting the calculated price_paid value
 
         return cleaned_data
+
+
+from django import forms
+from django.contrib.auth.models import User
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'is_active', 'is_superuser']  # Add more fields as needed

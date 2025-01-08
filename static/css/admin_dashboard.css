@@ -1,0 +1,168 @@
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* Apply Poppins font to all elements */
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 25%; /* Set sidebar width to 25% */
+    background-color: #333;
+    color: white;
+    height: 100vh; /* Full height */
+    padding-top: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Push content to top and bottom */
+    overflow-y: auto; /* Adds scroll if sidebar content overflows */
+    transition: width 0.3s ease; /* Smooth transition when sidebar width changes */
+}
+
+.sidebar-item {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.sidebar-item a,
+.dropdown-btn {
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    background-color: #333;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+}
+
+.sidebar-item a:hover,
+.dropdown-btn:hover {
+    background-color: #575757;
+}
+
+/* Sidebar Footer (Help & Support, Log Out) */
+.sidebar-footer {
+    margin-top: auto; /* Pushes the footer to the bottom */
+    border-top: 1px solid #444; /* Adds a border to the top of the footer */
+    transition: margin-top 0.3s ease; /* Smooth transition for footer margin change */
+}
+
+.sidebar-footer a {
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    background-color: #333;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sidebar-footer a:hover {
+    background-color: #575757;
+}
+
+/* Main Content Styling */
+.main-content {
+    margin-left: 25%; /* Push the main content to the right of the sidebar */
+    width: 75%; /* Ensure main content takes the remaining 75% */
+    padding: 20px;
+    background-color: #ffffff;
+    color: #333333;
+    height: 100vh; /* Full height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Title */
+.main-content h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #1c1c1c;
+}
+
+/* Dashboard Grid Styling */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 20px; /* Space between sections */
+    flex-grow: 1; /* Ensure it fills the remaining space */
+    padding: 20px; /* Inner padding for breathing space */
+    overflow-y: auto; /* Prevent overflow from appearing */
+}
+
+.dashboard-section {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Ensure each section takes full height */
+}
+
+.dashboard-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.dashboard-section p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #555;
+    flex-grow: 1; /* Ensures the paragraph stretches evenly */
+}
+
+.dashboard-section button {
+    padding: 10px 20px;
+    background-color: #1c1c1c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dashboard-section button:hover {
+    background-color: #333;
+}
+
+/* Footer Styling */
+.footer {
+    text-align: center;
+    margin-top: auto;
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+/* Button Styling */
+.dashboard-btn {
+    background-color: #1c1c1c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dashboard-btn:hover {
+    background-color: #333;
+  }
+  

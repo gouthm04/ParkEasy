@@ -97,6 +97,15 @@
                     {% endif %}
                 </li>
                 <li style="margin-left:100px ;"><h4>{{ request.user.username }}</h4></li>
+                <div class="sidebar-item">
+                    {% if user.is_superuser %}
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-primary" style="margin-left: 20px; padding: 10px 15px;">
+                        <i class="fas fa-cogs"></i> Admin Dashboard
+                    </a>
+                    {% endif %}
+                </div>
+                
+                  
 
             </ul>
         </nav>

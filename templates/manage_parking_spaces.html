@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Parking Spaces - ParkEasy</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'css/manage_parking_spaces.css' %}"> <!-- Add a separate CSS file for this page -->
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-item">
+      <a href="{% url 'admin_dashboard' %}" class="home-btn">Home</a>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">Driver Options</button>
+      <div class="dropdown-content">
+        <a href="#">Manage Drivers</a>
+        <a href="#">View Driver Reviews</a>
+        <a href="#">Manage Driver Bookings</a>
+      </div>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">Parking Host Options</button>
+      <div class="dropdown-content">
+        <a href="#">Manage Parking Hosts</a>
+        <a href="#">View Host Reviews</a>
+        <a href="#">Manage Parking Space Listings</a>
+      </div>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">System Settings</button>
+      <div class="dropdown-content">
+        <a href="#">General Settings</a>
+        <a href="{% url 'manage_parking_spaces' %}">Manage Parking Spaces</a> <!-- This is the current page link -->
+        <a href="#">System Logs</a>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <a href="{% url 'help_support' %}">Help & Support</a>
+      <a href="{% url 'logout' %}">Log Out</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h1>Manage Parking Spaces</h1>
+    <h2>Admin Panel: Parking Spaces Management</h2>
+
+    <!-- Search and filter options for parking spaces -->
+    <div class="search-filter">
+      <input type="text" id="searchParking" placeholder="Search by location or ID...">
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <!-- Table to display parking spaces -->
+    <div class="parking-table">
+      <table>
+        <thead>
+          <tr>
+            <th>No.</th> <!-- Serial number header -->
+            <th>Parking ID</th>
+            <th>Location</th>
+            <th>Host Name</th>
+            <th>Availability</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through parking spaces dynamically -->
+          {% for parking in parking_spaces %}
+            <tr>
+              <td>{{ forloop.counter }}</td> <!-- Serial number (index) -->
+              <td>{{ parking.id }}</td>
+              <td>{{ parking.location }}</td>
+              <td>{{ parking.host.user.username }}</td>
+              <td>{{ parking.availability }}</td>
+              <td>
+                <a href="{% url 'edit_parking_space' parking.id %}">Edit</a> | 
+                <a href="{% url 'delete_parking_space' parking.id %}">Delete</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">© 2024 ParkEasy</div>
+  </div>
+
+</body>
+</html>

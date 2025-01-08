@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users - ParkEasy</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'css/manage_users.css' %}"> <!-- Add a separate CSS file for this page -->
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-item">
+      <a href="{% url 'admin_dashboard' %}" class="home-btn">Home</a>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">Driver Options</button>
+      <div class="dropdown-content">
+        <a href="#">Manage Drivers</a>
+        <a href="#">View Driver Reviews</a>
+        <a href="#">Manage Driver Bookings</a>
+      </div>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">Parking Host Options</button>
+      <div class="dropdown-content">
+        <a href="#">Manage Parking Hosts</a>
+        <a href="#">View Host Reviews</a>
+        <a href="#">Manage Parking Space Listings</a>
+      </div>
+    </div>
+    <div class="sidebar-item">
+      <button class="dropdown-btn">System Settings</button>
+      <div class="dropdown-content">
+        <a href="#">General Settings</a>
+        <a href="{% url 'manage_users' %}">Manage Users</a> <!-- This is the current page link -->
+        <a href="#">System Logs</a>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <a href="{% url 'help_support' %}">Help & Support</a>
+      <a href="{% url 'logout' %}">Log Out</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h1>Manage Users</h1>
+    <h2>Admin Panel: User Management</h2>
+
+    <!-- Search and filter options for user management -->
+    <div class="search-filter">
+      <input type="text" id="searchUser" placeholder="Search by name or email...">
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <!-- Table to display users -->
+    <div class="user-table">
+      <table>
+        <thead>
+          <tr>
+            <th>No.</th> <!-- Added Serial Number Column -->
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through users dynamically -->
+            {% for user in users %}
+              <tr>
+                <td>{{ forloop.counter }}</td> <!-- Display serial number -->
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>  <!-- Show username instead of name -->
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.status }}</td>
+                <td>
+                  <a href="{% url 'edit_user' user.id %}">Edit</a> | 
+                  <a href="{% url 'delete_user' user.id %}">Delete</a>  <!-- Change deactivate to delete -->
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
+
+    <div class="footer">© 2024 ParkEasy</div>
+  </div>
+
+</body>
+
+</html>

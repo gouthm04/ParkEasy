@@ -9,9 +9,11 @@ from datetime import timedelta
 from django.db.models import Q
 from django.utils.timezone import make_aware
 
+# Check if the user is a superuser
+def is_superuser(user):
+    return user.is_authenticated and user.is_superuser
 
-
-# Login View
+# Login view
 def login_view(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -19,7 +21,11 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('dashboard')  # Redirect to the dashboard after login
+            # Check if the user is a superuser (admin)
+            if user.is_superuser:
+                return redirect('admin_dashboard')  # Redirect to admin dashboard
+            else:
+                return redirect('dashboard')  # Redirect to normal user's dashboard
         messages.error(request, "Invalid username or password")
     return render(request, 'login.html')
 
@@ -267,3 +273,84 @@ def map(request,space_id):
         'longitude': space.longitude
     }
     return render(request, 'map.html', context)
+
+
+# Admin Dash
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import User
+from django.db import models
+from .models import ParkingSpace, Booking, ParkEasyUser, Payment, Review, Notification
+
+# Check if the user is a superuser
+def is_superuser(user):
+    return user.is_authenticated and user.is_superuser
+
+@user_passes_test(is_superuser)
+def admin_dashboard(request):
+    total_users = User.objects.count()
+    total_parking_spaces = ParkingSpace.objects.count()
+    total_bookings = Booking.objects.count()
+    total_revenue = Booking.objects.filter(status='Completed').aggregate(total_revenue=models.Sum('price_paid'))['total_revenue'] or 0
+    
+    context = {
+        'total_users': total_users,
+        'total_parking_spaces': total_parking_spaces,
+        'total_bookings': total_bookings,
+        'total_revenue': total_revenue,
+    }
+    
+    return render(request, 'admin_dashboard.html', context)
+
+
+@user_passes_test(is_superuser)
+def manage_users(request):
+    users = User.objects.all()
+    return render(request, 'manage_users.html', {'users': users})
+
+@user_passes_test(is_superuser)
+def manage_parking_spaces(request):
+    parking_spaces = ParkingSpace.objects.all()
+    return render(request, 'manage_parking_spaces.html', {'parking_spaces': parking_spaces})
+
+@user_passes_test(is_superuser)
+def manage_bookings(request):
+    bookings = Booking.objects.all()
+    return render(request, 'manage_bookings.html', {'bookings': bookings})
+
+@user_passes_test(is_superuser)
+def reports(request):
+    # Generate reports data here
+    return render(request, 'reports.html', {})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.models import User
+from .forms import UserEditForm  # Create this form in forms.py if needed
+
+@user_passes_test(is_superuser)
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    
+    if request.method == "POST":
+        # Handle the form submission and update user
+        form = UserEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_users')  # Redirect to user management after edit
+    else:
+        # If not POST, render the form with existing user data
+        form = UserEditForm(instance=user)
+    
+    return render(request, 'edit_user.html', {'form': form, 'user': user})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.models import User
+
+@user_passes_test(is_superuser)
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.delete()  # Delete the user permanently
+    return redirect('manage_users')  # Redirect back to the manage users page
+
