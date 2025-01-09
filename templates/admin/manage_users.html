@@ -1,4 +1,3 @@
-<!-- manage_users -->
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
@@ -71,22 +70,45 @@
           </tr>
         </thead>
         <tbody>
-            <!-- Loop through users dynamically -->
-            {% for user in users %}
-              <tr>
-                <td>{{ forloop.counter }}</td> <!-- Display serial number -->
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>  <!-- Show username instead of name -->
-                <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
-                <td>{{ user.status }}</td>
-                <td>
-                  <a href="{% url 'edit_user' user.id %}">Edit</a> | 
-                  <a href="{% url 'delete_user' user.id %}">Delete</a>  <!-- Change deactivate to delete -->
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
+          <!-- Loop through users dynamically -->
+          {% for user in users %}
+          <tr>
+            <td>{{ forloop.counter }}</td> <!-- Display serial number -->
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td> <!-- Show username instead of name -->
+            <td>{{ user.email }}</td>
+            <td>
+              {% if user.is_superuser %}
+              Admin
+              {% elif user.parkeasyuser.get_role == 'driver' %}
+              Driver
+              {% elif user.parkeasyuser.get_role == 'host' %}
+              Parking Host
+              {% else %}
+              Both
+              {% endif %}
+            </td>
+
+
+            <td>
+              {% if user.status == 'active' %}
+              Active
+              {% elif user.status == 'suspended' %}
+              Suspended
+              {% elif user.status == 'pending' %}
+              Pending
+              {% else %}
+              N/A
+              {% endif %}
+            </td>
+
+            <td>
+              <a href="{% url 'edit_user' user.id %}">Edit</a> |
+              <a href="{% url 'delete_user' user.id %}">Delete</a> <!-- Change deactivate to delete -->
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
 

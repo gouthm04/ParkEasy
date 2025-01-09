@@ -1,12 +1,39 @@
 from datetime import datetime
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User  # Using Django's built-in User model for authentication
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-# User Model (extending the default Django User model)
+@receiver(post_save, sender=User)
+def create_parkeasy_user(sender, instance, created, **kwargs):
+    if created:
+        ParkEasyUser.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_parkeasy_user(sender, instance, **kwargs):
+    instance.parkeasyuser.save()
+
+
 class ParkEasyUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Linking to Django's built-in User model
+    status = models.CharField(max_length=20, choices=[('active', 'Active'), ('suspended', 'Suspended'), ('pending', 'Pending')], default='active')
+    
     def __str__(self):
         return self.user.username
+
+    def get_role(self):
+        # Check if the user is a superuser (admin)
+        if self.user.is_superuser:
+            return 'admin'
+        # If the user has parking spaces listed, they are a host
+        elif self.parking_spaces.exists():
+            return 'host'
+        # If the user has bookings, they are a driver
+        elif self.bookings.exists():
+            return 'driver'
+        # Default to both (can be both driver and host)
+        return 'both'
 
 
 # Parking Space Model (for listing parking spaces)
@@ -30,13 +57,9 @@ class ParkingSpace(models.Model):
         ]
 
 
-from django.db import models
-from django.utils import timezone
-from datetime import datetime, timedelta
-
+# Booking Model
 class Booking(models.Model):
     user = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE, related_name="bookings")
-    
     parking_space = models.ForeignKey(ParkingSpace, on_delete=models.CASCADE)
     booking_time = models.DateTimeField(auto_now_add=True)  # Auto-set to the time of booking
     start_date = models.DateField(default=timezone.now)  # Dynamically use current date
@@ -63,7 +86,6 @@ class Booking(models.Model):
             # Set the duration based on the difference between start and end times
             self.duration = end_datetime - start_datetime
         
-        # Call the parent class's save method
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -74,7 +96,6 @@ class Booking(models.Model):
             models.Index(fields=['user', 'parking_space', 'status']),
         ]
         unique_together = ('parking_space', 'start_time', 'end_time')
-
 
 
 # Payment Model

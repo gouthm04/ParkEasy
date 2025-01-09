@@ -8,6 +8,14 @@ from .forms import CustomUserCreationForm, ParkingSpaceForm, BookingForm
 from datetime import timedelta
 from django.db.models import Q
 from django.utils.timezone import make_aware
+from django.core.paginator import Paginator
+from django.utils.timezone import now
+from django.db.models import Sum
+import json
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import User
+
+
 
 # Check if the user is a superuser
 def is_superuser(user):
@@ -21,7 +29,6 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            # Check if the user is a superuser (admin)
             if user.is_superuser:
                 return redirect('admin_dashboard')  # Redirect to admin dashboard
             else:
@@ -52,12 +59,9 @@ def register_view(request):
 def profile_view(request):
     if request.method == "POST":
         user = request.user
-        # Update email
         if 'email' in request.POST:
             user.email = request.POST['email']
             user.save()
-        
-        # Update role
         if 'role' in request.POST:
             role = request.POST['role']
             if role in ['driver', 'host', 'both']:
@@ -68,9 +72,6 @@ def profile_view(request):
         return redirect('profile')
     
     return render(request, 'auth/profile.html')
-
-
-
 
 # Parking Space List View
 def parking_space_list_view(request):
@@ -83,7 +84,6 @@ def parking_space_list_view(request):
 # Parking Space Detail View
 def parking_space_detail_view(request, space_id):
     parking_space = get_object_or_404(ParkingSpace, id=space_id)
-    # Pass the user's ownership status for frontend validation
     is_host = request.user.is_authenticated and parking_space.host == request.user.parkeasyuser
     return render(request, 'parking/parking_space_detail.html', {
         'parking_space': parking_space,
@@ -94,7 +94,6 @@ def parking_space_detail_view(request, space_id):
 @login_required
 def add_parking_space_view(request):
     if request.method == 'POST':
-        print(request.POST)
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         form = ParkingSpaceForm(request.POST)
@@ -167,14 +166,7 @@ def faq(request):
 def terms_conditions(request):
     return render(request, 'pages/terms_conditions.html')
 
-
-# BOOKING VIEWS
-
-from django.utils.timezone import make_aware, get_current_timezone
-from django.contrib import messages
-from .models import ParkingSpace, Booking, ParkEasyUser
-from .forms import BookingForm
-
+# Booking Views
 @login_required
 def create_booking_view(request, parking_space_id):
     parking_space = get_object_or_404(ParkingSpace, id=parking_space_id)
@@ -186,8 +178,6 @@ def create_booking_view(request, parking_space_id):
 
     if request.method == 'POST':
         form = BookingForm(request.POST, user=park_easy_user, parking_space=parking_space)
-        print("Form Data:", request.POST)  # Debug form data
-        print("Form Valid:", form.is_valid())  # Debug form validity
         if form.is_valid():
             booking = form.save(commit=False)
             booking.parking_space = parking_space
@@ -195,13 +185,10 @@ def create_booking_view(request, parking_space_id):
             booking.save()
             messages.success(request, "Booking created successfully!")
             return redirect('booking_success')
-        else:
-            print("Form Errors:", form.errors)  # Debug form errors
     else:
         form = BookingForm()
 
     return render(request, 'booking/create_booking.html', {'form': form, 'parking_space': parking_space})
-
 
 @login_required
 def booking_success_view(request):
@@ -222,23 +209,15 @@ def cancel_booking_view(request, booking_id):
         return redirect('dashboard')
     return render(request, 'booking/cancel_booking.html', {'booking': booking})
 
-
-
-from django.core.paginator import Paginator
-
 @login_required
 def my_bookings_view(request):
     bookings = Booking.objects.filter(user=request.user.parkeasyuser)
-    paginator = Paginator(bookings, 10)  # Show 10 bookings per page
+    paginator = Paginator(bookings, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'booking/my_bookings.html', {'page_obj': page_obj})
 
-
-from django.utils.timezone import now
-from django.db.models import Sum
-import json
-
+# Earnings View
 def earnings_view(request):
     total_earnings = Booking.objects.aggregate(total=Sum('price_paid'))['total']
     current_year = now().year
@@ -275,24 +254,13 @@ def map(request,space_id):
     return render(request, 'map/map.html', context)
 
 
-# Admin Dash
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.models import User
-from django.db import models
-from .models import ParkingSpace, Booking, ParkEasyUser, Payment, Review, Notification
-
-# Check if the user is a superuser
-def is_superuser(user):
-    return user.is_authenticated and user.is_superuser
-
+# Admin Dashboard Views
 @user_passes_test(is_superuser)
 def admin_dashboard(request):
     total_users = User.objects.count()
     total_parking_spaces = ParkingSpace.objects.count()
     total_bookings = Booking.objects.count()
-    total_revenue = Booking.objects.filter(status='Completed').aggregate(total_revenue=models.Sum('price_paid'))['total_revenue'] or 0
+    total_revenue = Booking.objects.filter(status='Completed').aggregate(total_revenue=Sum('price_paid'))['total_revenue'] or 0
     
     context = {
         'total_users': total_users,
@@ -302,7 +270,6 @@ def admin_dashboard(request):
     }
     
     return render(request, 'admin/admin_dashboard.html', context)
-
 
 @user_passes_test(is_superuser)
 def manage_users(request):
@@ -321,36 +288,24 @@ def manage_bookings(request):
 
 @user_passes_test(is_superuser)
 def reports(request):
-    # Generate reports data here
     return render(request, 'admin/reports.html', {})
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.models import User
-from .forms import UserEditForm  # Create this form in forms.py if needed
 
 @user_passes_test(is_superuser)
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     
     if request.method == "POST":
-        # Handle the form submission and update user
         form = UserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('manage_users')  # Redirect to user management after edit
     else:
-        # If not POST, render the form with existing user data
         form = UserEditForm(instance=user)
     
     return render(request, 'admin/edit_user.html', {'form': form, 'user': user})
-
-
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.models import User
 
 @user_passes_test(is_superuser)
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.delete()  # Delete the user permanently
     return redirect('manage_users')  # Redirect back to the manage users page
-
