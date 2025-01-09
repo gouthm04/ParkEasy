@@ -27,7 +27,7 @@ def login_view(request):
             else:
                 return redirect('dashboard')  # Redirect to normal user's dashboard
         messages.error(request, "Invalid username or password")
-    return render(request, 'login.html')
+    return render(request, 'auth/login.html')
 
 # Logout View
 def logout_view(request):
@@ -45,7 +45,7 @@ def register_view(request):
             return redirect('login')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'auth/register.html', {'form': form})
 
 # Profile View
 @login_required
@@ -67,7 +67,7 @@ def profile_view(request):
         messages.success(request, "Profile updated successfully!")
         return redirect('profile')
     
-    return render(request, 'profile.html')
+    return render(request, 'auth/profile.html')
 
 
 
@@ -78,14 +78,14 @@ def parking_space_list_view(request):
     parking_spaces = ParkingSpace.objects.filter(
         Q(location__icontains=query) & Q(availability=True) & ~Q(host__user=request.user)
     ).order_by('-created_at')
-    return render(request, 'parking_space_list.html', {'parking_spaces': parking_spaces, 'query': query})
+    return render(request, 'parking/parking_space_list.html', {'parking_spaces': parking_spaces, 'query': query})
 
 # Parking Space Detail View
 def parking_space_detail_view(request, space_id):
     parking_space = get_object_or_404(ParkingSpace, id=space_id)
     # Pass the user's ownership status for frontend validation
     is_host = request.user.is_authenticated and parking_space.host == request.user.parkeasyuser
-    return render(request, 'parking_space_detail.html', {
+    return render(request, 'parking/parking_space_detail.html', {
         'parking_space': parking_space,
         'is_host': is_host,
     })
@@ -107,7 +107,7 @@ def add_parking_space_view(request):
             return redirect('my_listed_parking_spaces')
     else:
         form = ParkingSpaceForm()
-    return render(request, 'add_parking_space.html', {'form': form})
+    return render(request, 'parking/add_parking_space.html', {'form': form})
 
 # Edit Parking Space View
 @login_required
@@ -120,7 +120,7 @@ def edit_parking_space_view(request, space_id):
             return redirect('parking_space_detail', space_id=space_id)
     else:
         form = ParkingSpaceForm(instance=parking_space)
-    return render(request, 'edit_parking_space.html', {
+    return render(request, 'parking/edit_parking_space.html', {
         'form': form,
         'parking_space': parking_space,
     })
@@ -132,40 +132,40 @@ def delete_parking_space_view(request, space_id):
     if request.method == 'POST':
         parking_space.delete()
         return redirect('parking_space_list')
-    return render(request, 'delete_parking_space.html', {
+    return render(request, 'parking/delete_parking_space.html', {
         'parking_space': parking_space,
     })
 
 # Dashboard and Other Views
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'user/home.html')
 
 def about(request):
-    return render(request, 'about.html')
+    return render(request, 'pages/about.html')
 
 def contact(request):
     return render(request, 'contact.html')
 
 def dashboard(request):
     user_name = request.user.username if request.user.is_authenticated else "Guest"
-    return render(request, 'dashboard.html', {"user_name": user_name})
+    return render(request, 'user/dashboard.html', {"user_name": user_name})
 
 @login_required
 def my_listed_parking_spaces(request):
     user_profile = ParkEasyUser.objects.get(user=request.user)
     parking_spaces = ParkingSpace.objects.filter(host=user_profile)
     if not parking_spaces:
-        return render(request, 'my_listed_parking_spaces.html', {'message': 'You haven\'t listed any parking spaces yet.'})
-    return render(request, 'my_listed_parking_spaces.html', {'parking_spaces': parking_spaces})
+        return render(request, 'parking/my_listed_parking_spaces.html', {'message': 'You haven\'t listed any parking spaces yet.'})
+    return render(request, 'parking/my_listed_parking_spaces.html', {'parking_spaces': parking_spaces})
 
 def help_support(request):
-    return render(request, 'help_support.html')
+    return render(request, 'pages/help_support.html')
 
 def faq(request):
-    return render(request, 'FAQ_Page.html')
+    return render(request, 'pages/FAQ_Page.html')
 
 def terms_conditions(request):
-    return render(request, 'terms_conditions.html')
+    return render(request, 'pages/terms_conditions.html')
 
 
 # BOOKING VIEWS
@@ -200,17 +200,17 @@ def create_booking_view(request, parking_space_id):
     else:
         form = BookingForm()
 
-    return render(request, 'create_booking.html', {'form': form, 'parking_space': parking_space})
+    return render(request, 'booking/create_booking.html', {'form': form, 'parking_space': parking_space})
 
 
 @login_required
 def booking_success_view(request):
-    return render(request, 'booking_success.html')
+    return render(request, 'booking/booking_success.html')
 
 @login_required
 def booking_detail_view(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    return render(request, 'booking_detail.html', {'booking': booking})
+    return render(request, 'booking/booking_detail.html', {'booking': booking})
 
 @login_required
 def cancel_booking_view(request, booking_id):
@@ -220,7 +220,7 @@ def cancel_booking_view(request, booking_id):
         booking.save()
         messages.success(request, "Booking cancelled successfully.")
         return redirect('dashboard')
-    return render(request, 'cancel_booking.html', {'booking': booking})
+    return render(request, 'booking/cancel_booking.html', {'booking': booking})
 
 
 
@@ -232,7 +232,7 @@ def my_bookings_view(request):
     paginator = Paginator(bookings, 10)  # Show 10 bookings per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'my_bookings.html', {'page_obj': page_obj})
+    return render(request, 'booking/my_bookings.html', {'page_obj': page_obj})
 
 
 from django.utils.timezone import now
@@ -263,7 +263,7 @@ def earnings_view(request):
         'monthly_earnings': sum(monthly_earnings) or 0.0,
     }
     
-    return render(request, 'view_earnings.html', context)
+    return render(request, 'admin/view_earnings.html', context)
 
 
 def map(request,space_id):
@@ -272,7 +272,7 @@ def map(request,space_id):
         'latitude': space.latitude,
         'longitude': space.longitude
     }
-    return render(request, 'map.html', context)
+    return render(request, 'map/map.html', context)
 
 
 # Admin Dash
@@ -301,28 +301,28 @@ def admin_dashboard(request):
         'total_revenue': total_revenue,
     }
     
-    return render(request, 'admin_dashboard.html', context)
+    return render(request, 'admin/admin_dashboard.html', context)
 
 
 @user_passes_test(is_superuser)
 def manage_users(request):
     users = User.objects.all()
-    return render(request, 'manage_users.html', {'users': users})
+    return render(request, 'admin/manage_users.html', {'users': users})
 
 @user_passes_test(is_superuser)
 def manage_parking_spaces(request):
     parking_spaces = ParkingSpace.objects.all()
-    return render(request, 'manage_parking_spaces.html', {'parking_spaces': parking_spaces})
+    return render(request, 'admin/manage_parking_spaces.html', {'parking_spaces': parking_spaces})
 
 @user_passes_test(is_superuser)
 def manage_bookings(request):
     bookings = Booking.objects.all()
-    return render(request, 'manage_bookings.html', {'bookings': bookings})
+    return render(request, 'admin/manage_bookings.html', {'bookings': bookings})
 
 @user_passes_test(is_superuser)
 def reports(request):
     # Generate reports data here
-    return render(request, 'reports.html', {})
+    return render(request, 'admin/reports.html', {})
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
@@ -342,7 +342,7 @@ def edit_user(request, user_id):
         # If not POST, render the form with existing user data
         form = UserEditForm(instance=user)
     
-    return render(request, 'edit_user.html', {'form': form, 'user': user})
+    return render(request, 'admin/edit_user.html', {'form': form, 'user': user})
 
 
 from django.shortcuts import get_object_or_404, redirect
