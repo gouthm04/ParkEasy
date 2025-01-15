@@ -23,11 +23,24 @@
                         <td>{{ booking.start_date }} : {{ booking.start_time }}</td>
                         <td>{{ booking.end_date }} : {{ booking.end_time }}</td>
                         <td>{{ booking.parking_space.location }}</td>
-                        <td>{{ booking.status }}</td>
+                        <td class="{% if booking.status == 'cancelled' %}cancelled-status{% endif %}">
+                            {% if booking.status != 'cancelled' %}
+                                {{ booking.status }}
+                            {% else %}
+                                <span class="cancelled-text">Cancelled</span>
+                            {% endif %}
+                        </td>
                         <td>{{ booking.price_paid }}</td>
                         <td>
-                            <button class="btn"><a href="">Extend Time</a></button>
-                             <button class="btn " style="background-color: yellow;"><a href="{% url 'cancel_booking' booking.id %}">{% if booking.status != 'cancelled'  %}Cancel {% else %}Cancelled {% endif %}</a></button> 
+                            {% if booking.status != 'cancelled' %}
+                                <!-- Show Extend Time button if not canceled -->
+                                <button class="btn"><a href="">Extend Time</a></button>
+                                
+                                <!-- Show Cancel button if not canceled -->
+                                <button class="btn" style="background-color: yellow;">
+                                    <a href="{% url 'cancel_booking' booking.id %}">Cancel</a>
+                                </button>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

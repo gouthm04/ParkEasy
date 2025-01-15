@@ -8,11 +8,16 @@ from django.dispatch import receiver
 @receiver(post_save, sender=User)
 def create_parkeasy_user(sender, instance, created, **kwargs):
     if created:
-        ParkEasyUser.objects.create(user=instance)
+        # Check if the ParkEasyUser already exists for the user
+        if not hasattr(instance, 'parkeasyuser'):
+            print(f"Creating ParkEasyUser for {instance.username}")
+            ParkEasyUser.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_parkeasy_user(sender, instance, **kwargs):
-    instance.parkeasyuser.save()
+    if hasattr(instance, 'parkeasyuser'):
+        print(f"Saving ParkEasyUser for {instance.username}")
+        instance.parkeasyuser.save()
 
 
 class ParkEasyUser(models.Model):
@@ -40,13 +45,13 @@ class ParkEasyUser(models.Model):
 class ParkingSpace(models.Model):
     host = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE, related_name="parking_spaces")
     location = models.CharField(max_length=255)
-    price_per_hour = models.DecimalField(max_digits=6, decimal_places=2)
+    price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     availability = models.BooleanField(default=True)  # Indicates if space is available for booking
     amenities = models.TextField(blank=True, null=True)  # Optional description of amenities
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)  # Average rating by users
     created_at = models.DateTimeField(auto_now_add=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True)  # Store latitude
+    longitude = models.FloatField(null=True, blank=True)  # Store longitude
 
     def __str__(self):
         return f"Parking Space {self.id} at {self.location}"
@@ -57,7 +62,11 @@ class ParkingSpace(models.Model):
         ]
 
 
-# Booking Model
+from django.db import models
+from django.utils import timezone
+from datetime import datetime
+from decimal import Decimal
+
 class Booking(models.Model):
     user = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE, related_name="bookings")
     parking_space = models.ForeignKey(ParkingSpace, on_delete=models.CASCADE)
@@ -95,7 +104,8 @@ class Booking(models.Model):
         indexes = [
             models.Index(fields=['user', 'parking_space', 'status']),
         ]
-        unique_together = ('parking_space', 'start_time', 'end_time')
+        unique_together = ('parking_space', 'start_time', 'end_time'),
+
 
 
 # Payment Model

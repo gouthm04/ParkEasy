@@ -14,6 +14,8 @@ from django.db.models import Sum
 import json
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
+from .forms import UserEditForm  # Import the form
+
 
 
 
@@ -90,23 +92,57 @@ def parking_space_detail_view(request, space_id):
         'is_host': is_host,
     })
 
-# Add Parking Space View
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import ParkingSpace
+from .forms import ParkingSpaceForm  # Import the form here
+from django.shortcuts import get_object_or_404
+from ParkEasyApp.models import ParkEasyUser, ParkingSpace
+
 @login_required
 def add_parking_space_view(request):
     if request.method == 'POST':
-        latitude = request.POST.get('latitude')
-        longitude = request.POST.get('longitude')
         form = ParkingSpaceForm(request.POST)
         if form.is_valid():
+            user = request.user
+            parkeasy_user = get_object_or_404(ParkEasyUser, user=user)
             parking_space = form.save(commit=False)
-            parking_space.host = request.user.parkeasyuser
-            parking_space.latitude = latitude 
-            parking_space.longitude = longitude 
+            parking_space.host = parkeasy_user
             parking_space.save()
-            return redirect('my_listed_parking_spaces')
+            return redirect('success_url')  # Replace with your success URL
     else:
         form = ParkingSpaceForm()
+
     return render(request, 'parking/add_parking_space.html', {'form': form})
+
+
+
+from django.shortcuts import render
+def success_view(request):
+    return render(request, 'parking/success.html')  # Ensure you have a 'success.html' template
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import ParkingSpace
+def map(request, space_id):
+    # Fetch parking space by ID
+    space = get_object_or_404(ParkingSpace, id=space_id)
+    
+    # If latitude or longitude is None, fall back to default coordinates
+    latitude = space.latitude if space.latitude else 51.505  # Default value if None
+    longitude = space.longitude if space.longitude else -0.09  # Default value if None
+    
+    context = {
+        'latitude': latitude,
+        'longitude': longitude,
+        'location': space.location,  # Location name to show
+    }
+    
+    return render(request, 'map/map.html', context)
+
+
+
 
 # Edit Parking Space View
 @login_required
@@ -127,13 +163,17 @@ def edit_parking_space_view(request, space_id):
 # Delete Parking Space View
 @login_required
 def delete_parking_space_view(request, space_id):
-    parking_space = get_object_or_404(ParkingSpace, id=space_id, host=request.user.parkeasyuser)
+    try:
+        parkeasy_user = request.user.parkeasyuser
+    except ParkEasyUser.DoesNotExist:
+        parkeasy_user, _ = ParkEasyUser.objects.get_or_create(user=request.user)
+
+    parking_space = get_object_or_404(ParkingSpace, id=space_id, host=parkeasy_user)
     if request.method == 'POST':
         parking_space.delete()
-        return redirect('parking_space_list')
-    return render(request, 'parking/delete_parking_space.html', {
-        'parking_space': parking_space,
-    })
+        return redirect('my_listed_parking_spaces')
+    return render(request, 'parking/delete_parking_space.html', {'parking_space': parking_space})
+
 
 # Dashboard and Other Views
 def home(request):
@@ -163,59 +203,107 @@ def help_support(request):
 def faq(request):
     return render(request, 'pages/FAQ_Page.html')
 
+
 def terms_conditions(request):
     return render(request, 'pages/terms_conditions.html')
 
-# Booking Views
-@login_required
+
+
+
+from datetime import datetime
+from django.utils.timezone import make_aware
+
 def create_booking_view(request, parking_space_id):
-    parking_space = get_object_or_404(ParkingSpace, id=parking_space_id)
-    park_easy_user = ParkEasyUser.objects.get(user=request.user)
+    # Fetch parking space and user
+    parking_space = ParkingSpace.objects.get(id=parking_space_id)
+    user = request.user
 
-    if parking_space.host == park_easy_user:
-        messages.error(request, "You cannot book your own parking space.")
-        return redirect('parking_space_list')
+    # Get the form data and clean it
+    form = BookingForm(request.POST or None, user=user, parking_space=parking_space)
 
-    if request.method == 'POST':
-        form = BookingForm(request.POST, user=park_easy_user, parking_space=parking_space)
-        if form.is_valid():
-            booking = form.save(commit=False)
-            booking.parking_space = parking_space
-            booking.user = park_easy_user
-            booking.save()
-            messages.success(request, "Booking created successfully!")
-            return redirect('booking_success')
-    else:
-        form = BookingForm()
+    if form.is_valid():
+        cleaned_data = form.cleaned_data
+        start_datetime = cleaned_data['start_datetime']
+        end_datetime = cleaned_data['end_datetime']
 
-    return render(request, 'booking/create_booking.html', {'form': form, 'parking_space': parking_space})
+        # Check for conflicts with other bookings
+        conflicting_booking = Booking.objects.filter(
+            parking_space=parking_space,
+            end_date__gte=start_datetime.date(),  # Check if the booking overlaps the start date
+            end_time__gte=start_datetime.time(),  # Check if the booking overlaps the start time
+            start_date__lte=end_datetime.date(),  # Check if the booking overlaps the end date
+            start_time__lte=end_datetime.time()   # Check if the booking overlaps the end time
+        ).exists()
+
+        if conflicting_booking:
+            form.add_error(None, "The parking space is already booked for the selected time.")
+        else:
+            # Save the booking
+            form.save()
+
+    return render(request, 'booking/create_booking.html', {'form': form})
+
+
+
+
+
+
+
+
+
 
 @login_required
 def booking_success_view(request):
-    return render(request, 'booking/booking_success.html')
+    booking_id = request.GET.get('booking_id')
+    booking = Booking.objects.get(id=booking_id) if booking_id else None
+    return render(request, 'booking/booking_success.html', {'booking': booking})
+
+
+
 
 @login_required
 def booking_detail_view(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     return render(request, 'booking/booking_detail.html', {'booking': booking})
 
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Booking
+
 @login_required
 def cancel_booking_view(request, booking_id):
+    # Fetch the booking object for the logged-in user
     booking = get_object_or_404(Booking, id=booking_id, user=request.user.parkeasyuser)
+    
     if request.method == 'POST':
-        booking.status = 'cancelled'
-        booking.save()
-        messages.success(request, "Booking cancelled successfully.")
-        return redirect('dashboard')
+        # Mark the booking as cancelled and delete it
+        booking.delete()
+        messages.success(request, "Booking cancelled and removed successfully.")
+        return redirect('my_bookings')  # Redirect back to my bookings page
+    
     return render(request, 'booking/cancel_booking.html', {'booking': booking})
+
+
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from .models import Booking
 
 @login_required
 def my_bookings_view(request):
+    # Fetch all bookings of the logged-in user
     bookings = Booking.objects.filter(user=request.user.parkeasyuser)
+    
+    # Paginate the bookings list (10 bookings per page)
     paginator = Paginator(bookings, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    
+    # Render the template with the page_obj to handle pagination and booking data
     return render(request, 'booking/my_bookings.html', {'page_obj': page_obj})
+
+
 
 # Earnings View
 def earnings_view(request):
@@ -245,13 +333,14 @@ def earnings_view(request):
     return render(request, 'admin/view_earnings.html', context)
 
 
-def map(request,space_id):
-    space=get_object_or_404(ParkingSpace,id=space_id)
-    context = {
-        'latitude': space.latitude,
-        'longitude': space.longitude
-    }
-    return render(request, 'map/map.html', context)
+
+
+
+
+
+
+
+
 
 
 # Admin Dashboard Views
@@ -289,23 +378,36 @@ def manage_bookings(request):
 @user_passes_test(is_superuser)
 def reports(request):
     return render(request, 'admin/reports.html', {})
-
 @user_passes_test(is_superuser)
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    
+
     if request.method == "POST":
         form = UserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('manage_users')  # Redirect to user management after edit
+            messages.success(request, "User details updated successfully.")  # Feedback to admin
+            return redirect('manage_users')
+        else:
+            messages.error(request, "Failed to update user details. Please check the form.")
     else:
         form = UserEditForm(instance=user)
-    
+
     return render(request, 'admin/edit_user.html', {'form': form, 'user': user})
+
+
+import logging
+
+logger = logging.getLogger(__name__)  # Set up logging
 
 @user_passes_test(is_superuser)
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    user.delete()  # Delete the user permanently
-    return redirect('manage_users')  # Redirect back to the manage users page
+
+    if request.method == "POST":
+        user.delete()
+        messages.success(request, f"User '{user.username}' deleted successfully.")
+        logger.info(f"User '{user.username}' (ID: {user.id}) was deleted by admin {request.user.username}.")
+        return redirect('manage_users')
+    return render(request, 'admin/confirm_delete_user.html', {'user': user})
+

@@ -128,6 +128,15 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",  # 'static' directory is within the base directory
 ]
 
+import os
+
+# Static files (CSS, JavaScript, images)
+STATIC_URL = '/static/'
+
+# Media files (for user-uploaded files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 # Default primary key field type

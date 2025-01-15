@@ -26,22 +26,25 @@ urlpatterns = [
 
 
     # Booking URLs
-    path('parkeasy/create-booking/<int:parking_space_id>/', views.create_booking_view, name='create_booking'),
+    path('create-booking/<int:parking_space_id>/', views.create_booking_view, name='create_booking'),
     path('booking/<int:booking_id>/', views.booking_detail_view, name='booking_detail'),
     path('cancel-booking/<int:booking_id>/', views.cancel_booking_view, name='cancel_booking'),
     path('my-bookings/', views.my_bookings_view, name='my_bookings'),
     path('booking-success/', views.booking_success_view, name='booking_success'),
 
+
     ## view earnings
     path('view_earnings/', views.earnings_view, name='view_earnings'),
     path('map/<int:space_id>/', views.map, name='map'),
+    path('parking-spaces/success/', views.success_view, name='success_url'),  # Define success URL
 
     # Admin Dashboard
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('manage-users/', views.manage_users, name='manage_users'),
     path('edit-user/<int:user_id>/', views.edit_user, name='edit_user'),
-    path('delete-user/<int:user_id>/', views.delete_user, name='delete_user'),  # Change deactivate to delete
-    path('manage-parking-spaces/', views.manage_parking_spaces, name='manage_parking_spaces'),    path('manage-bookings/', views.manage_bookings, name='manage_bookings'),
+    path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),  # Change deactivate to delete
+    path('manage-parking-spaces/', views.manage_parking_spaces, name='manage_parking_spaces'),  
+    path('manage-bookings/', views.manage_bookings, name='manage_bookings'),
     path('reports/', views.reports, name='reports'),
 
 ]

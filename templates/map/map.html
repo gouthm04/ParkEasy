@@ -1,39 +1,40 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-    <h1 class="text-center mt-4">Parking Location</h1>
-    <div class="row">
-        <div id="map" style="height: 600px;" class="container"></div>
-    </div>
+<div
+    style="font-family: Arial, sans-serif; background-color: #0d0d0d; min-height: 90vh; display: flex; justify-content: center; align-items: center; padding: 40px 20px;">
+    <main
+        style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); width: 100%; max-width: 1000px; display: flex; flex-wrap: wrap; gap: 30px; box-sizing: border-box;">
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Initialize the map with default coordinates
-        const latitude = {{ latitude|default:51.505 }};
-        const longitude = {{ longitude|default:-0.09 }};
-        
-        // Initialize the map
+        <!-- Map Column -->
+        <div
+            style="flex: 1 1 45%; min-width: 400px; border-radius: 10px; background-color: #eee; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-top: 50px;">
+            <div id="map" style="height: 400px; border-radius: 10px;"></div>
+        </div>
+    </main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    window.onload = function () {
+        // Ensure latitude and longitude are treated as numbers
+        var latitude = parseFloat("{{ latitude }}");  // Parse to float if needed
+        var longitude = parseFloat("{{ longitude }}"); // Parse to float if needed
+        const locationName = "{{ location }}"; // Dynamic location name from Django context
+
+        // Initialize the map with the passed latitude and longitude
         const map = L.map('map').setView([latitude, longitude], 13);
-    
-        // Add OpenStreetMap tiles
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
-    
-        // Add a marker to the map
+
+        // Add a marker at the location from the database
         const marker = L.marker([latitude, longitude]).addTo(map)
-            .bindPopup('Your location')
+            .bindPopup(`Location: ${locationName}`)
             .openPopup();
-    
-        // Event listener for map click to get selected location
-        map.on('click', function(event) {
-            const selectedLatitude = event.latlng.lat;
-            const selectedLongitude = event.latlng.lng;
-    
-            // Move the marker to the clicked location
-            marker.setLatLng([selectedLatitude, selectedLongitude]);
-            marker.bindPopup(`Selected location: ${selectedLatitude}, ${selectedLongitude}`).openPopup();
-    
-        });
-    </script>
+    };
+</script>
+
 {% endblock %}

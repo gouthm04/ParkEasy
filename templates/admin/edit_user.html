@@ -1,0 +1,9 @@
+<body>
+    <h1>Edit User</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url 'manage_users' %}">Back to User Management</a>
+</body>
