@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .notification {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function showNotification(message) {
+            const notification = document.getElementById("notification");
+            notification.textContent = message;
+            notification.style.display = "block";
+
+            // Hide the notification after 3 seconds
+            setTimeout(() => {
+                notification.style.display = "none";
+            }, 3000);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Create a Review</h1>
+
+        <!-- Notification Div -->
+        <div id="notification" class="notification"></div>
+
+        <form method="post" action="{% url 'add_review' parking_space.id %}" >
+            {% csrf_token %}
+            
+            <!-- Read-only parking space field -->
+            <div class="form-group">
+                <label>Parking Space</label>
+                <input type="text" value="{{ parking_space.location }}" readonly>
+                <input type="hidden" name="parking_space" value="{{ parking_space.id }}">
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating (out of 5)</label>
+                <input type="number" name="rating" id="rating" step="0.1" max="5" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Comment (optional)</label>
+                <textarea name="comment" id="comment" rows="5" placeholder="Write your comment here..."></textarea>
+            </div>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+</body>
+</html>

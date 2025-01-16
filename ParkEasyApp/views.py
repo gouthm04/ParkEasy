@@ -524,3 +524,44 @@ def payment_form_view(request):
         return redirect('booking_success', booking_id=booking.id)
 
     return render(request, 'payment/payment_form.html', {'booking': booking})
+
+
+from .forms import ReviewForm
+
+
+# views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import ParkingSpace, Review
+from .forms import ReviewForm
+
+# View for displaying all reviews for a particular parking space
+def parking_space_reviews(request, space_id):
+    parking_space = get_object_or_404(ParkingSpace, id=space_id)
+    reviews = Review.objects.filter(parking_space=parking_space)
+
+    # Handling the "Add Review" functionality
+    if request.method == 'POST':
+        return redirect('add_review', space_id=space_id)
+
+    return render(request, 'reviews/parking_space_reviews.html', {
+        'parking_space': parking_space,
+        'reviews': reviews
+    })
+
+    
+
+def add_review(request, space_id):
+    parking_space = get_object_or_404(ParkingSpace, id=space_id)
+    user = get_object_or_404(ParkEasyUser, user=request.user)
+    form = ReviewForm(request.POST)
+
+    if form.is_valid():
+        review = form.save(commit=False)
+        review.parking_space = parking_space
+        review.user = user
+        review.save()
+        messages.success(request, "Review added successfully.")
+        return redirect('parking_space_reviews', space_id=space_id)
+
+    return render(request, 'reviews/add_review.html', {'parking_space': parking_space, 'form': form})

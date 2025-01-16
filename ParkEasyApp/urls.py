@@ -23,7 +23,7 @@ urlpatterns = [
     path('parking-spaces/edit/<int:space_id>/', views.edit_parking_space_view, name='edit_parking_space'),
     path('parking-spaces/delete/<int:space_id>/', views.delete_parking_space_view, name='delete_parking_space'),
     path('listed-parking-spaces/', views.my_listed_parking_spaces, name='my_listed_parking_spaces'),
-
+    path('add_review/<int:space_id>/', views.add_review, name='add_review'),
 
     # Booking URLs
     path('create-booking/<int:parking_space_id>/', views.create_booking_view, name='create_booking'),
@@ -51,5 +51,6 @@ urlpatterns = [
     
     # PAYMENT
     path('payment/', views.payment_form_view, name='payment_form'),
+    
 
 ]

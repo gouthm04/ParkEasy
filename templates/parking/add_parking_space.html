@@ -66,6 +66,16 @@
                     {% endif %}
                 </div>
 
+                <!-- Display Selected Coordinates -->
+                <div class="form-group">
+                    <label for="selected-latitude">Selected Latitude</label>
+                    <input type="text" id="selected-latitude" name="selected-latitude" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="selected-longitude">Selected Longitude</label>
+                    <input type="text" id="selected-longitude" name="selected-longitude" readonly>
+                </div>
+
                 <!-- Hidden input fields to store coordinates -->
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
@@ -103,36 +113,21 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Add a marker at the default location
         const marker = L.marker([latitude, longitude]).addTo(map)
             .bindPopup('Your location')
             .openPopup();
 
-        // When user clicks on the map, update the marker and set the new coordinates
         map.on('click', function (event) {
             const selectedLatitude = event.latlng.lat;
             const selectedLongitude = event.latlng.lng;
 
-            // Use Nominatim Reverse Geocoding to get the address
-            const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${selectedLatitude}&lon=${selectedLongitude}&format=json`;
+            marker.setLatLng([selectedLatitude, selectedLongitude]);
+            marker.bindPopup(`Selected location: ${selectedLatitude}, ${selectedLongitude}`).openPopup();
 
-            fetch(geocodeUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const locationName = data.display_name || "Unknown location";
-                    // Update marker position and popup with location name
-                    marker.setLatLng([selectedLatitude, selectedLongitude]);
-                    marker.bindPopup(`Selected location: ${locationName}`).openPopup();
-
-                    // Update the hidden input fields with the new latitude and longitude
-                    document.getElementById('latitude').value = selectedLatitude;
-                    document.getElementById('longitude').value = selectedLongitude;
-                })
-                .catch(error => {
-                    console.error("Error fetching location:", error);
-                    marker.setLatLng([selectedLatitude, selectedLongitude]);
-                    marker.bindPopup(`Selected location: ${selectedLatitude}, ${selectedLongitude}`).openPopup();
-                });
+            document.getElementById('latitude').value = selectedLatitude;
+            document.getElementById('longitude').value = selectedLongitude;
+            document.getElementById('selected-latitude').value = selectedLatitude;
+            document.getElementById('selected-longitude').value = selectedLongitude;
         });
     };
 
@@ -140,14 +135,12 @@
         const latitude = document.getElementById('latitude').value;
         const longitude = document.getElementById('longitude').value;
 
-        // If no coordinates are selected, alert the user
         if (!latitude || !longitude) {
             event.preventDefault();
             alert("Please select a location on the map.");
             return false;
         }
 
-        // Allow form submission
         return true;
     }
 </script>

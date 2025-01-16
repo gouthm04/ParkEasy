@@ -117,8 +117,8 @@ class Payment(models.Model):
 
 # Review Model
 class Review(models.Model):
-    user = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE)
-    parking_space = models.ForeignKey(ParkingSpace, on_delete=models.CASCADE)
+    user = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE , null=True ,blank=True)
+    parking_space = models.ForeignKey(ParkingSpace, on_delete=models.CASCADE , null=True ,blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     comment = models.TextField(blank=True, null=True)  # Optional review comment
     review_date = models.DateTimeField(auto_now_add=True)
@@ -126,12 +126,7 @@ class Review(models.Model):
     def __str__(self):
         return f"Review by {self.user.user.username} for {self.parking_space.location}"
 
-    class Meta:
-        unique_together = ('user', 'parking_space')  # Ensure one review per user per space
-        indexes = [
-            models.Index(fields=['user', 'parking_space']),
-        ]
-
+    
 
 # Notifications Model
 class Notification(models.Model):
