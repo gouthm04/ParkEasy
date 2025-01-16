@@ -46,19 +46,19 @@ def logout_view(request):
 # Registration View
 def register_view(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            # Save the user instance
-            user = form.save()
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
 
-            # Check if a ParkEasyUser entry already exists for the user
-            parkeasy_user, created = ParkEasyUser.objects.get_or_create(user=user)
+            if password != confirm_password:
+                messages.error(request, 'Passwords do not match')
+                return redirect('register')
 
-            if created:  # Entry was created successfully
-                messages.success(request, 'Your account has been created successfully! You can now log in.')
-            else:  # Entry already exists (should not normally happen in registration)
-                messages.warning(request, 'This user already exists.')
-
+            user = User.objects.create_user(username=username, email=email,password=password)
+        
+            ParkEasyUser.objects.create(user=user)
+            messages.success(request, 'Your account has been created successfully! You can now log in.')
             return redirect('login')
     else:
         return render(request, 'auth/register.html')
