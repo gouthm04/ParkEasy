@@ -9,12 +9,12 @@ from .models import ParkingSpace, Booking
 
 
 # Custom user registration form
-class CustomUserCreationForm(UserCreationForm):
+class CustomUserCreationForm(forms.ModelForm):
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email','password']
 
 
 # Parking Space form for adding and editing parking spaces

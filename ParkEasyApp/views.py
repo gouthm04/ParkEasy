@@ -61,8 +61,7 @@ def register_view(request):
 
             return redirect('login')
     else:
-        form = CustomUserCreationForm()
-    return render(request, 'auth/register.html', {'form': form})
+        return render(request, 'auth/register.html')
 
 
 # Profile View
