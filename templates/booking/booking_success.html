@@ -2,12 +2,13 @@
 {% block content %}
 <h1>Booking Success</h1>
 {% if booking %}
+    <p>Your booking has been successfully created!</p>
     <p>Booking ID: {{ booking.id }}</p>
     <p>Parking Space: {{ booking.parking_space.location }}</p>
     <p>Start Time: {{ booking.start_time }}</p>
     <p>End Time: {{ booking.end_time }}</p>
 {% else %}
-    <p>No booking details available.</p>
+    <p>Sorry, there was an issue with your booking.</p>
 {% endif %}
 
 <a href="{% url 'my_bookings' %}">View My Bookings</a>

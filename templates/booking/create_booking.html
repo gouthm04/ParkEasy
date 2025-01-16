@@ -7,7 +7,7 @@
         style="background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px; box-sizing: border-box;">
         <h2 style="text-align: center; margin-bottom: 20px;">Book Parking for {{ parking_space.location }}</h2>
 
-        <form method="POST" action="{% url 'create_booking' parking_space.id %}" id="booking-form">
+        <form method="POST" action="{% url 'create_booking' parking_space_id=parking_space.id %}" id="booking-form">
             {% csrf_token %}
 
             <!-- Display form-level errors -->
@@ -64,31 +64,24 @@
             </div>
 
             <div>
-                <label for="id_payment_method">Payment Method:</label>
-                <select name="payment_method" id="id_payment_method" class="form-control" required>
-                    <option value="" selected disabled>Choose a payment method</option>
-                    <option value="credit" {% if form.payment_method.value == 'credit' %}selected{% endif %}>Credit
-                    </option>
-                    <option value="debit" {% if form.payment_method.value == 'debit' %}selected{% endif %}>Debit</option>
-                    <option value="cash" {% if form.payment_method.value == 'cash' %}selected{% endif %}>Cash</option>
-                </select>
-                <div class="form-error payment-method-error" style="color: red; font-size: 14px; display: none;">
-                    {% for error in form.payment_method.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div>
                 <label for="id_price_paid">Price (Calculated):</label>
                 <input type="number" name="price_paid" id="id_price_paid" class="form-control" readonly
                     data-price-per-hour="{{ parking_space.price_per_hour }}">
             </div>
 
             <button type="submit" class="btn"
-                style="width: 100%; padding: 10px; border: none; background-color: #007bff; color: white; cursor: pointer;">
-                Create Booking
+                style="width: 100%; padding: 10px; background-color: #007bff; color: white;">
+                Proceed to Payment
             </button>
+
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
         </form>
     </main>
 </div>

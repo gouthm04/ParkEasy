@@ -1,0 +1,183 @@
+/* Manage Bookings Page Specific Styling */
+.booking-table {
+    margin-top: 30px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.booking-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.booking-table th,
+.booking-table td {
+    padding: 12px 20px;
+    text-align: left;
+    border: 1px solid #ddd;
+    word-wrap: break-word; /* Allows text to wrap */
+}
+
+/* Adjust widths of specific columns */
+.booking-table th:nth-child(1), 
+.booking-table td:nth-child(1) { width: 5%; } /* No. */
+.booking-table th:nth-child(2), 
+.booking-table td:nth-child(2) { width: 10%; } /* Booking ID */
+.booking-table th:nth-child(3), 
+.booking-table td:nth-child(3) { width: 15%; } /* Driver Name */
+.booking-table th:nth-child(4), 
+.booking-table td:nth-child(4) { width: 20%; } /* Parking Location */
+.booking-table th:nth-child(5), 
+.booking-table td:nth-child(5) { width: 10%; } /* Status */
+.booking-table th:nth-child(6), 
+.booking-table td:nth-child(6) { width: 15%; } /* Start Date/Time */
+.booking-table th:nth-child(7), 
+.booking-table td:nth-child(7) { width: 15%; } /* End Date/Time */
+.booking-table th:nth-child(8), 
+.booking-table td:nth-child(8) { width: 10%; } /* Actions */
+
+/* Header styling */
+.booking-table th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: 600;
+}
+
+.booking-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.booking-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.booking-table td {
+    text-align: center;
+}
+
+.booking-table td a {
+    text-decoration: none;
+    color: #1c1c1c;
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.booking-table td a:hover {
+    background-color: #f4f4f4;
+}
+
+.booking-table td a.edit {
+    color: #4CAF50; /* Green color for Edit */
+}
+
+.booking-table td a.delete {
+    color: #F44336; /* Red color for Delete */
+}
+
+.booking-table td a.edit:hover {
+    background-color: #dfffd9; /* Light green on hover */
+}
+
+.booking-table td a.delete:hover {
+    background-color: #f8d7da; /* Light red on hover */
+}
+
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .booking-table th:nth-child(6), 
+    .booking-table td:nth-child(6),
+    .booking-table th:nth-child(7), 
+    .booking-table td:nth-child(7) {
+        width: 12%; /* Adjust Start/End Date/Time columns */
+    }
+}
+
+@media (max-width: 1024px) {
+    .booking-table th:nth-child(3), 
+    .booking-table td:nth-child(3),
+    .booking-table th:nth-child(4), 
+    .booking-table td:nth-child(4) {
+        width: 18%; /* Reduce Driver Name and Parking Location columns */
+    }
+
+    .booking-table th:nth-child(6), 
+    .booking-table td:nth-child(6),
+    .booking-table th:nth-child(7), 
+    .booking-table td:nth-child(7) {
+        width: 13%; /* Adjust Start/End Date/Time columns */
+    }
+}
+
+@media (max-width: 768px) {
+    .booking-table th:nth-child(3), 
+    .booking-table td:nth-child(3),
+    .booking-table th:nth-child(4), 
+    .booking-table td:nth-child(4) {
+        width: 25%; /* Further reduce Driver Name and Parking Location columns */
+    }
+
+    .booking-table th:nth-child(6), 
+    .booking-table td:nth-child(6),
+    .booking-table th:nth-child(7), 
+    .booking-table td:nth-child(7) {
+        width: 20%; /* Adjust Date/Time columns */
+    }
+
+    .booking-table th:nth-child(8), 
+    .booking-table td:nth-child(8) {
+        width: 15%; /* Adjust Actions column */
+    }
+
+    .booking-table td a {
+        font-size: 12px; /* Adjust link text size for mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .booking-table th:nth-child(1),
+    .booking-table td:nth-child(1) {
+        width: 5%; /* Keep No. column narrow */
+    }
+
+    .booking-table th:nth-child(2),
+    .booking-table td:nth-child(2) {
+        width: 10%; /* Narrow Booking ID */
+    }
+
+    .booking-table th:nth-child(3),
+    .booking-table td:nth-child(3) {
+        width: 20%; /* Driver Name */
+    }
+
+    .booking-table th:nth-child(4),
+    .booking-table td:nth-child(4) {
+        width: 25%; /* Parking Location */
+    }
+
+    .booking-table th:nth-child(5),
+    .booking-table td:nth-child(5) {
+        width: 15%; /* Status */
+    }
+
+    .booking-table th:nth-child(6),
+    .booking-table td:nth-child(6),
+    .booking-table th:nth-child(7),
+    .booking-table td:nth-child(7),
+    .booking-table th:nth-child(8),
+    .booking-table td:nth-child(8) {
+        width: 20%; /* Adjust columns to fit smaller screen */
+    }
+
+    .booking-table td a {
+        font-size: 10px; /* Adjust link text size for very small screens */
+    }
+}

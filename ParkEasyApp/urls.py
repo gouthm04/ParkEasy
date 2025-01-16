@@ -45,6 +45,11 @@ urlpatterns = [
     path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),  # Change deactivate to delete
     path('manage-parking-spaces/', views.manage_parking_spaces, name='manage_parking_spaces'),  
     path('manage-bookings/', views.manage_bookings, name='manage_bookings'),
+    path('admin/edit-booking/<int:booking_id>/', views.edit_booking, name='edit_booking'),
+    path('admin/delete-booking/<int:booking_id>/', views.delete_booking, name='delete_booking'), 
     path('reports/', views.reports, name='reports'),
+    
+    # PAYMENT
+    path('payment/', views.payment_form_view, name='payment_form'),
 
 ]

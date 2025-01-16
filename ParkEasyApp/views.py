@@ -46,22 +46,23 @@ def logout_view(request):
 # Registration View
 def register_view(request):
     if request.method == 'POST':
-            username = request.POST['username']
-            email = request.POST['email']
-            password = request.POST.get('password')
-            confirm_password = request.POST.get('confirm_password')
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            # Save the user instance
+            user = form.save()
 
-            if password != confirm_password:
-                messages.error(request, 'Passwords do not match')
-                return redirect('register')
+            # Check if a ParkEasyUser entry already exists for the user
+            parkeasy_user, created = ParkEasyUser.objects.get_or_create(user=user)
 
-            user = User.objects.create_user(username=username, email=email,password=password)
-        
-            ParkEasyUser.objects.create(user=user)
-            messages.success(request, 'Your account has been created successfully! You can now log in.')
+            if created:  # Entry was created successfully
+                messages.success(request, 'Your account has been created successfully! You can now log in.')
+            else:  # Entry already exists (should not normally happen in registration)
+                messages.warning(request, 'This user already exists.')
+
             return redirect('login')
     else:
         return render(request, 'auth/register.html')
+
 
 # Profile View
 @login_required
@@ -83,12 +84,22 @@ def profile_view(request):
     return render(request, 'auth/profile.html')
 
 # Parking Space List View
+from django.db.models import Q
+from django.shortcuts import render
+from .models import ParkingSpace
+
 def parking_space_list_view(request):
     query = request.GET.get('q', '')
     parking_spaces = ParkingSpace.objects.filter(
         Q(location__icontains=query) & Q(availability=True) & ~Q(host__user=request.user)
     ).order_by('-created_at')
-    return render(request, 'parking/parking_space_list.html', {'parking_spaces': parking_spaces, 'query': query})
+    
+    # Render the template with the filtered parking spaces and the query
+    return render(request, 'parking/parking_space_list.html', {
+        'parking_spaces': parking_spaces,
+        'query': query
+    })
+
 
 # Parking Space Detail View
 def parking_space_detail_view(request, space_id):
@@ -217,53 +228,71 @@ def terms_conditions(request):
 
 
 
-from datetime import datetime
-from django.utils.timezone import make_aware
+from django.urls import reverse
 
 def create_booking_view(request, parking_space_id):
     # Fetch parking space and user
     parking_space = ParkingSpace.objects.get(id=parking_space_id)
-    user = request.user
+    
+    try:
+        parkeasy_user = ParkEasyUser.objects.get(user=request.user)
+    except ParkEasyUser.DoesNotExist:
+        messages.error(request, "User profile is incomplete. Please contact support.")
+        return redirect('profile')
 
-    # Get the form data and clean it
-    form = BookingForm(request.POST or None, user=user, parking_space=parking_space)
+    form = BookingForm(request.POST or None, user=parkeasy_user, parking_space=parking_space)
 
     if form.is_valid():
         cleaned_data = form.cleaned_data
         start_datetime = cleaned_data['start_datetime']
         end_datetime = cleaned_data['end_datetime']
 
-        # Check for conflicts with other bookings
+        # Check for conflicts
         conflicting_booking = Booking.objects.filter(
             parking_space=parking_space,
-            end_date__gte=start_datetime.date(),  # Check if the booking overlaps the start date
-            end_time__gte=start_datetime.time(),  # Check if the booking overlaps the start time
-            start_date__lte=end_datetime.date(),  # Check if the booking overlaps the end date
-            start_time__lte=end_datetime.time()   # Check if the booking overlaps the end time
+            end_date__gte=start_datetime.date(),
+            end_time__gte=start_datetime.time(),
+            start_date__lte=end_datetime.date(),
+            start_time__lte=end_datetime.time()
         ).exists()
 
         if conflicting_booking:
             form.add_error(None, "The parking space is already booked for the selected time.")
         else:
-            # Save the booking
-            form.save()
+            # Save a tentative booking
+            booking = form.save(commit=False)
+            booking.parking_space = parking_space
+            booking.user = parkeasy_user
+            booking.status = "tentative"  # Example status for incomplete payment
+            booking.save()
 
-    return render(request, 'booking/create_booking.html', {'form': form})
+            # Redirect to payment form with booking ID
+            # In your payment_form_view
+            payment_url = reverse('payment_form')  # Ensure reverse() works correctly
+            print(f"Redirecting to: {payment_url}?booking_id={booking.id}")
+            return redirect(f"{payment_url}?booking_id={booking.id}")
 
 
+    return render(request, 'booking/create_booking.html', {
+        'parking_space': parking_space,
+        'form': form
+    })
 
 
-
-
-
-
-
+from django.shortcuts import render
 
 @login_required
 def booking_success_view(request):
     booking_id = request.GET.get('booking_id')
-    booking = Booking.objects.get(id=booking_id) if booking_id else None
+    booking = None
+    if booking_id:
+        try:
+            booking = Booking.objects.get(id=booking_id)
+        except Booking.DoesNotExist:
+            booking = None
+
     return render(request, 'booking/booking_success.html', {'booking': booking})
+
 
 
 
@@ -377,10 +406,34 @@ def manage_parking_spaces(request):
     parking_spaces = ParkingSpace.objects.all()
     return render(request, 'admin/manage_parking_spaces.html', {'parking_spaces': parking_spaces})
 
+from django.shortcuts import render
+from .models import Booking
+from django.contrib.auth.decorators import user_passes_test
+
 @user_passes_test(is_superuser)
 def manage_bookings(request):
     bookings = Booking.objects.all()
     return render(request, 'admin/manage_bookings.html', {'bookings': bookings})
+
+
+
+@user_passes_test(is_superuser)
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)  # Fetch booking by ID
+    # Handle your form submission or editing logic here
+
+    return render(request, 'edit_booking.html', {'booking': booking})
+
+
+@user_passes_test(is_superuser)
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.method == 'POST':
+        booking.delete()  # Delete the booking object
+        return redirect('manage_bookings')  # Redirect to the bookings management page
+    return render(request, 'delete_booking_confirmation.html', {'booking': booking})  # Optional: Show confirmation page
+
+
 
 @user_passes_test(is_superuser)
 def reports(request):
@@ -418,3 +471,27 @@ def delete_user(request, user_id):
         return redirect('manage_users')
     return render(request, 'admin/confirm_delete_user.html', {'user': user})
 
+
+# PAYMENT 
+def payment_form_view(request):
+    booking_id = request.GET.get('booking_id')
+
+    try:
+        booking = Booking.objects.get(id=booking_id, user=request.user)
+    except Booking.DoesNotExist:
+        messages.error(request, "Invalid booking. Please try again.")
+        return redirect('home')
+
+    if request.method == "POST":
+        # Handle payment processing logic here
+        payment_method = request.POST.get('payment_method')
+
+        if payment_method:  # Assume payment is successful for now
+            booking.status = "confirmed"
+            booking.save()
+            messages.success(request, "Payment successful! Booking confirmed.")
+            return redirect('booking_success')
+
+        messages.error(request, "Payment failed. Please try again.")
+    
+    return render(request, 'payment_form.html', {'booking': booking})
