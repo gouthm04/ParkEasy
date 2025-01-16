@@ -17,7 +17,9 @@
       <!-- Display calculated price before the payment options -->
       <div class="input-group">
         <label for="calculated-price">Price (Calculated):</label>
-        <input type="text" id="calculated-price" class="form-control" value="{{ price_paid }}" readonly>
+        <input type="text" name="amount" id="calculated-price" class="form-control" value="{{ request.GET.price_paid }}"readonly>
+        <!-- <input type="hidden"  value=> -->
+
       </div>
 
       <div class="payment--options">
@@ -56,7 +58,7 @@
   <div id="success-message" style="display: none; text-align: center; margin-top: 20px;">
     <h3>Payment Successful!</h3>
     <p>Thank you for your payment.</p>
-    <a href="/" class="btn">Go Back to Dashboard</a>
+    <a href="{% url 'dashboard' %}" class="btn">Go Back to Dashboard</a>
   </div>
 
   <script>

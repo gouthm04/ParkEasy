@@ -46,19 +46,19 @@ def logout_view(request):
 # Registration View
 def register_view(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            # Save the user instance
-            user = form.save()
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
 
-            # Check if a ParkEasyUser entry already exists for the user
-            parkeasy_user, created = ParkEasyUser.objects.get_or_create(user=user)
+            if password != confirm_password:
+                messages.error(request, 'Passwords do not match')
+                return redirect('register')
 
-            if created:  # Entry was created successfully
-                messages.success(request, 'Your account has been created successfully! You can now log in.')
-            else:  # Entry already exists (should not normally happen in registration)
-                messages.warning(request, 'This user already exists.')
-
+            user = User.objects.create_user(username=username, email=email,password=password)
+        
+            ParkEasyUser.objects.create(user=user)
+            messages.success(request, 'Your account has been created successfully! You can now log in.')
             return redirect('login')
     else:
         return render(request, 'auth/register.html')
@@ -260,42 +260,25 @@ def create_booking_view(request, parking_space_id):
 
     if form.is_valid():
         cleaned_data = form.cleaned_data
-        start_date = cleaned_data['start_date']
-        start_time = cleaned_data['start_time']
-        end_date = cleaned_data['end_date']
-        end_time = cleaned_data['end_time']
-        
-        # Combine the date and time fields to create datetime objects
-        start_datetime = make_aware(datetime.combine(start_date, start_time))
-        end_datetime = make_aware(datetime.combine(end_date, end_time))
+        price_paid = cleaned_data['price_paid']  # Get the calculated price
 
-        # Check for conflicts using start_datetime and end_datetime
-        conflicting_booking = Booking.objects.filter(
-            parking_space=parking_space,
-            end_date__gte=start_date,  # check that end date is after start date
-            start_date__lte=end_date,  # check that start date is before end date
-            end_time__gte=start_time,  # check that end time is after start time
-            start_time__lte=end_time   # check that start time is before end time
-        ).exists()
+        # Create the booking instance and save it
+        booking = form.save(commit=False)
+        booking.parking_space = parking_space
+        booking.user = parkeasy_user
+        booking.price_paid = price_paid  # Store the calculated price
+        booking.status = "tentative"  # Example status for incomplete payment
+        booking.save()
 
-        if conflicting_booking:
-            form.add_error(None, "The parking space is already booked for the selected time.")
-        else:
-            # Save a tentative booking
-            booking = form.save(commit=False)
-            booking.parking_space = parking_space
-            booking.user = parkeasy_user
-            booking.status = "tentative"  # Example status for incomplete payment
-            booking.save()
-
-            # Redirect to payment form with booking ID
-            payment_url = reverse('payment_form')  # Ensure reverse() works correctly
-            return redirect(f"{payment_url}?booking_id={booking.id}")
+        # Redirect to payment form with booking ID and price_paid
+        payment_url = reverse('payment_form')  # Ensure reverse() works correctly
+        return redirect(f"{payment_url}?booking_id={booking.id}&price_paid={price_paid}")
 
     return render(request, 'booking/create_booking.html', {
         'parking_space': parking_space,
         'form': form
     })
+
 
 
 from django.shortcuts import render, redirect, get_object_or_404
