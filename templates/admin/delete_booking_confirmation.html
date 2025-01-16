@@ -1,0 +1,12 @@
+<!-- delete_booking_confirmation.html -->
+
+<h1>Are you sure you want to delete this booking?</h1>
+
+<p>Booking ID: {{ booking.id }}</p>
+<p>Location: {{ booking.location }}</p>
+
+<form method="POST">
+  {% csrf_token %}
+  <button type="submit">Yes, Delete</button>
+  <a href="{% url 'manage_bookings' %}">Cancel</a>
+</form>

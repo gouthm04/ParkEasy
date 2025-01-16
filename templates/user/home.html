@@ -15,7 +15,7 @@
                 <h2>Find Parking Space <br>Near You</h2>
                 <p>Searching for a parking space has never been easier. With ParkEasy, drivers can <br> quickly
                     locateavailable parking spots and make reservations from the comfort of their car.</p><a
-                    href="{% static 'img/parking host.webp' %}"><button id="get_started_button">Book your Space</button></a>
+                    href="{% url 'parking_space_list' %}"><button id="get_started_button">Book your Space</button></a>
             </div>
         </div>
     </section><!-- Parking Host Section -->
@@ -28,7 +28,7 @@
                     href="{% url 'add_parking_space' %}"><button id="get_started_button">List your Space</button></a>
             </div><!-- Right Side: Image (Parking Host Offering Space) -->
             <div class="parking-host-image"><img
-                    src="https://files.oaiusercontent.com/file-EvE2uLzjrXsrgVbZ19aR8a?se=2025-01-15T02%3A06%3A49Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Dcb70a590-b7b4-411f-aca1-d284ff377c38.webp&sig=AsK0FVFZh%2B0NxOdO4F/xX%2BsJArEbQD4Os91j6o2gyv4%3D" alt="Parking host offering space"
+                    src="{% static 'img/parking host.webp' %}" alt="Parking host offering space"
                     height="500px" width="500px"></div>
         </div>
     </section>

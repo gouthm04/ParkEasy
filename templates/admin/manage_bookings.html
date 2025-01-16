@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings - ParkEasy</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/manage_bookings.css' %}"> <!-- Add a separate CSS file for this page -->
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-item">
+            <a href="{% url 'admin_dashboard' %}" class="home-btn">Home</a>
+        </div>
+        <div class="sidebar-item">
+            <button class="dropdown-btn">Driver Options</button>
+            <div class="dropdown-content">
+                <a href="#">Manage Drivers</a>
+                <a href="#">View Driver Reviews</a>
+                <a href="#">Manage Driver Bookings</a>
+            </div>
+        </div>
+        <div class="sidebar-item">
+            <button class="dropdown-btn">Parking Host Options</button>
+            <div class="dropdown-content">
+                <a href="#">Manage Parking Hosts</a>
+                <a href="#">View Host Reviews</a>
+                <a href="#">Manage Parking Space Listings</a>
+            </div>
+        </div>
+        <div class="sidebar-item">
+            <button class="dropdown-btn">System Settings</button>
+            <div class="dropdown-content">
+                <a href="#">General Settings</a>
+                <a href="{% url 'manage_users' %}">Manage Users</a>
+                <a href="{% url 'manage_parking_spaces' %}">Manage Parking Spaces</a>
+                <a href="#">System Logs</a>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <a href="{% url 'help_support' %}">Help & Support</a>
+            <a href="{% url 'logout' %}">Log Out</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Manage Bookings</h1>
+        <h2>Admin Panel: Booking Management</h2>
+
+        <!-- Search and filter options for bookings -->
+        <div class="search-filter">
+            <input type="text" id="searchBooking" placeholder="Search by booking ID or driver name...">
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <!-- Table to display bookings -->
+        <!-- Table to display bookings -->
+        <div class="booking-table">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th> <!-- Serial number header -->
+                            <th>Booking ID</th>
+                            <th>Driver Name</th>
+                            <th>Parking Location</th>
+                            <th>Status</th>
+                            <th>Start</th> <!-- Instead of Start Date/Time -->
+                            <th>End</th> <!-- Instead of End Date/Time -->
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through bookings dynamically -->
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td> <!-- Serial number -->
+                            <td>{{ booking.id }}</td> <!-- Booking ID -->
+                            <td>{{ booking.user.user.username }}</td> <!-- Driver Name -->
+                            <td>{{ booking.parking_space.location }}</td> <!-- Parking Location -->
+                            <td>{{ booking.status }}</td> <!-- Booking Status -->
+                            <td>{{ booking.start_date }} {{ booking.start_time }}</td> <!-- Start Date/Time -->
+                            <td>{{ booking.end_date }} {{ booking.end_time }}</td> <!-- End Date/Time -->
+                            <td>
+                                <a href="{% url 'edit_booking' booking.id %}">Edit</a> |
+                                <a href="{% url 'delete_booking' booking.id %}">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="footer">© 2024 ParkEasy</div>
+    </div>
+
+</body>
+
+</html>
