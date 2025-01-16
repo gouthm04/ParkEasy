@@ -14,6 +14,12 @@
       <input type="hidden" name="amount" value="{{ booking.amount }}">
       <input type="hidden" name="payment_method" id="payment-method" value="">
 
+      <!-- Display calculated price before the payment options -->
+      <div class="input-group">
+        <label for="calculated-price">Price (Calculated):</label>
+        <input type="text" id="calculated-price" class="form-control" value="{{ price_paid }}" readonly>
+      </div>
+
       <div class="payment--options">
         <button type="button" onclick="setPaymentMethod('paypal')">
           <svg xml:space="preserve" viewBox="0 0 124 33" height="20px" width="70px">
@@ -23,22 +29,26 @@
         <button type="button" onclick="setPaymentMethod('stripe')">Credit Card</button>
       </div>
 
-      <div class="input-group">
-        <label for="name">Name on Card</label>
-        <input type="text" id="name" name="name" placeholder="Full Name" required>
+      <!-- Credit Card fields, hidden by default -->
+      <div id="credit-card-details" style="display: none;">
+        <div class="input-group">
+          <label for="name">Name on Card</label>
+          <input type="text" id="name" name="name" placeholder="Full Name" required>
+        </div>
+        <div class="input-group">
+          <label for="card-number">Card Number</label>
+          <input type="text" id="card-number" name="card-number" placeholder="XXXX XXXX XXXX XXXX" required>
+        </div>
+        <div class="input-group">
+          <label for="expiry">Expiry Date</label>
+          <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
+        </div>
+        <div class="input-group">
+          <label for="cvv">CVV</label>
+          <input type="text" id="cvv" name="cvv" placeholder="XXX" required>
+        </div>
       </div>
-      <div class="input-group">
-        <label for="card-number">Card Number</label>
-        <input type="text" id="card-number" name="card-number" placeholder="XXXX XXXX XXXX XXXX" required>
-      </div>
-      <div class="input-group">
-        <label for="expiry">Expiry Date</label>
-        <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
-      </div>
-      <div class="input-group">
-        <label for="cvv">CVV</label>
-        <input type="text" id="cvv" name="cvv" placeholder="XXX" required>
-      </div>
+
       <button type="submit" class="submit-btn">Pay Now</button>
     </form>
   </div>
@@ -53,6 +63,13 @@
     function setPaymentMethod(method) {
       // Set the selected payment method
       document.getElementById('payment-method').value = method;
+
+      // Show or hide the credit card details based on selected method
+      if (method === 'stripe') {
+        document.getElementById('credit-card-details').style.display = 'block';
+      } else {
+        document.getElementById('credit-card-details').style.display = 'none';
+      }
     }
 
     function handlePayment(event) {

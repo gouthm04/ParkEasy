@@ -65,14 +65,10 @@ class BookingForm(forms.ModelForm):
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}))
     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
     end_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}))
-    payment_method = forms.ChoiceField(
-        choices=[('credit', 'Credit'), ('debit', 'Debit'), ('cash', 'Cash')],
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
-
+    
     class Meta:
         model = Booking
-        fields = ['start_date', 'start_time', 'end_date', 'end_time', 'payment_method']
+        fields = ['start_date', 'start_time', 'end_date', 'end_time']  # Remove 'payment_method'
 
     def __init__(self, *args, user=None, parking_space=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -103,6 +99,7 @@ class BookingForm(forms.ModelForm):
             cleaned_data['price_paid'] = total_price
 
         return cleaned_data
+
 
 
 

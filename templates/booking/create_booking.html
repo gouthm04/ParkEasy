@@ -9,7 +9,7 @@
 
         <form method="POST" action="{% url 'create_booking' parking_space_id=parking_space.id %}" id="booking-form">
             {% csrf_token %}
-
+            
             <!-- Display form-level errors -->
             {% if form.non_field_errors %}
             <div style="color: red; margin-bottom: 15px; text-align: center; font-size: 14px;">
@@ -18,62 +18,41 @@
                 {% endfor %}
             </div>
             {% endif %}
-
+            
             <div>
                 <label for="id_start_date">Start Date:</label>
                 <input type="date" name="start_date" id="id_start_date" class="form-control"
                     value="{{ form.start_date.value }}" required>
-                <div class="form-error start-date-error" style="color: red; font-size: 14px; display: none;">
-                    {% for error in form.start_date.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
             </div>
-
+        
             <div>
                 <label for="id_start_time">Start Time:</label>
                 <input type="time" name="start_time" id="id_start_time" class="form-control"
                     value="{{ form.start_time.value }}" required>
-                <div class="form-error start-time-error" style="color: red; font-size: 14px; display: none;">
-                    {% for error in form.start_time.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
             </div>
-
+        
             <div>
                 <label for="id_end_date">End Date:</label>
                 <input type="date" name="end_date" id="id_end_date" class="form-control"
                     value="{{ form.end_date.value }}" required>
-                <div class="form-error end-date-error" style="color: red; font-size: 14px; display: none;">
-                    {% for error in form.end_date.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
             </div>
-
+        
             <div>
                 <label for="id_end_time">End Time:</label>
                 <input type="time" name="end_time" id="id_end_time" class="form-control"
                     value="{{ form.end_time.value }}" required>
-                <div class="form-error end-time-error" style="color: red; font-size: 14px; display: none;">
-                    {% for error in form.end_time.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
             </div>
-
+        
             <div>
                 <label for="id_price_paid">Price (Calculated):</label>
                 <input type="number" name="price_paid" id="id_price_paid" class="form-control" readonly
                     data-price-per-hour="{{ parking_space.price_per_hour }}">
             </div>
-
-            <button type="submit" class="btn"
-                style="width: 100%; padding: 10px; background-color: #007bff; color: white;">
+        
+            <button type="submit" class="btn" style="width: 100%; padding: 10px; background-color: #007bff; color: white;">
                 Proceed to Payment
             </button>
-
+        
             {% if messages %}
             <ul>
                 {% for message in messages %}
@@ -81,8 +60,8 @@
                 {% endfor %}
             </ul>
             {% endif %}
-
         </form>
+        
     </main>
 </div>
 
@@ -93,6 +72,7 @@
         const endDateInput = document.getElementById('id_end_date');
         const endTimeInput = document.getElementById('id_end_time');
         const priceInput = document.getElementById('id_price_paid');
+        const bookingForm = document.getElementById('booking-form');
 
         const pricePerHour = parseFloat(priceInput.dataset.pricePerHour);
 
@@ -111,8 +91,14 @@
                     const durationInHours = (end - start) / (1000 * 3600); // Convert milliseconds to hours
                     const totalPrice = (durationInHours * pricePerHour).toFixed(2);
                     priceInput.value = totalPrice;
+
+                    // Set the price in the hidden field before form submission
+                    const pricePaidField = document.querySelector('[name="price_paid"]');
+                    pricePaidField.value = totalPrice;
                 } else {
                     priceInput.value = 0; // Invalid time range
+                    const pricePaidField = document.querySelector('[name="price_paid"]');
+                    pricePaidField.value = 0;
                 }
             }
         }
@@ -122,6 +108,11 @@
         startTimeInput.addEventListener('change', calculatePrice);
         endDateInput.addEventListener('change', calculatePrice);
         endTimeInput.addEventListener('change', calculatePrice);
+
+        // Trigger price calculation when the form is submitted to ensure the value is passed
+        bookingForm.addEventListener('submit', () => {
+            calculatePrice();
+        });
     });
 </script>
 

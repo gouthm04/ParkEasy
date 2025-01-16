@@ -230,7 +230,23 @@ def terms_conditions(request):
 
 
 from django.urls import reverse
+from django.shortcuts import render, redirect
+from django.contrib import messages
+import logging
 
+logger = logging.getLogger(__name__)
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.urls import reverse
+from django.utils.timezone import make_aware
+from datetime import datetime
+from decimal import Decimal
+from .forms import BookingForm
+from .models import ParkingSpace, Booking
+
+# Function to handle booking creation
+@login_required
 def create_booking_view(request, parking_space_id):
     # Fetch parking space and user
     parking_space = ParkingSpace.objects.get(id=parking_space_id)
@@ -245,16 +261,22 @@ def create_booking_view(request, parking_space_id):
 
     if form.is_valid():
         cleaned_data = form.cleaned_data
-        start_datetime = cleaned_data['start_datetime']
-        end_datetime = cleaned_data['end_datetime']
+        start_date = cleaned_data['start_date']
+        start_time = cleaned_data['start_time']
+        end_date = cleaned_data['end_date']
+        end_time = cleaned_data['end_time']
+        
+        # Combine the date and time fields to create datetime objects
+        start_datetime = make_aware(datetime.combine(start_date, start_time))
+        end_datetime = make_aware(datetime.combine(end_date, end_time))
 
-        # Check for conflicts
+        # Check for conflicts using start_datetime and end_datetime
         conflicting_booking = Booking.objects.filter(
             parking_space=parking_space,
-            end_date__gte=start_datetime.date(),
-            end_time__gte=start_datetime.time(),
-            start_date__lte=end_datetime.date(),
-            start_time__lte=end_datetime.time()
+            end_date__gte=start_date,  # check that end date is after start date
+            start_date__lte=end_date,  # check that start date is before end date
+            end_time__gte=start_time,  # check that end time is after start time
+            start_time__lte=end_time   # check that start time is before end time
         ).exists()
 
         if conflicting_booking:
@@ -268,11 +290,8 @@ def create_booking_view(request, parking_space_id):
             booking.save()
 
             # Redirect to payment form with booking ID
-            # In your payment_form_view
             payment_url = reverse('payment_form')  # Ensure reverse() works correctly
-            print(f"Redirecting to: {payment_url}?booking_id={booking.id}")
             return redirect(f"{payment_url}?booking_id={booking.id}")
-
 
     return render(request, 'booking/create_booking.html', {
         'parking_space': parking_space,
@@ -280,8 +299,16 @@ def create_booking_view(request, parking_space_id):
     })
 
 
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
+from .models import ParkEasyUser, ParkingSpace, Booking
+from .forms import BookingForm
+from datetime import datetime
+from django.utils.timezone import make_aware
+from decimal import Decimal
+# Booking Success View
 @login_required
 def booking_success_view(request):
     booking_id = request.GET.get('booking_id')
@@ -473,26 +500,45 @@ def delete_user(request, user_id):
     return render(request, 'admin/confirm_delete_user.html', {'user': user})
 
 
-# PAYMENT 
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
+from .models import ParkEasyUser, ParkingSpace, Booking
+from .forms import BookingForm
+from datetime import datetime
+from django.utils.timezone import make_aware
+from decimal import Decimal
+
+
+# Booking Payment Form View
+@login_required
 def payment_form_view(request):
+    # Fetch the booking ID from the URL query parameters
     booking_id = request.GET.get('booking_id')
+    if not booking_id:
+        messages.error(request, "Booking ID is missing.")
+        return redirect('home')  # Redirect to home or a suitable page
 
     try:
-        booking = Booking.objects.get(id=booking_id, user=request.user)
+        # Fetch the booking associated with the given booking ID
+        booking = Booking.objects.get(id=booking_id)
+        # Ensure the user is the one who created the booking
+        if booking.user != request.user.parkeasyuser:
+            messages.error(request, "You do not have permission to view this booking.")
+            return redirect('home')
     except Booking.DoesNotExist:
-        messages.error(request, "Invalid booking. Please try again.")
+        messages.error(request, "Booking not found.")
         return redirect('home')
 
-    if request.method == "POST":
-        # Handle payment processing logic here
-        payment_method = request.POST.get('payment_method')
+    # Process the payment if the booking is valid
+    if request.method == 'POST':
+        # Assuming there’s a payment gateway or processing logic here
+        # For now, let's simulate successful payment
+        booking.status = 'confirmed'
+        booking.save()
+        messages.success(request, "Payment successful! Your booking is confirmed.")
+        return redirect('booking_success', booking_id=booking.id)
 
-        if payment_method:  # Assume payment is successful for now
-            booking.status = "confirmed"
-            booking.save()
-            messages.success(request, "Payment successful! Booking confirmed.")
-            return redirect('booking_success')
-
-        messages.error(request, "Payment failed. Please try again.")
-    
-    return render(request, 'payment_form.html', {'booking': booking})
+    return render(request, 'payment/payment_form.html', {'booking': booking})
