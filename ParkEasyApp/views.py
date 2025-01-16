@@ -268,8 +268,11 @@ def create_booking_view(request, parking_space_id):
             booking.save()
 
             # Redirect to payment form with booking ID
-            payment_url = reverse('payment_form')
+            # In your payment_form_view
+            payment_url = reverse('payment_form')  # Ensure reverse() works correctly
+            print(f"Redirecting to: {payment_url}?booking_id={booking.id}")
             return redirect(f"{payment_url}?booking_id={booking.id}")
+
 
     return render(request, 'booking/create_booking.html', {
         'parking_space': parking_space,
