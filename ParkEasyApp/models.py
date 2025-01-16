@@ -5,20 +5,6 @@ from django.contrib.auth.models import User  # Using Django's built-in User mode
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-@receiver(post_save, sender=User)
-def create_parkeasy_user(sender, instance, created, **kwargs):
-    if created:
-        # Check if the ParkEasyUser already exists for the user
-        if not hasattr(instance, 'parkeasyuser'):
-            print(f"Creating ParkEasyUser for {instance.username}")
-            ParkEasyUser.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_parkeasy_user(sender, instance, **kwargs):
-    if hasattr(instance, 'parkeasyuser'):
-        print(f"Saving ParkEasyUser for {instance.username}")
-        instance.parkeasyuser.save()
-
 
 class ParkEasyUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Linking to Django's built-in User model
