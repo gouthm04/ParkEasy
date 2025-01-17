@@ -49,7 +49,7 @@ urlpatterns = [
     path('admin/delete-booking/<int:booking_id>/', views.delete_booking, name='delete_booking'), 
     path('reports/', views.reports, name='reports'),
     
-    # PAYMENT
+    # PAYMENT url
     path('payment/', views.payment_form_view, name='payment_form'),
     path('process-payment/',views.process_payment, name='process_payment'),
     
