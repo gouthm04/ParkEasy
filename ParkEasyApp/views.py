@@ -163,34 +163,37 @@ def map(request, space_id):
 
 
 # Edit Parking Space View
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import ParkingSpace
+from .forms import ParkingSpaceForm
 @login_required
 def edit_parking_space_view(request, space_id):
-    parking_space = get_object_or_404(ParkingSpace, id=space_id, host=request.user.parkeasyuser)
-    if request.method == 'POST':
+    parking_space = get_object_or_404(ParkingSpace, id=space_id)
+    if request.method == "POST":
         form = ParkingSpaceForm(request.POST, instance=parking_space)
         if form.is_valid():
-            form.save()
-            return redirect('parking_space_detail', space_id=space_id)
+            parking_space = form.save(commit=False)
+            # Update location coordinates
+            parking_space.latitude = request.POST.get('latitude')
+            parking_space.longitude = request.POST.get('longitude')
+            parking_space.save()
+            return redirect('my_listed_parking_spaces')
     else:
         form = ParkingSpaceForm(instance=parking_space)
-    return render(request, 'parking/edit_parking_space.html', {
-        'form': form,
-        'parking_space': parking_space,
-    })
+    return render(request, 'parking/edit_parking_space.html', {'form': form})
+
+
 
 # Delete Parking Space View
 @login_required
 def delete_parking_space_view(request, space_id):
-    try:
-        parkeasy_user = request.user.parkeasyuser
-    except ParkEasyUser.DoesNotExist:
-        parkeasy_user, _ = ParkEasyUser.objects.get_or_create(user=request.user)
-
+    parkeasy_user = request.user.parkeasyuser
     parking_space = get_object_or_404(ParkingSpace, id=space_id, host=parkeasy_user)
     if request.method == 'POST':
         parking_space.delete()
         return redirect('my_listed_parking_spaces')
     return render(request, 'parking/delete_parking_space.html', {'parking_space': parking_space})
+
 
 
 # Dashboard and Other Views
@@ -493,35 +496,28 @@ from datetime import datetime
 from django.utils.timezone import make_aware
 from decimal import Decimal
 
+from django.http import JsonResponse
 
-# Booking Payment Form View
 @login_required
 def payment_form_view(request):
-    # Fetch the booking ID from the URL query parameters
     booking_id = request.GET.get('booking_id')
     if not booking_id:
-        messages.error(request, "Booking ID is missing.")
-        return redirect('home')  # Redirect to home or a suitable page
+        return JsonResponse({'error': 'Booking ID is missing.'}, status=400)
 
     try:
-        # Fetch the booking associated with the given booking ID
-        booking = Booking.objects.get(id=booking_id)
-        # Ensure the user is the one who created the booking
-        if booking.user != request.user.parkeasyuser:
-            messages.error(request, "You do not have permission to view this booking.")
-            return redirect('home')
+        booking = Booking.objects.get(id=booking_id, user=request.user.parkeasyuser)
     except Booking.DoesNotExist:
-        messages.error(request, "Booking not found.")
-        return redirect('home')
+        return JsonResponse({'error': 'Booking not found or permission denied.'}, status=404)
 
-    # Process the payment if the booking is valid
     if request.method == 'POST':
-        # Assuming there’s a payment gateway or processing logic here
-        # For now, let's simulate successful payment
+        # Process payment here
         booking.status = 'confirmed'
         booking.save()
-        messages.success(request, "Payment successful! Your booking is confirmed.")
-        return redirect('booking_success', booking_id=booking.id)
+        return JsonResponse({
+            'amount': booking.total_amount,
+            'date_time': booking.payment_date.strftime('%B %d, %Y, %I:%M %p'),
+            'reference_number': booking.reference_number,
+        })
 
     return render(request, 'payment/payment_form.html', {'booking': booking})
 
@@ -565,3 +561,19 @@ def add_review(request, space_id):
         return redirect('parking_space_reviews', space_id=space_id)
 
     return render(request, 'reviews/add_review.html', {'parking_space': parking_space, 'form': form})
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt  # Only for testing, ensure proper CSRF protection in production
+def process_payment(request):
+    if request.method == 'POST':
+        # Simulate payment processing
+        # Extract and validate form data here
+        return JsonResponse({
+            'amount': 100.00,
+            'date_time': 'January 17, 2025, 12:00 PM',
+            'reference_number': '123456789',
+        })
+    return JsonResponse({'error': 'Invalid request method'}, status=400)

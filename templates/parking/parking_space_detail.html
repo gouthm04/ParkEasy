@@ -14,7 +14,6 @@
 </head>
 
 <body>
-
     {% block content %}
     <h2>Parking Space Details</h2>
     <p><strong>Location:</strong> {{ parking_space.location }}</p>
@@ -27,12 +26,6 @@
         Not Available
         {% endif %}
     </p>
-    {% if is_host %}
-    <a href="{% url 'edit_parking_space' parking_space.id %}" class="btn btn-success">Edit</a>
-    <a href="{% url 'delete_parking_space' parking_space.id %}" class="btn btn-danger">Delete</a>
-    {% endif %}
-
-
     {% endblock %}
 </body>
 

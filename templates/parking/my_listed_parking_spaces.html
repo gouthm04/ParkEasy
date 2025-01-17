@@ -11,7 +11,7 @@
                 {% for space in parking_spaces %}
                     <div style="background-color: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 20px; width: calc(33.333% - 20px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                         <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 10px;">{{ space.location }}</h2>
-                        <p style="color: #333; margin-bottom: 10px;"><strong>Price:</strong> ${{ space.price_per_hour }} per hour</p>
+                        <p style="color: #333; margin-bottom: 10px;"><strong>Price:</strong> ₹{{ space.price_per_hour }} per hour</p>
                         <p style="color: #333; margin-bottom: 10px;">
                             <strong>Availability:</strong> 
                             {% if space.availability %} 
@@ -23,8 +23,8 @@
                         <p style="color: #333; margin-bottom: 10px;"><strong>Amenities:</strong> {{ space.amenities }}</p>
                         <p style="color: #333; margin-bottom: 10px;"><strong>Rating:</strong> {{ space.rating }} / 5</p>
                         <div style="margin-top: 15px;">
-                            <a href="#" style="color: #007bff; text-decoration: none; margin-right: 10px;">Edit Listing</a>
-                            <a href="#" style="color: #dc3545; text-decoration: none;">Delete Listing</a>
+                            <a href="{% url 'edit_parking_space' space.id %}" style="color: #007bff; text-decoration: none; margin-right: 10px;">Edit Listing</a>
+                            <a href="{% url 'delete_parking_space' space.id %}" style="color: #dc3545; text-decoration: none;">Delete Listing</a>
                         </div>
                     </div>
                 {% endfor %}

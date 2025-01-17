@@ -1,91 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+  {% load static %}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Form</title>
-  {% load static %}
   <link rel="stylesheet" href="{% static 'css/payment_styles.css' %}">
+  <title>Payment Form</title>
 </head>
 <body>
-  <div class="modal">
-    <form class="form" id="payment-form" method="POST" onsubmit="return handlePayment(event)">
+  <div class="payment-container">
+    <!-- Payment Header -->
+    <h1 id="payment-header">Payment Form</h1>
+
+    <!-- Booking Details -->
+    <div class="booking-details">
+      <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+      <p><strong>Parking Space:</strong> {{ booking.parking_space.name }}</p>
+      <p><strong>Amount Due:</strong> ${{ booking.total_amount }}</p>
+    </div>
+
+    <!-- Payment Form -->
+    <form id="payment-form" method="post" class="payment-form" action="{% url 'process_payment' %}">
       {% csrf_token %}
-      <input type="hidden" name="amount" value="{{ booking.amount }}">
-      <input type="hidden" name="payment_method" id="payment-method" value="">
+      <label for="card-number">Card Number</label>
+      <input type="text" id="card-number" name="card_number" placeholder="1234 5678 9876 5432" required>
 
-      <!-- Display calculated price before the payment options -->
-      <div class="input-group">
-        <label for="calculated-price">Price (Calculated):</label>
-        <input type="text" name="amount" id="calculated-price" class="form-control" value="{{ request.GET.price_paid }}"readonly>
-        <!-- <input type="hidden"  value=> -->
+      <label for="exp-date">Expiration Date</label>
+      <input type="text" id="exp-date" name="exp_date" placeholder="MM/YY" required>
 
-      </div>
+      <label for="cvv">CVV</label>
+      <input type="password" id="cvv" name="cvv" placeholder="123" required>
 
-      <div class="payment--options">
-        <button type="button" onclick="setPaymentMethod('paypal')">
-          <svg xml:space="preserve" viewBox="0 0 124 33" height="20px" width="70px">
-            <path d="M46.211,6.749h-6.839c-0.468,0-0.866,0.34-0.939,0.802l-2.766,17.537c-0.055,0.346,0.213,0.658,0.564,0.658  h3.265c0.468,0,0.866-0.34,0.939-0.803l0.746-4.73c0.072-0.463,0.471-0.803,0.938-0.803h2.165c4.505,0,7.105-2.18,7.784-6.5  c0.306-1.89,0.013-3.375-0.872-4.415C50.224,7.353,48.5,6.749,46.211,6.749z M47,13.154c-0.374,2.454-2.249,2.454-4.062,2.454  h-1.032l0.724-4.583c0.043-0.277,0.283-0.481,0.563-0.481h0.473c1.235,0,2.4,0,3.002,0.704C47.027,11.668,47.137,12.292,47,13.154z" fill="#253B80"></path>
-          </svg>
-        </button>
-        <button type="button" onclick="setPaymentMethod('stripe')">Credit Card</button>
-      </div>
-
-      <!-- Credit Card fields, hidden by default -->
-      <div id="credit-card-details" style="display: none;">
-        <div class="input-group">
-          <label for="name">Name on Card</label>
-          <input type="text" id="name" name="name" placeholder="Full Name" required>
-        </div>
-        <div class="input-group">
-          <label for="card-number">Card Number</label>
-          <input type="text" id="card-number" name="card-number" placeholder="XXXX XXXX XXXX XXXX" required>
-        </div>
-        <div class="input-group">
-          <label for="expiry">Expiry Date</label>
-          <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
-        </div>
-        <div class="input-group">
-          <label for="cvv">CVV</label>
-          <input type="text" id="cvv" name="cvv" placeholder="XXX" required>
-        </div>
-      </div>
+      <label for="name">Cardholder Name</label>
+      <input type="text" id="name" name="cardholder_name" placeholder="John Doe" required>
 
       <button type="submit" class="submit-btn">Pay Now</button>
     </form>
+
+    <!-- Loader -->
+    <div class="newtons-cradle" id="loader" style="display: none;">
+      <div class="newtons-cradle__dot"></div>
+      <div class="newtons-cradle__dot"></div>
+      <div class="newtons-cradle__dot"></div>
+      <div class="newtons-cradle__dot"></div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="success-message" class="payment-container" style="display: none;">
+      <div class="icon-success">
+        <span>&#10004;</span>
+      </div>
+      <h1>Payment Successful</h1>
+      <p class="message">Thank you for your purchase!</p>
+      <div class="details">
+        <p><strong>Amount Paid:</strong> ${{ booking.total_amount }}</p>
+        <p><strong>Date & Time:</strong> {{ booking.payment_date|date:"F d, Y, h:i A" }}</p>
+        <p><strong>Reference Number:</strong> {{ booking.reference_number }}</p>
+      </div>
+      <button class="return-button" onclick="window.location.href='{% url 'home' %}'">Return to Homepage</button>
+    </div>
   </div>
 
-  <div id="success-message" style="display: none; text-align: center; margin-top: 20px;">
-    <h3>Payment Successful!</h3>
-    <p>Thank you for your payment.</p>
-    <a href="{% url 'dashboard' %}" class="btn">Go Back to Dashboard</a>
-  </div>
-
-  <script>
-    function setPaymentMethod(method) {
-      // Set the selected payment method
-      document.getElementById('payment-method').value = method;
-
-      // Show or hide the credit card details based on selected method
-      if (method === 'stripe') {
-        document.getElementById('credit-card-details').style.display = 'block';
-      } else {
-        document.getElementById('credit-card-details').style.display = 'none';
-      }
-    }
-
-    function handlePayment(event) {
-      event.preventDefault(); // Prevent real form submission
-
-      // Simulate the payment success process
-      const form = document.getElementById('payment-form');
-      
-      // Hide the payment form
-      form.style.display = 'none';
-
-      // Show the payment success message
-      document.getElementById('success-message').style.display = 'block';
-    }
-  </script>
+  <script src="{% static 'js/payment_script.js' %}"></script>
 </body>
 </html>

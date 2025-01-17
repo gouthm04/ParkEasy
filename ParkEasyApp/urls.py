@@ -51,6 +51,7 @@ urlpatterns = [
     
     # PAYMENT
     path('payment/', views.payment_form_view, name='payment_form'),
+    path('process-payment/',views.process_payment, name='process_payment'),
     
 
 ]
