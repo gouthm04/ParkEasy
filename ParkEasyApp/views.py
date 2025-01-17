@@ -544,7 +544,8 @@ def parking_space_reviews(request, space_id):
     if request.method == 'POST':
         return redirect('add_review', space_id=space_id)
 
-    return render(request, 'reviews/parking_space_reviews.html', {
+    return render(request, 'parking/parking_space_reviews.html',
+    {
         'parking_space': parking_space,
         'reviews': reviews
     })
@@ -564,4 +565,4 @@ def add_review(request, space_id):
         messages.success(request, "Review added successfully.")
         return redirect('parking_space_reviews', space_id=space_id)
 
-    return render(request, 'reviews/add_review.html', {'parking_space': parking_space, 'form': form})
+    return render(request, 'parking/add_review.html', {'parking_space': parking_space, 'form': form})

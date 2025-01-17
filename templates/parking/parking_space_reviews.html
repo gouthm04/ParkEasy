@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Space Reviews</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1A1A2E, #16213E);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Styles */
+        .header h1 {
+            font-size: 28px;
+            color: #00EAD3;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .header h1:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px rgba(0, 255, 255, 1);
+        }
+
+        /* Reviews Section */
+        .review {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .review:hover {
+            transform: scale(1.02);
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .review .user {
+            font-weight: bold;
+            color: #FFC107;
+        }
+
+        .review .rating {
+            color: #FFD700;
+        }
+
+        .review .comment {
+            font-style: italic;
+            color: #E0E0E0;
+        }
+
+        /* Add Review Button */
+        .add-review-button {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #00EAD3, #00A6FF);
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .add-review-button:hover {
+            background: linear-gradient(135deg, #00A6FF, #00EAD3);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="parkingName">🚗 Reviews for {{ parking_space.name }}</h1>
+        </div>
+
+        <div class="reviews">
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="review">
+                        <p class="user">👤 Reviewed by: {{ review.user.username }}</p>
+                        <p class="rating">⭐ <strong>Rating:</strong> {{ review.rating }} / 5</p>
+                        <p class="comment">📝 "{{ review.comment }}"</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No reviews yet for this parking space.</p>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'add_review' parking_space.id %}" class="add-review-button">➕ Add Your Review</a>
+    </div>
+</body>
+</html>
+
