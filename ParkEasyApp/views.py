@@ -535,14 +535,22 @@ from .forms import ReviewForm
 def parking_space_reviews(request, space_id):
     parking_space = get_object_or_404(ParkingSpace, id=space_id)
     reviews = Review.objects.filter(parking_space=parking_space)
+    user = get_object_or_404(ParkEasyUser, user=request.user)
+
+    user_has_reviewed=True
+    if Review.objects.filter(parking_space=parking_space, user=user).exists():
+        user_has_reviewed=True
+        messages.error(request, "You have already reviewed this parking space.")
 
     # Handling the "Add Review" functionality
     if request.method == 'POST':
         return redirect('add_review', space_id=space_id)
 
-    return render(request, 'reviews/parking_space_reviews.html', {
+    return render(request, 'parking/parking_space_reviews.html',
+    {
         'parking_space': parking_space,
-        'reviews': reviews
+        'reviews': reviews,
+        'user_has_reviewed':user_has_reviewed
     })
 
     
@@ -552,6 +560,12 @@ def add_review(request, space_id):
     user = get_object_or_404(ParkEasyUser, user=request.user)
     form = ReviewForm(request.POST)
 
+    user_has_reviewed=False
+
+    if Review.objects.filter(parking_space=parking_space, user=user).exists():
+        user_has_reviewed=True
+        messages.error(request, "You have already reviewed this parking space.")
+
     if form.is_valid():
         review = form.save(commit=False)
         review.parking_space = parking_space
@@ -560,10 +574,9 @@ def add_review(request, space_id):
         messages.success(request, "Review added successfully.")
         return redirect('parking_space_reviews', space_id=space_id)
 
-    return render(request, 'reviews/add_review.html', {'parking_space': parking_space, 'form': form})
+    return render(request, 'parking/add_review.html', {'parking_space': parking_space, 'form': form,'user_has_reviewed':user_has_reviewed})
 
 
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt  # Only for testing, ensure proper CSRF protection in production
