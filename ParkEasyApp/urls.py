@@ -52,4 +52,7 @@ urlpatterns = [
     # PAYMENT url
     path('payment/', views.payment_form_view, name='payment_form'),
     path('parking_space/<int:space_id>/reviews/', views.parking_space_reviews, name='parking_space_reviews'),
+    path('process-payment/',views.process_payment, name='process_payment'),
+    
+
 ]

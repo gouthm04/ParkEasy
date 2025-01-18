@@ -19,7 +19,7 @@
         </a>
         {% if space.host.user != request.user %}
         <a href="{% url 'create_booking' parking_space_id=space.id %}" class="btn btn-success">Book Parking</a>
-        <a href="{% url 'add_review' space.id %}" class="btn btn-warning">Location</a>
+        <a href="{% url 'map' space.id %}" class="btn btn-warning">Location</a>
         <a href="{% url 'parking_space_reviews' space.id %}" class="btn btn-warning">Reviews</a>
         <!-- <p>Parking Space ID: {{ space.id }}</p> -->
         <!-- link to review -->
