@@ -10,7 +10,7 @@
                     <th>Booking ID</th>
                     <th>Start Time</th>
                     <th>End Time</th>
-                    <th>Location</th>
+                    <th>Parking Space</th>
                     <th>Status</th>
                     <th>Amount Paid</th>
                     <th>Actions</th>
@@ -22,7 +22,10 @@
                         <td>{{ booking.id }}</td>
                         <td>{{ booking.start_date }} : {{ booking.start_time }}</td>
                         <td>{{ booking.end_date }} : {{ booking.end_time }}</td>
-                        <td>{{ booking.parking_space.location }}</td>
+                        <td>
+                            <strong>{{ booking.parking_space.name }}</strong><br>
+                            {{ booking.parking_space.location }}
+                        </td>
                         <td class="{% if booking.status == 'cancelled' %}cancelled-status{% endif %}">
                             {% if booking.status != 'cancelled' %}
                                 {{ booking.status }}

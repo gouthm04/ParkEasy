@@ -62,7 +62,8 @@
           <tr>
             <th>No.</th> <!-- Serial number header -->
             <th>Parking ID</th>
-            <th>Location</th>
+            <th>Parking Name</th> <!-- Added Parking Name -->
+            <th>Location</th> <!-- Added Location -->
             <th>Host Name</th>
             <th>Availability</th>
             <th>Actions</th>
@@ -74,7 +75,8 @@
             <tr>
               <td>{{ forloop.counter }}</td> <!-- Serial number (index) -->
               <td>{{ parking.id }}</td>
-              <td>{{ parking.location }}</td>
+              <td>{{ parking.name }}</td> <!-- Displaying Parking Name -->
+              <td>{{ parking.location }}</td> <!-- Displaying Location -->
               <td>{{ parking.host.user.username }}</td>
               <td>{{ parking.availability }}</td>
               <td>

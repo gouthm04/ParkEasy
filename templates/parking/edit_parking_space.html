@@ -14,6 +14,12 @@
             <form method="post" style="display: flex; flex-direction: column; gap: 15px;" onsubmit="return validateForm(event)">
                 {% csrf_token %}
 
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="id_name">Parking Space Name</label>
+                    {{ form.name }}
+                </div>
+
                 <!-- Location Field -->
                 <div class="form-group">
                     <label for="id_location">Parking Space Location</label>
@@ -61,6 +67,18 @@
             <div id="map" style="height: 400px; border-radius: 10px;"></div>
         </div>
     </main>
+</div>
+
+<!-- Display Parking Space Name Section -->
+<div style="padding: 20px; margin-top: 20px; background-color: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    <h3>Parking Space Information</h3>
+    <p><strong>Name:</strong> {{ form.name.value }}</p>
+    <p><strong>Location:</strong> {{ form.location.value }}</p>
+    <p><strong>Price:</strong> ₹{{ form.price_per_hour.value }} per hour</p>
+    <p><strong>Availability:</strong> {{ form.availability.value }}</p>
+    <p><strong>Amenities:</strong> {{ form.amenities.value }}</p>
+    <p><strong>Latitude:</strong> {{ form.latitude.value }}</p>
+    <p><strong>Longitude:</strong> {{ form.longitude.value }}</p>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

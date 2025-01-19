@@ -4,7 +4,7 @@
 {% if booking %}
     <p>Your booking has been successfully created!</p>
     <p>Booking ID: {{ booking.id }}</p>
-    <p>Parking Space: {{ booking.parking_space.location }}</p>
+    <p>Parking Space: {{ booking.parking_space.name }} - {{ booking.parking_space.location }}</p>
     <p>Start Time: {{ booking.start_time }}</p>
     <p>End Time: {{ booking.end_time }}</p>
 {% else %}

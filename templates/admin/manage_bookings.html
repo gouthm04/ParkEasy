@@ -57,7 +57,6 @@
         </div>
 
         <!-- Table to display bookings -->
-        <!-- Table to display bookings -->
         <div class="booking-table">
             <div class="table-container">
                 <table>
@@ -66,7 +65,8 @@
                             <th>No.</th> <!-- Serial number header -->
                             <th>Booking ID</th>
                             <th>Driver Name</th>
-                            <th>Parking Location</th>
+                            <th>Parking Space Name</th> <!-- Added Parking Space Name -->
+                            <th>Parking Location</th> <!-- Added Parking Location -->
                             <th>Status</th>
                             <th>Start</th> <!-- Instead of Start Date/Time -->
                             <th>End</th> <!-- Instead of End Date/Time -->
@@ -80,6 +80,7 @@
                             <td>{{ forloop.counter }}</td> <!-- Serial number -->
                             <td>{{ booking.id }}</td> <!-- Booking ID -->
                             <td>{{ booking.user.user.username }}</td> <!-- Driver Name -->
+                            <td>{{ booking.parking_space.name }}</td> <!-- Parking Space Name -->
                             <td>{{ booking.parking_space.location }}</td> <!-- Parking Location -->
                             <td>{{ booking.status }}</td> <!-- Booking Status -->
                             <td>{{ booking.start_date }} {{ booking.start_time }}</td> <!-- Start Date/Time -->
@@ -94,7 +95,6 @@
                 </table>
             </div>
         </div>
-
 
         <div class="footer">© 2024 ParkEasy</div>
     </div>

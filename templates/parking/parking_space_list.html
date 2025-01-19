@@ -14,15 +14,14 @@
     {% for space in parking_spaces %}
     <div class="parking-space-card">
         <a href="{% url 'parking_space_detail' space.id %}" class="space-link">
-            <h3>{{ space.location }}</h3>
+            <h3>{{ space.name }}</h3>  <!-- Display the name of the parking space -->
+            <p>Location: {{ space.location }}</p>  <!-- You can also keep location if needed -->
             <p>₹{{ space.price_per_hour }}/hour</p>
         </a>
         {% if space.host.user != request.user %}
         <a href="{% url 'create_booking' parking_space_id=space.id %}" class="btn btn-success">Book Parking</a>
         <a href="{% url 'map' space.id %}" class="btn btn-warning">Location</a>
         <a href="{% url 'parking_space_reviews' space.id %}" class="btn btn-warning">Reviews</a>
-        <!-- <p>Parking Space ID: {{ space.id }}</p> -->
-        <!-- link to review -->
         {% else %}
         <p class="text-muted">This is your parking space</p>
         {% endif %}
@@ -32,6 +31,6 @@
         <p>No parking spaces available.</p>
     </div>
     {% endfor %}
-
 </div>
+
 {% endblock %}

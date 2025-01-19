@@ -9,13 +9,15 @@
     <title>Parking Space Details</title>
     <link rel="stylesheet" href="{% static 'css/parking_space_detail.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-
 </head>
 
 <body>
     {% block content %}
     <h2>Parking Space Details</h2>
+
+    <!-- Display Name here -->
+    <p><strong>Name:</strong> {{ parking_space.name }}</p>
+
     <p><strong>Location:</strong> {{ parking_space.location }}</p>
     <p><strong>Price per Hour:</strong> ₹{{ parking_space.price_per_hour }}</p>
     <p><strong>Amenities:</strong> {{ parking_space.amenities|default:"None" }}</p>

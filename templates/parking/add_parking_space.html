@@ -11,8 +11,20 @@
         <div style="flex: 1 1 45%; min-width: 400px;">
             <h2 style="text-align: center; margin-bottom: 20px; font-size: 24px; color: #333;">Add Parking Space</h2>
 
-            <form method="post" style="display: flex; flex-direction: column; gap: 15px;" onsubmit="return validateForm(event)">
+            <form method="post" style="display: flex; flex-direction: column; gap: 15px;"
+                onsubmit="return validateForm(event)">
                 {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_name">Parking Space Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <div style="color: red; font-size: 14px;">
+                        {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
 
                 <!-- Location Field -->
                 <div class="form-group">

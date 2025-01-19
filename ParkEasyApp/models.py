@@ -29,6 +29,7 @@ class ParkEasyUser(models.Model):
 
 # Parking Space Model (for listing parking spaces)
 class ParkingSpace(models.Model):
+    name = models.CharField(max_length=255, default='Default Parking Space')
     host = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE, related_name="parking_spaces")
     location = models.CharField(max_length=255)
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
@@ -94,12 +95,20 @@ class Booking(models.Model):
 
 
 
-# Payment Model
+# PAYMENT MODEL
+from django.db import models
+from django.utils.timezone import now
+
 class Payment(models.Model):
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    payment_date = models.DateTimeField(auto_now_add=True)
-    payment_method = models.CharField(max_length=50, choices=[('stripe', 'Stripe'), ('paypal', 'PayPal')])
+    payment_date = models.DateTimeField(default=now)  # Use default for manual date handling
+    
+    payment_method = models.CharField(
+        max_length=50,
+        choices=[('stripe', 'Stripe'), ('paypal', 'PayPal'), ('card', 'Credit/Debit Card')],
+        default='card'
+    )
     payment_status = models.CharField(
         max_length=20,
         choices=[('pending', 'Pending'), ('paid', 'Paid'), ('failed', 'Failed')],
@@ -107,7 +116,7 @@ class Payment(models.Model):
     )
 
     def __str__(self):
-        return f"Payment of ₹{self.amount} for booking {self.booking.id}"
+        return f"Payment of ₹{self.amount} for Booking ID {self.booking.id}"
 
     class Meta:
         indexes = [

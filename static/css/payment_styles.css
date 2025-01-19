@@ -20,13 +20,11 @@ body {
 .payment-container {
   background: #ffffff;
   border-radius: 10px;
-  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
   text-align: center;
   padding: 30px;
   width: 100%;
   max-width: 400px;
   position: relative;
-  
 }
 
 /* Payment Form */
@@ -49,13 +47,13 @@ body {
 
 .payment-form input:focus {
   outline: none;
-  border-color: #6c63ff;
+  border-color: #128EED;
 }
 
 .payment-form .submit-btn {
   width: 100%;
   padding: 14px;
-  background-color: #6c63ff;
+  background-color: #128EED;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -64,82 +62,63 @@ body {
 }
 
 .payment-form .submit-btn:hover {
-  background-color: #5a54e2;
+  background-color: #128EED;
 }
 
-/* Loader */
-.newtons-cradle {
-  --uib-size: 50px;
-  --uib-speed: 1.2s;
-  --uib-color: #474554;
-  position: fixed; /* Position fixed to center it on the screen */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--uib-size);
-  height: var(--uib-size);
-  visibility: hidden;
-  background: transparent; /* Remove background */
-  box-shadow: none; /* No shadow */
-  border: none; /* No border */
-}
-
-.newtons-cradle__dot {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: 100%;
-  width: 25%;
-  transform-origin: center top;
-}
-
-.newtons-cradle__dot::after {
-  content: '';
+/* New Loader */
+.loader {
+  width: 48px;
+  height: 48px;
   display: block;
-  width: 100%;
-  height: 25%;
+  margin: 20px auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.loader::after {
+  content: '';
+  width: 48px;
+  height: 48px;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+  border-radius: 50% 50% 0;
+  border: 15px solid #128EED;
+  transform: rotate(45deg) translate(0, 0);
+  box-sizing: border-box;
+  animation: animMarker 0.4s ease-in-out infinite alternate;
+}
+
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 150%;
+  width: 24px;
+  height: 4px;
   border-radius: 50%;
-  background-color: var(--uib-color);
+  background: rgba(0, 0, 0, 0.2);
+  animation: animShadow 0.4s ease-in-out infinite alternate;
 }
 
-.newtons-cradle__dot:first-child {
-  animation: swing var(--uib-speed) linear infinite;
-}
-
-.newtons-cradle__dot:last-child {
-  animation: swing2 var(--uib-speed) linear infinite;
-}
-
-@keyframes swing {
+@keyframes animMarker {
   0% {
-      transform: rotate(0deg);
-      animation-timing-function: ease-out;
+    transform: rotate(45deg) translate(5px, 5px);
   }
-  25% {
-      transform: rotate(70deg);
-      animation-timing-function: ease-in;
-  }
-  50% {
-      transform: rotate(0deg);
-      animation-timing-function: linear;
+  100% {
+    transform: rotate(45deg) translate(-5px, -5px);
   }
 }
 
-@keyframes swing2 {
+@keyframes animShadow {
   0% {
-      transform: rotate(0deg);
-      animation-timing-function: linear;
+    transform: scale(0.5);
   }
-  50% {
-      transform: rotate(0deg);
-      animation-timing-function: ease-out;
-  }
-  75% {
-      transform: rotate(-70deg);
-      animation-timing-function: ease-in;
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -151,8 +130,24 @@ body {
 
 .icon-success {
   font-size: 48px;
-  color: #4CAF50;
+  color: #128EED;
   margin-bottom: 20px;
+  animation: tickAnimation 1s ease-out forwards;
+}
+
+@keyframes tickAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 h1 {
@@ -179,7 +174,7 @@ h1 {
 }
 
 .return-button {
-  background-color: #4CAF50;
+  background-color: #128EED;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -189,7 +184,7 @@ h1 {
 }
 
 .return-button:hover {
-  background-color: #45a049;
+  background-color: #0b5b97;
 }
 
 @media (max-width: 600px) {

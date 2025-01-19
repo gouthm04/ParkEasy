@@ -10,7 +10,11 @@
             <div style="display: flex; flex-wrap: wrap; gap: 20px;">
                 {% for space in parking_spaces %}
                     <div style="background-color: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 20px; width: calc(33.333% - 20px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 10px;">{{ space.location }}</h2>
+                        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 10px;">{{ space.name }}</h2> <!-- Display name here -->
+                        
+                        <!-- Display location here -->
+                        <p style="color: #333; margin-bottom: 10px;"><strong>Location:</strong> {{ space.location }}</p>
+
                         <p style="color: #333; margin-bottom: 10px;"><strong>Price:</strong> ₹{{ space.price_per_hour }} per hour</p>
                         <p style="color: #333; margin-bottom: 10px;">
                             <strong>Availability:</strong> 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,123 +9,128 @@
         /* General Styles */
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1A1A2E, #16213E);
-            color: #fff;
+            background-color: #f4f4f9;
             margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            animation: fadeIn 1s ease-in-out;
+            padding: 0;
+            color: #333;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Main container styling */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
         }
 
         /* Header Styles */
         .header h1 {
-            font-size: 28px;
-            color: #00EAD3;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
-            transition: all 0.3s ease-in-out;
+            font-size: 32px;
+            color: #2C3E50;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-        .header h1:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 20px rgba(0, 255, 255, 1);
+        .header h3 {
+            font-size: 18px;
+            color: #95a5a6;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        /* Reviews Section */
+        /* Review Styling */
         .review {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px;
+            background-color: #ecf0f1;
+            padding: 20px;
             margin-bottom: 15px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
 
         .review:hover {
             transform: scale(1.02);
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            background-color: #dfe6e9;
         }
 
         .review .user {
             font-weight: bold;
-            color: #FFC107;
+            font-size: 16px;
+            color: #3498db;
         }
 
         .review .rating {
-            color: #FFD700;
+            font-size: 16px;
+            color: #f39c12;
         }
 
         .review .comment {
-            font-style: italic;
-            color: #E0E0E0;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 10px;
         }
 
         /* Add Review Button */
         .add-review-button {
             display: inline-block;
-            margin: 20px auto;
+            margin: 30px auto;
             padding: 12px 20px;
-            background: linear-gradient(135deg, #00EAD3, #00A6FF);
+            background-color: #3498db;
             color: #fff;
             text-decoration: none;
             text-align: center;
             border-radius: 8px;
             font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            font-size: 16px;
         }
 
         .add-review-button:hover {
-            background: linear-gradient(135deg, #00A6FF, #00EAD3);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
-            transform: scale(1.05);
+            background-color: #2980b9;
+        }
+
+        /* No reviews message */
+        .no-reviews-message {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 18px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
-            <h1 id="parkingName">🚗 Reviews for {{ parking_space.location }}</h1>
-            <h3>{{messages.0}}</h3>
+            <h1>Reviews for {{ parking_space.name }}</h1>
+            <h3>{{ parking_space.location }}</h3>
+            <p>{{ messages.0 }}</p>
         </div>
 
         <div class="reviews">
             {% if reviews %}
-                {% for review in reviews %}
-                    <div class="review">
-                        <p class="user">👤 Reviewed by: {{ review.user.user.username }}</p>
-                        <p class="rating">⭐ <strong>Rating:</strong> {{ review.rating }} / 5</p>
-                        <p class="comment">📝 "{{ review.comment }}"</p>
-                    </div>
-                {% endfor %}
+            {% for review in reviews %}
+            <div class="review">
+                <p class="user">Reviewed by: {{ review.user.user.username }}</p>
+                <p class="rating">⭐ <strong>Rating:</strong> {{ review.rating }} / 5</p>
+                <p class="comment">"{{ review.comment }}"</p>
+            </div>
+            {% endfor %}
             {% else %}
-                <p>No reviews yet for this parking space.</p>
+            <p class="no-reviews-message">No reviews yet for this parking space.</p>
             {% endif %}
         </div>
 
         {% if user_has_reviewed %}
-            <p>You have already submitted a review for this parking space.</p>
+        <p class="no-reviews-message">You have already submitted a review for this parking space.</p>
         {% else %}
-            <a href="{% url 'add_review' parking_space.id %}" class="add-review-button">➕ Add Your Review</a>
+        <a href="{% url 'add_review' parking_space.id %}" class="add-review-button">Add Your Review</a>
         {% endif %}
-        <a href="{% url 'add_review' parking_space.id %}" class="add-review-button">➕ Add Your Review</a>
+
 
     </div>
 </body>
+
 </html>
