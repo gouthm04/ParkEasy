@@ -545,7 +545,6 @@ def payment_form_view(request):
 
 
 
-from .forms import ReviewForm
 
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -598,3 +597,50 @@ def add_review(request, space_id):
     return render(request, 'parking/add_review.html', {'parking_space': parking_space, 'form': form})
 
 
+# View for editing a review
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import ParkingSpace, Review
+from .forms import ReviewForm
+from .models import ParkEasyUser
+
+# View for editing an existing review
+def edit_review(request, space_id, review_id):
+    parking_space = get_object_or_404(ParkingSpace, id=space_id)
+    review = get_object_or_404(Review, id=review_id)
+    user = get_object_or_404(ParkEasyUser, user=request.user)
+
+    # Check if the review belongs to the current user
+    if review.user != user:
+        messages.error(request, "You can only edit your own reviews.")
+        return redirect('parking_space_reviews', space_id=space_id)
+
+    # Handle the review editing
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Review updated successfully.")
+            return redirect('parking_space_reviews', space_id=space_id)
+    else:
+        form = ReviewForm(instance=review)
+
+    return render(request, 'parking/edit_review.html', {'parking_space': parking_space, 'form': form, 'review': review})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Review
+from django.contrib import messages
+
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    # Check if the logged-in user is the one who wrote the review
+    if review.user.user == request.user:
+        review.delete()
+        messages.success(request, "Review deleted successfully.")
+    else:
+        messages.error(request, "You can only delete your own reviews.")
+
+    # Redirect back to the parking space reviews page
+    return redirect('parking_space_reviews', space_id=review.parking_space.id)

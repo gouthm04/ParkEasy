@@ -123,9 +123,16 @@ body {
 }
 
 /* Success Message */
-#success-message {
-  display: none;
+/* Success Message Styling */
+.success-container {
+  background: #ffffff;
+  border-radius: 10px;
   text-align: center;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .icon-success {
@@ -188,11 +195,34 @@ h1 {
 }
 
 @media (max-width: 600px) {
-  .payment-container {
+  .success-container {
     width: 90%;
     padding: 20px;
   }
-  .payment-form input {
-    padding: 10px;
-  }
+}
+
+
+/* Booking Details Section */
+.booking-details {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.booking-details p {
+  margin-bottom: 8px;
+  
+
+}
+
+.booking-details strong {
+  color: #000000;
+  font-weight: bold;
+}
+
+.booking-details p span {
+  font-weight: normal;
+  color: #555;
 }

@@ -133,7 +133,7 @@ class Review(models.Model):
     review_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Review by {self.user.user.username} for {self.parking_space.location}"
+        return f"Review by {self.user.user.username} for {self.parking_space.name}"
 
     
 

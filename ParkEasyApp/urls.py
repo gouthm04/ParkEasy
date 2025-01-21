@@ -23,7 +23,9 @@ urlpatterns = [
     path('parking-spaces/delete/<int:space_id>/', views.delete_parking_space_view, name='delete_parking_space'),
     path('listed-parking-spaces/', views.my_listed_parking_spaces, name='my_listed_parking_spaces'),
     path('add_review/<int:space_id>/', views.add_review, name='add_review'),
+    path('parking_space/<int:space_id>/reviews/edit/<int:review_id>/', views.edit_review, name='edit_review'),
     path('parking_space/<int:space_id>/reviews/', views.parking_space_reviews, name='parking_space_reviews'),
+    path('parking_space/reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),
 
     # Booking Routes
     path('create-booking/<int:parking_space_id>/', views.create_booking_view, name='create_booking'),
@@ -54,4 +56,5 @@ urlpatterns = [
 
     # Success URL for Parking Spaces
     path('parking-spaces/success/', views.success_view, name='success_url'),
+    
 ]
