@@ -1,5 +1,9 @@
 /* General Reset */
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 * {
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -9,7 +13,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #f4f4f4;
-    
+
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -21,11 +25,11 @@ form {
     background-color: #fff;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
     width: 100%;
     max-width: 450px;
     text-align: left;
-    
+
 }
 
 /* Form Title */

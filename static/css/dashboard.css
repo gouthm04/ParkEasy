@@ -12,7 +12,7 @@
 /* Sidebar Styling */
 .sidebar {
     width: 25%; /* Set sidebar width to 25% */
-    background-color: #333;
+    background-color: #000000;
     color: white;
     height: 100vh; /* Full height */
     padding-top: 20px;
@@ -29,7 +29,8 @@
 
 .sidebar-item {
     padding: 10px;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #ededed56;
+
 }
 
 .sidebar-item a,
@@ -39,7 +40,7 @@
     text-decoration: none;
     display: block;
     width: 100%;
-    background-color: #333;
+    background-color: #000000;
     border: none;
     text-align: left;
     cursor: pointer;
@@ -48,12 +49,12 @@
 
 .sidebar-item a:hover,
 .dropdown-btn:hover {
-    background-color: #575757;
+    background-color: #000000;
 }
 
 .dropdown-content {
     display: none;
-    background-color: #444;
+    background-color: #000000;
     padding-left: 20px;
     max-height: 0; /* Initially collapsed */
     opacity: 0; /* Initially hidden */
@@ -74,7 +75,7 @@
 .dropdown-btn {
     font-size: 16px;
     font-weight: bold;
-    background-color: #333;
+    background-color: #000000;
     border: none;
     cursor: pointer;
 }
@@ -82,7 +83,7 @@
 /* Sidebar Footer (Help & Support, Log Out) */
 .sidebar-footer {
     margin-top: auto; /* Pushes the footer to the bottom */
-    border-top: 1px solid #444; /* Adds a border to the top of the footer */
+    border-top: 1px solid #ededed56; /* Adds a border to the top of the footer */
     transition: margin-top 0.3s ease; /* Smooth transition for footer margin change */
 }
 
@@ -90,7 +91,7 @@
     padding: 10px 20px;
     text-decoration: none;
     display: block;
-    background-color: #333;
+    background-color: #000000;
     color: white;
     text-align: left;
     cursor: pointer;
