@@ -27,7 +27,7 @@ from django.core.exceptions import ValidationError
 class ParkingSpaceForm(forms.ModelForm):
     class Meta:
         model = ParkingSpace
-        fields = ['name', 'location', 'price_per_hour', 'availability', 'amenities', 'longitude', 'latitude']
+        fields = ['name', 'location', 'price_per_hour', 'availability', 'amenities', 'longitude', 'latitude', 'image']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter parking space name'}),
             'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
@@ -41,7 +41,9 @@ class ParkingSpaceForm(forms.ModelForm):
             'price_per_hour': 'Price per Hour',
             'availability': 'Available for Booking',
             'amenities': 'Amenities (Optional)',
+            'image': 'Parking Space Image',
         }
+
 
     def clean_price_per_hour(self):
         price = self.cleaned_data.get('price_per_hour')

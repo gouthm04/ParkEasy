@@ -176,3 +176,23 @@
 .dashboard-section button:hover {
     background-color: #333;
 }
+
+.profile-avatar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ddd; /* Placeholder color */
+    background-image: url('https://via.placeholder.com/50'); /* Placeholder image URL */
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #333;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.1);
+}

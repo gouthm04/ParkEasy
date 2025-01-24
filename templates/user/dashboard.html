@@ -19,7 +19,7 @@
       <div class="dropdown-content">
         <a href="{% url 'parking_space_list' %}">Search Parking</a>
         <a href="{% url 'my_bookings' %}">Booking History</a>
-        <a href="#">Notifications</a>
+        <a href="{% url 'notifications_page' %}">Notifications</a>
         <a href="#">Account Settings</a>
         <a href="#">Manage Reviews</a> <!-- Added Manage Reviews option for Driver -->
       </div>
@@ -46,6 +46,7 @@
   <div class="main-content">
     <h1>Hi {{ user_name }}!</h1>
     <h2>Welcome to Your ParkEasy Dashboard</h2>
+    <div class="profile-avatar" title="Profile"></div>
     <div class="dashboard-grid">
       <!-- Section 1: Search Parking -->
       <div class="dashboard-section">

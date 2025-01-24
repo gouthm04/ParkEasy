@@ -21,19 +21,49 @@ h2 {
     text-align: center;
     font-size: 2rem;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 70px !important;  /* Increased s pace below the header */
 }
+
 
 /* Parking Space Details Styling */
-p {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-    color: #555;
+.parking-space-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;  /* Adds space between the details and image */
+    margin: 20px;
+    max-width: 1200px;  /* To limit the max width */
+    width: 100%;
+    margin: 0 auto;  /* Center the container */
+    align-items: center;
 }
 
-/* Parking Space Information Styling */
-strong {
-    color: #333;
+/* Details Section (Text side 60%) */
+.details {
+    flex: 0 0 60%;  /* This makes the details take 60% of the container */
+    font-size: 1.1rem;
+    color: #000000;
+}
+
+.details p {
+    margin-bottom: 10px;
+}
+
+/* Image Section (Image side 40%) */
+.image {
+    flex: 0 0 40%;  /* This makes the image take 40% of the container */
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image img {
+    width: 100%;   /* Make the image responsive */
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
 }
 
 /* Button Styling */
@@ -80,5 +110,19 @@ strong {
     .btn {
         width: 100%;
         margin-bottom: 10px;
+    }
+
+    .parking-space-details {
+        flex-direction: column;  /* Stacks details and image vertically on smaller screens */
+        align-items: center;
+    }
+
+    .image {
+        margin-top: 20px; /* Adds space between image and details */
+        width: 100%;  /* Full width image */
+    }
+
+    .details {
+        width: 100%;  /* Full width for details in smaller screens */
     }
 }

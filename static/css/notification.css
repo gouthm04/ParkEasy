@@ -1,0 +1,116 @@
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensures the entire notification list is left-aligned */
+.notification-list {
+    text-align: left;
+    padding: 0;
+    margin: 0 auto; /* Centers the notification list */
+    width: 80%; /* Makes the list occupy 80% of the screen width */
+    max-width: 700px; /* Sets a maximum width for larger screens */
+}
+
+/* Styles for each notification item */
+.notification-list li {
+    list-style-type: none;
+    margin-bottom: 20px; /* Adds more space between notification items */
+    padding: 15px; /* Adds more padding for better readability */
+    border: 1px solid #e0e0e0; /* Adds a subtle border */
+    border-radius: 10px; /* Rounds the corners of each notification */
+    background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Adds a modern gradient background */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Adds a soft shadow for depth */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Adds a hover effect */
+}
+
+/* Hover effect for notification items */
+.notification-list li:hover {
+    transform: scale(1.02); /* Slightly enlarges the notification on hover */
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15); /* Increases shadow on hover */
+}
+
+/* Style for unread notifications */
+.notification-list .unread {
+    font-weight: bold;
+    background-color: #f3f8ff; /* Adds a light blue highlight for unread notifications */
+    border-left: 5px solid #007bff; /* Adds a colored border to indicate unread status */
+}
+
+/* Ensures the timestamp appears on a new line and is styled lightly */
+.notification-list small {
+    display: block;
+    color: #6c757d; /* Subtle gray for the timestamp */
+    font-size: 0.85em; /* Slightly smaller font for timestamps */
+    margin-top: 8px;
+}
+
+/* Styles for the "Mark as read" link */
+.notification-list a {
+    color: #007bff;
+    text-decoration: none; /* Removes underline for a cleaner look */
+    font-size: 0.9em;
+    margin-top: 10px;
+    display: inline-block;
+    font-weight: 500; /* Slightly bolder for visibility */
+}
+
+/* Hover effect for the link */
+.notification-list a:hover {
+    color: #0056b3; /* Darker blue on hover */
+    text-decoration: underline; /* Adds underline back on hover */
+}
+
+/* Header styling */
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333; /* A subtle dark color for the heading */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .notification-list {
+        width: 95%; /* Makes the list occupy more space on smaller screens */
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Adjusts heading size for smaller screens */
+    }
+}
+
+
+/* Dashboard icon link */
+.dashboard-link {
+    position: absolute; /* Allows positioning relative to the page */
+    top: 20px; /* Position from the top */
+    left: 20px; /* Position from the left */
+    display: flex; /* Centers the icon if needed */
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Adjust size of the link area */
+    height: 50px; /* Same as width for a square link */
+    background-color: #007bff; /* Background color for the icon */
+    border-radius: 50%; /* Makes the link circular */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover animation */
+}
+
+/* Dashboard icon hover effect */
+.dashboard-link:hover {
+    transform: scale(1.1); /* Slightly enlarges on hover */
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3); /* More shadow on hover */
+}
+
+/* Dashboard icon image */
+.dashboard-link img {
+    width: 24px; /* Icon image width */
+    height: 24px; /* Icon image height */
+    filter: invert(1); /* Makes the image white (useful for dark icons) */
+}

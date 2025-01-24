@@ -110,28 +110,37 @@ def parking_space_detail_view(request, space_id):
         'is_host': is_host,
     })
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import ParkingSpace
-from .forms import ParkingSpaceForm  # Import the form here
-from django.shortcuts import get_object_or_404
-from ParkEasyApp.models import ParkEasyUser, ParkingSpace
+from .models import ParkingSpace, Notification
+from .forms import ParkingSpaceForm
+from ParkEasyApp.models import ParkEasyUser
 
 @login_required
 def add_parking_space_view(request):
     if request.method == 'POST':
-        form = ParkingSpaceForm(request.POST)
+        form = ParkingSpaceForm(request.POST, request.FILES)  # Add request.FILES here
         if form.is_valid():
             user = request.user
             parkeasy_user = get_object_or_404(ParkEasyUser, user=user)
             parking_space = form.save(commit=False)
             parking_space.host = parkeasy_user
             parking_space.save()
+
+            # Create a notification for the parking host
+            Notification.objects.create(
+                user=user,
+                message=f"Your parking space '{parking_space.name}' has been successfully added and is now available.",
+                notification_type='PARKING_AVAILABLE'
+            )
+
             return redirect('success_url')  # Replace with your success URL
     else:
         form = ParkingSpaceForm()
 
     return render(request, 'parking/add_parking_space.html', {'form': form})
+
+
 
 
 
@@ -500,11 +509,12 @@ def delete_user(request, user_id):
 
 
 # views.py
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-from .models import Payment, Booking
+from .models import Payment, Booking, Notification
+from django.contrib.auth.models import User
 
 @login_required
 def payment_form_view(request):
@@ -514,12 +524,14 @@ def payment_form_view(request):
 
     try:
         booking = Booking.objects.get(id=booking_id, user=request.user.parkeasyuser)
+        parking_host = booking.parking_space.host  # Assuming `parking_space` has a `host` field
     except Booking.DoesNotExist:
         return JsonResponse({'error': 'Booking not found or access denied.'}, status=404)
 
     if request.method == 'POST':
         payment_method = request.POST.get('payment_method', 'card')  # Default to card
         try:
+            # Create the payment
             payment = Payment.objects.create(
                 booking=booking,
                 amount=booking.price_paid,  # Use price_paid field here
@@ -529,6 +541,30 @@ def payment_form_view(request):
             )
             booking.status = 'confirmed'
             booking.save()
+
+            # Notifications for the driver
+            Notification.objects.create(
+                user=request.user,
+                message=f"Your payment of {payment.amount} has been successfully processed.",
+                notification_type='PAYMENT_CONFIRM'
+            )
+            Notification.objects.create(
+                user=request.user,
+                message=f"Your booking at '{booking.parking_space.name}' has been successfully confirmed.",
+                notification_type='BOOKING_CONFIRM'
+            )
+
+            # Notifications for the host
+            Notification.objects.create(
+                user=parking_host.user,  # Assuming the host is related to the User model
+                message=f"A booking has been confirmed for your parking space at '{booking.parking_space.name}'.",
+                notification_type='BOOKING_CONFIRM'
+            )
+            Notification.objects.create(
+                user=parking_host.user,
+                message=f"You have received a payment of {payment.amount} for a booking at '{booking.parking_space.name}'.",
+                notification_type='PAYMENT_CONFIRM'
+            )
 
             return JsonResponse({
                 'amount': payment.amount,
@@ -541,6 +577,9 @@ def payment_form_view(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return render(request, 'payment/payment_form.html', {'booking': booking})
+
+
+
 
 
 
@@ -644,3 +683,19 @@ def delete_review(request, review_id):
 
     # Redirect back to the parking space reviews page
     return redirect('parking_space_reviews', space_id=review.parking_space.id)
+
+
+@login_required
+def notifications_view(request):
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'notifications/notifications_page.html', {'notifications': notifications})
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Notification
+
+@login_required
+def mark_notification_as_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return redirect('notifications_page')

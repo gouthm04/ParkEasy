@@ -28,17 +28,20 @@ class ParkEasyUser(models.Model):
 
 
 # Parking Space Model (for listing parking spaces)
+from django.db import models
+
 class ParkingSpace(models.Model):
-    name = models.CharField(max_length=255, default='Default Parking Space')
+    name = models.CharField(max_length=255)
     host = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE, related_name="parking_spaces")
     location = models.CharField(max_length=255)
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
-    availability = models.BooleanField(default=True)  # Indicates if space is available for booking
-    amenities = models.TextField(blank=True, null=True)  # Optional description of amenities
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)  # Average rating by users
+    availability = models.BooleanField(default=True)
+    amenities = models.TextField(blank=True, null=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
-    latitude = models.FloatField(null=True, blank=True)  # Store latitude
-    longitude = models.FloatField(null=True, blank=True)  # Store longitude
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    image = models.ImageField(upload_to="parking_images/", null=True, blank=True)  # Image field
 
     def __str__(self):
         return f"Parking Space {self.id} at {self.location}"
@@ -47,6 +50,7 @@ class ParkingSpace(models.Model):
         indexes = [
             models.Index(fields=['host', 'location']),
         ]
+
 
 
 from django.db import models
@@ -138,20 +142,30 @@ class Review(models.Model):
     
 
 # Notifications Model
+from django.db import models
+from django.contrib.auth.models import User
+
 class Notification(models.Model):
-    user = models.ForeignKey(ParkEasyUser, on_delete=models.CASCADE)
-    message = models.TextField()
-    notification_type = models.CharField(max_length=50, choices=[('booking', 'Booking'), ('payment', 'Payment'), ('reminder', 'Reminder')])
-    read = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    NOTIFICATION_TYPES = [
+        ('BOOKING_CONFIRM', 'Booking Confirmation'),
+        ('PAYMENT_CONFIRM', 'Payment Confirmation'),
+        ('PENDING_APPROVAL', 'Pending Approval'),
+        ('PARKING_AVAILABLE', 'Parking Available'),
+        ('EXTENSION_REQUEST', 'Time Extension Request'),
+        ('GRACE_PERIOD', 'Grace Period Expiry'),
+        # Add other types as needed
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # user to whom the notification belongs
+    message = models.CharField(max_length=500)  # the notification message
+    notification_type = models.CharField(choices=NOTIFICATION_TYPES, max_length=50)
+    is_read = models.BooleanField(default=False)  # Add this line for the 'is_read' field
+    created_at = models.DateTimeField(auto_now_add=True)  # timestamp when the notification is created
 
     def __str__(self):
-        return f"Notification for {self.user.user.username}: {self.message[:30]}"
+        return f"Notification for {self.user.username} - {self.notification_type}"
 
-    class Meta:
-        indexes = [
-            models.Index(fields=['user', 'created_at']),
-        ]
+
 
 
 # Time Extension Request Model

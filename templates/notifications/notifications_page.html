@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Notifications</title>
+    <link rel="stylesheet" href="{% static 'css/notification.css' %}">
+</head>
+<body>
+    <!-- Dashboard Icon Link -->
+    <a href="{% url 'dashboard' %}" class="dashboard-link" title="Go to Dashboard">
+        <img src="{% static 'images/dashboard-icon.png' %}" >
+    </a>
+
+    <h1>Your Notifications</h1>
+    <ul class="notification-list">
+        {% for notification in notifications %}
+            <li class="{% if not notification.is_read %}unread{% endif %}">
+                <p>{{ notification.message }}</p>
+                <small>{{ notification.created_at }}</small>
+                <br>
+                {% if not notification.is_read %}
+                    <a href="{% url 'mark_as_read' notification.id %}">Mark as read</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

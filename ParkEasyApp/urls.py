@@ -57,4 +57,7 @@ urlpatterns = [
     # Success URL for Parking Spaces
     path('parking-spaces/success/', views.success_view, name='success_url'),
     
+    path('notifications/', views.notifications_view, name='notifications_page'),
+    path('notifications/mark_as_read/<int:notification_id>/', views.mark_notification_as_read, name='mark_as_read'),
+    
 ]

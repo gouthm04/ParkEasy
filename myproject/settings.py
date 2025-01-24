@@ -133,9 +133,14 @@ import os
 # Static files (CSS, JavaScript, images)
 STATIC_URL = '/static/'
 
-# Media files (for user-uploaded files)
+# settings.py
+
+import os
+
+# Add this configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 

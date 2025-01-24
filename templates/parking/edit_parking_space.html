@@ -11,7 +11,7 @@
         <div style="flex: 1 1 45%; min-width: 400px;">
             <h2 style="text-align: center; margin-bottom: 20px; font-size: 24px; color: #333;">Edit Parking Space</h2>
 
-            <form method="post" style="display: flex; flex-direction: column; gap: 15px;" onsubmit="return validateForm(event)">
+            <form method="post"  enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;" onsubmit="return validateForm(event)">
                 {% csrf_token %}
 
                 <!-- Name Field -->
@@ -44,12 +44,18 @@
                     {{ form.amenities }}
                 </div>
 
-                <!-- Display Selected Coordinates -->
+                <!-- Image Field -->
                 <div class="form-group">
+                    <label for="id_image">Upload Image (Optional)</label>
+                    {{ form.image }}
+                </div>
+
+                <!-- Display Selected Coordinates -->
+                <div class="form-group" hidden>
                     <label for="selected-latitude">Selected Latitude</label>
                     <input type="text" id="selected-latitude" name="latitude" readonly value="{{ form.latitude.value }}">
                 </div>
-                <div class="form-group">
+                <div class="form-group" hidden>
                     <label for="selected-longitude">Selected Longitude</label>
                     <input type="text" id="selected-longitude" name="longitude" readonly value="{{ form.longitude.value }}">
                 </div>
