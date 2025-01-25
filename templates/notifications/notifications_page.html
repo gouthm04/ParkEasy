@@ -10,21 +10,27 @@
 <body>
     <!-- Dashboard Icon Link -->
     <a href="{% url 'dashboard' %}" class="dashboard-link" title="Go to Dashboard">
-        <img src="{% static 'images/dashboard-icon.png' %}" >
+        <img src="{% static 'images/dashboard-icon.png' %}">
     </a>
 
     <h1>Your Notifications</h1>
-    <ul class="notification-list">
-        {% for notification in notifications %}
-            <li class="{% if not notification.is_read %}unread{% endif %}">
-                <p>{{ notification.message }}</p>
-                <small>{{ notification.created_at }}</small>
-                <br>
-                {% if not notification.is_read %}
-                    <a href="{% url 'mark_as_read' notification.id %}">Mark as read</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+    
+    <!-- Check if there are no notifications -->
+    {% if notifications.count == 0 %}
+        <h5>No notifications to show.</h5>
+    {% else %}
+        <ul class="notification-list">
+            {% for notification in notifications %}
+                <li class="{% if not notification.is_read %}unread{% endif %}">
+                    <p>{{ notification.message }}</p>
+                    <small>{{ notification.created_at }}</small>
+                    <br>
+                    {% if not notification.is_read %}
+                        <a href="{% url 'mark_as_read' notification.id %}">Mark as read</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 </html>

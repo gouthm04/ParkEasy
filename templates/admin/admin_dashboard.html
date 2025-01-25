@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - ParkEasy</title>
   <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -36,8 +37,20 @@
   </div>
 
   <div class="main-content">
-    <h1>Welcome, Admin!</h1>
+    <h1>Welcome, {{ user_name }}!</h1>
     <h2>ParkEasy Dashboard</h2>
+
+    <!-- Notification Icon -->
+    <div class="notification-icon">
+      <a href="{% url 'notifications_page' %}">
+          <i class="fa fa-bell-o" style="color: black;"></i>
+      </a>
+
+      {% if unread_notifications_count > 0 %}
+      <span class="notification-indicator"></span>
+      {% endif %}
+  </div>
+
     <div class="dashboard-grid">
       <div class="dashboard-section">
         <h3>Total Users</h3>
@@ -69,8 +82,5 @@
       </div>
     </div>
   </div>
-  
-  </div>
 </body>
-
 </html>

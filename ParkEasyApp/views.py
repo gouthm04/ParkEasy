@@ -43,25 +43,43 @@ def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect to login page after logout
 
-# Registration View
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import Notification
+
 def register_view(request):
     if request.method == 'POST':
-            username = request.POST['username']
-            email = request.POST['email']
-            password = request.POST.get('password')
-            confirm_password = request.POST.get('confirm_password')
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
 
-            if password != confirm_password:
-                messages.error(request, 'Passwords do not match')
-                return redirect('register')
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match')
+            return redirect('register')
 
-            user = User.objects.create_user(username=username, email=email,password=password)
+        # Create the user
+        user = User.objects.create_user(username=username, email=email, password=password)
         
-            ParkEasyUser.objects.create(user=user)
-            messages.success(request, 'Your account has been created successfully! You can now log in.')
-            return redirect('login')
+        # Create a ParkEasyUser if needed (assuming you have a ParkEasyUser model)
+        ParkEasyUser.objects.create(user=user)
+        
+        # Create a notification for the admin
+        admin_user = User.objects.get(is_superuser=True)  # Assuming the admin is a superuser
+        notification_message = f"A new user, {user.username}, has registered."
+        Notification.objects.create(
+            user=admin_user,
+            message=notification_message,
+            notification_type='USER_REGISTRATION'
+        )
+
+        # Display a success message and redirect to login
+        messages.success(request, 'Your account has been created successfully! You can now log in.')
+        return redirect('login')
     else:
         return render(request, 'auth/register.html')
+
 
 
 # Profile View
@@ -229,9 +247,9 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Notification
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def dashboard(request):
@@ -241,14 +259,13 @@ def dashboard(request):
     # Get unread notifications
     unread_notifications = notifications.filter(is_read=False)
 
-    # Pass the unread notifications to the template
+    # Pass the unread notifications to the template (we don't need to pass count anymore)
     user_name = request.user.username if request.user.is_authenticated else "Guest"
     return render(request, 'user/dashboard.html', {
         'user_name': user_name,
         'unread_notifications': unread_notifications,
         'notifications': notifications
     })
-
 
 @login_required
 def my_listed_parking_spaces(request):
@@ -432,22 +449,32 @@ def earnings_view(request):
 
 
 
-# Admin Dashboard Views
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+from django.db.models import Sum
+from .models import ParkingSpace, Booking, Notification, User
+
 @user_passes_test(is_superuser)
 def admin_dashboard(request):
     total_users = User.objects.count()
     total_parking_spaces = ParkingSpace.objects.count()
     total_bookings = Booking.objects.count()
     total_revenue = Booking.objects.filter(status='Completed').aggregate(total_revenue=Sum('price_paid'))['total_revenue'] or 0
-    
+
+    # Count unread notifications for the admin
+    unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count()
+
     context = {
         'total_users': total_users,
         'total_parking_spaces': total_parking_spaces,
         'total_bookings': total_bookings,
         'total_revenue': total_revenue,
+        'unread_notifications_count': unread_notifications_count
     }
-    
+
     return render(request, 'admin/admin_dashboard.html', context)
+
+
 
 @user_passes_test(is_superuser)
 def manage_users(request):
@@ -491,6 +518,7 @@ def delete_booking(request, booking_id):
 @user_passes_test(is_superuser)
 def reports(request):
     return render(request, 'admin/reports.html', {})
+
 @user_passes_test(is_superuser)
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -704,6 +732,7 @@ def delete_review(request, review_id):
 
 @login_required
 def notifications_view(request):
+    # Get all notifications for the logged-in user
     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'notifications/notifications_page.html', {'notifications': notifications})
 
@@ -712,7 +741,13 @@ from .models import Notification
 
 @login_required
 def mark_notification_as_read(request, notification_id):
+    # Get the specific notification and mark it as read
     notification = get_object_or_404(Notification, id=notification_id, user=request.user)
     notification.is_read = True
     notification.save()
     return redirect('notifications_page')
+
+
+
+
+

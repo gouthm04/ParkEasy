@@ -7,24 +7,23 @@ from django.dispatch import receiver
 
 
 class ParkEasyUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Linking to Django's built-in User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=[('active', 'Active'), ('suspended', 'Suspended'), ('pending', 'Pending')], default='active')
-    
+
     def __str__(self):
         return self.user.username
 
     def get_role(self):
-        # Check if the user is a superuser (admin)
         if self.user.is_superuser:
             return 'admin'
-        # If the user has parking spaces listed, they are a host
+        # If the user has both parking spaces listed (host) and bookings (driver), return 'both'
+        elif self.parking_spaces.exists() and self.bookings.exists():
+            return 'both'
         elif self.parking_spaces.exists():
             return 'host'
-        # If the user has bookings, they are a driver
         elif self.bookings.exists():
             return 'driver'
-        # Default to both (can be both driver and host)
-        return 'both'
+        return 'user'  # If none of the above, treat as a regular user
 
 
 # Parking Space Model (for listing parking spaces)
@@ -153,7 +152,7 @@ class Notification(models.Model):
         ('PARKING_AVAILABLE', 'Parking Available'),
         ('EXTENSION_REQUEST', 'Time Extension Request'),
         ('GRACE_PERIOD', 'Grace Period Expiry'),
-        # Add other types as needed
+        ('USER_REGISTRATION', 'New User Registration'),  # Added this line
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # user to whom the notification belongs
@@ -164,6 +163,7 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username} - {self.notification_type}"
+
 
 
 
