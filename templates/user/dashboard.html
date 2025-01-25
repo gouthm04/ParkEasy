@@ -7,74 +7,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ParkEasy Dashboard</title>
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
   <div class="sidebar">
     <div class="sidebar-item">
-      <a href="{% url 'home' %}" class="home-btn"><B>Home</B></a>
+      <a href="{% url 'home' %}" class="home-btn"><B><i class="fa fa-home"></i> Home</B></a>
     </div>
     <div class="sidebar-item">
-      <button class="dropdown-btn">Driver Options</button>
+      <button class="dropdown-btn"><i class="fa fa-car"></i> Driver Options</button>
       <div class="dropdown-content">
-        <a href="{% url 'parking_space_list' %}">Search Parking</a>
-        <a href="{% url 'my_bookings' %}">Booking History</a>
-        <a href="{% url 'notifications_page' %}">Notifications</a>
-        <a href="#">Account Settings</a>
-        <a href="#">Manage Reviews</a> <!-- Added Manage Reviews option for Driver -->
+        <a href="{% url 'parking_space_list' %}"><i class="fa fa-search"></i> Search Parking</a>
+        <a href="{% url 'my_bookings' %}"><i class="fa fa-history"></i> Booking History</a>
+        <!-- <a href="#"><i class="fa fa-cogs"></i> Account Settings</a> -->
+        <a href="#"><i class="fa fa-star"></i> Manage Reviews</a>
       </div>
     </div>
     <div class="sidebar-item">
-      <button class="dropdown-btn">Parking Host Options</button>
+      <button class="dropdown-btn"><i class="fa fa-building"></i> Parking Host Options</button>
       <div class="dropdown-content">
-        <a href="{% url 'add_parking_space' %}">Add Parking Space</a>
-        <a href="{% url 'my_listed_parking_spaces' %}">View Your Parking Space</a> <!-- New option for viewing parking spaces -->
-        <a href="#">Manage Reservations</a>
-        <a href="#">Manage Time Extensions</a>
-        <a href="#">View Reviews</a> <!-- Changed Manage Reviews to View Reviews -->
-        <a href="{% url 'view_earnings' %}">View Earnings</a> <!-- Added View Earnings option for Parking Hosts -->
-        <a href="#">Account Settings</a>
+        <a href="{% url 'add_parking_space' %}"><i class="fa fa-plus-circle"></i> Add Parking Space</a>
+        <a href="{% url 'my_listed_parking_spaces' %}"><i class="fa fa-list-ul"></i> View Your Parking Space</a>
+        <a href="#"><i class="fa fa-calendar-check-o"></i> Manage Reservations</a>
+        <a href="#"><i class="fa fa-clock"></i> Manage Time Extensions</a>
+        <a href="#"><i class="fa fa-comments"></i> View Reviews</a>
+        <a href="{% url 'view_earnings' %}"><i class="fa fa-rupee"></i> View Earnings</a>
+        <!-- <a href="#"><i class="fa fa-cogs"></i> Account Settings</a> -->
       </div>
     </div>
-    <!-- Help & Support and Log Out links at the bottom -->
     <div class="sidebar-footer">
-      <a href="{% url 'help_support' %}">Help & Support</a>
-      <a href="{% url 'logout' %}"><b>Log Out</b></a>
+      <a href="{% url 'help_support' %}"><i class="fa fa-question-circle"></i> Help & Support</a>
+      <a href="{% url 'logout' %}"><b><i class="fa fa-sign-out"></i> Log Out</b></a>
     </div>
   </div>
 
   <div class="main-content">
     <h1>Hi {{ user_name }}!</h1>
     <h2>Welcome to Your ParkEasy Dashboard</h2>
-    <div class="profile-avatar" title="Profile"></div>
+    <!-- <div class="notification-icon" title="Notifications">
+      <a href="{% url 'notifications_page' %}">
+        <i class="fa fa-bell-o" style="color: black;"></i>
+      </a>
+    </div> -->
+
+    <!-- Profile Icon Section with Conditional Unread Notification Indicator -->
+    <!-- Profile Icon Section with Conditional Unread Notification Indicator -->
+    <div class="profile-icon" title="Profile">
+      <a href="#">
+        <i class="fa fa-user-o" style="color: black;"></i>
+        {% if unread_notifications %}
+        <span class="notification-indicator1"></span>
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Profile Buttons Section -->
+    <div class="profile-buttons">
+      <button><a href=""><i class="fa fa-user-o"></i> Profile</a></button>
+      <button><a href=""><i class="fa fa-paint-brush"></i> Appearance</a></button>
+      <button><a href="{% url 'notifications_page' %}">
+          <i class="fa fa-bell-o"></i> Notifications
+          {% if unread_notifications %}
+          <span class="notification-indicator"></span>
+          {% endif %}
+        </a></button>
+      <button><a href=""><i class="fa fa-cog"></i> Settings</a></button>
+    </div>
+
     <div class="dashboard-grid">
       <!-- Section 1: Search Parking -->
       <div class="dashboard-section">
         <h3>Search Parking</h3>
         <p>Quickly find available parking spots in your area. Start your search today!</p>
-        <a href="{% url 'parking_space_list' %}"><button>Search Now</button></a>
+        <a href="{% url 'parking_space_list' %}"><button><i class="fa fa-search"></i> Search Now</button></a>
       </div>
 
       <!-- Section 2: Booking History -->
       <div class="dashboard-section">
         <h3>Booking History</h3>
         <p>View your past bookings and manage your parking records effortlessly.</p>
-        <a href="{% url 'my_bookings' %}"><button>View History</button></a>
-      
+        <a href="{% url 'my_bookings' %}"><button><i class="fa fa-history"></i> View History</button></a>
       </div>
 
       <!-- Section 3: List Parking -->
       <div class="dashboard-section">
         <h3>List Parking</h3>
         <p>List your available parking spaces for others to book easily.</p>
-        <a href="{% url 'add_parking_space' %}"><button>List Parking</button></a>
+        <a href="{% url 'add_parking_space' %}"><button><i class="fa fa-plus-circle"></i> List Parking</button></a>
       </div>
 
       <!-- Section 4: Account Overview -->
       <div class="dashboard-section">
         <h3>Account Overview</h3>
         <p>Manage your profile, payment methods, and settings with ease.</p>
-        <a href="#"><button>Go to Settings</button></a>
+        <a href="#"><button><i class="fa fa-cogs"></i> Go to Settings</button></a>
       </div>
     </div>
 

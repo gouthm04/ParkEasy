@@ -30,7 +30,6 @@
 .sidebar-item {
     padding: 10px;
     border-bottom: 1px solid #ededed56;
-
 }
 
 .sidebar-item a,
@@ -103,6 +102,7 @@
 
 /* Main Content Styling */
 .main-content {
+    position: relative; /* Ensure profile icon is positioned relative to this container */
     margin-left: 25%; /* Push the main content to the right of the sidebar */
     width: 75%; /* Ensure main content takes the remaining 75% */
     padding: 20px;
@@ -174,25 +174,118 @@
 }
 
 .dashboard-section button:hover {
-    background-color: #333;
+    background-color: #575757;
 }
 
-.profile-avatar {
+/* Profile Dropdown Buttons */
+.input {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+
+.value {
+    background-color: #1c1c1c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 200px;
+    text-align: center;
+}
+
+.value:hover {
+    background-color: #575757;
+}
+
+/* Notification Icon Styling */
+.notification-icon {
     position: absolute;
     top: 20px;
     right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #ddd; /* Placeholder color */
-    background-image: url('https://via.placeholder.com/50'); /* Placeholder image URL */
-    background-size: cover;
-    background-position: center;
-    border: 2px solid #333;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+    font-size: 24px;
+    color: #000000; /* White color for notification icon */
 }
 
-.profile-avatar:hover {
-    transform: scale(1.1);
+/* Profile Icon Styling */
+.profile-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    color: #ffffff; /* White color for profile icon */
+}
+
+/* Profile Buttons Section (Appears on Hover) */
+.profile-buttons {
+    display: none;
+    position: absolute;
+    top: 52px; /* Adjust as necessary */
+    right: 20px;
+    background-color: #1c1c1c;
+    color: white;
+    width: 200px;
+    z-index: 1;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+    
+}
+.profile-buttons a{
+    text-decoration: none;
+    color: white;
+
+}
+
+/* Make the profile buttons stay visible when hovering over the profile icon or buttons */
+.profile-icon:hover + .profile-buttons,
+.profile-buttons:hover {
+    display: block;
+}
+
+.profile-buttons button {
+    background-color: #1c1c1c;
+   
+
+    border: none;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+}
+
+.profile-buttons button:hover {
+    background-color: #575757;
+}
+
+/* Style for the red dot indicator */
+.notification-indicator1 {
+    width: 10px;
+    height: 10px;
+    background-color: rgb(255, 0, 0);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%);
+}
+.notification-indicator {
+    width: 11px;
+    height: 10px;
+    background-color: rgb(255, 0, 0);
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    right: -9px;
+    transform: translate(30%, -30%);
+}
+
+button a {
+    position: relative; /* Positioning context for the red dot */
+    
 }

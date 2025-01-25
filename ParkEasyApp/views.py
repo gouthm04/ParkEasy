@@ -229,9 +229,26 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
+from django.shortcuts import render
+from .models import Notification
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def dashboard(request):
+    # Get notifications for the logged-in user
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Get unread notifications
+    unread_notifications = notifications.filter(is_read=False)
+
+    # Pass the unread notifications to the template
     user_name = request.user.username if request.user.is_authenticated else "Guest"
-    return render(request, 'user/dashboard.html', {"user_name": user_name})
+    return render(request, 'user/dashboard.html', {
+        'user_name': user_name,
+        'unread_notifications': unread_notifications,
+        'notifications': notifications
+    })
+
 
 @login_required
 def my_listed_parking_spaces(request):
