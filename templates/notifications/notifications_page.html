@@ -12,10 +12,9 @@
 
 <body>
     <!-- Dashboard Icon -->
-    <!-- Dashboard Icon -->
     <a href="{% if user.is_superuser %}{% url 'admin_dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}"
         class="dashboard-link" title="Go to Dashboard">
-        <i class="fas fa-tachometer-alt"></i> <!-- Font Awesome dashboard icon -->
+        <i class="fas fa-users-cog"></i> <!-- Font Awesome dashboard icon -->
     </a>
 
 
