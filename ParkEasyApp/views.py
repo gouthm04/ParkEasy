@@ -128,6 +128,8 @@ def parking_space_detail_view(request, space_id):
         'is_host': is_host,
     })
 
+
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import ParkingSpace, Notification
@@ -151,6 +153,15 @@ def add_parking_space_view(request):
                 message=f"Your parking space '{parking_space.name}' has been successfully added and is now available.",
                 notification_type='PARKING_AVAILABLE'
             )
+
+            # Create a notification for the admin (assuming admins are superusers)
+            admin_users = User.objects.filter(is_superuser=True)
+            for admin in admin_users:
+                Notification.objects.create(
+                    user=admin,
+                    message=f"A new parking space '{parking_space.name}' has been created by {user.username}.",
+                    notification_type='NEW_PARKING_SPACE'  # You can use the same type or create a new one like 'NEW_PARKING_SPACE'
+                )
 
             return redirect('success_url')  # Replace with your success URL
     else:
@@ -454,6 +465,9 @@ from django.shortcuts import render
 from django.db.models import Sum
 from .models import ParkingSpace, Booking, Notification, User
 
+# In your admin_dashboard view
+from .models import ParkEasyUser
+
 @user_passes_test(is_superuser)
 def admin_dashboard(request):
     total_users = User.objects.count()
@@ -461,18 +475,23 @@ def admin_dashboard(request):
     total_bookings = Booking.objects.count()
     total_revenue = Booking.objects.filter(status='Completed').aggregate(total_revenue=Sum('price_paid'))['total_revenue'] or 0
 
-    # Count unread notifications for the admin
     unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count()
+
+    # Get the ParkEasyUser object for the logged-in user
+    parkeasy_user = ParkEasyUser.objects.get(user=request.user)
+    user_role = parkeasy_user.get_role()  # Get the user's role
 
     context = {
         'total_users': total_users,
         'total_parking_spaces': total_parking_spaces,
         'total_bookings': total_bookings,
         'total_revenue': total_revenue,
-        'unread_notifications_count': unread_notifications_count
+        'unread_notifications_count': unread_notifications_count,
+        'user_role': user_role,  # Pass the role to the template
     }
 
     return render(request, 'admin/admin_dashboard.html', context)
+
 
 
 
@@ -553,7 +572,6 @@ def delete_user(request, user_id):
     return render(request, 'admin/confirm_delete_user.html', {'user': user})
 
 
-# views.py
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
@@ -611,6 +629,15 @@ def payment_form_view(request):
                 notification_type='PAYMENT_CONFIRM'
             )
 
+            # Notifications for the admin (assuming admin users are superusers)
+            admin_users = User.objects.filter(is_superuser=True)
+            for admin in admin_users:
+                Notification.objects.create(
+                    user=admin,
+                    message=f"A payment of {payment.amount} has been processed for booking '{booking.parking_space.name}' by {request.user.username}.",
+                    notification_type='ADMIN_PAYMENT'
+                )
+
             return JsonResponse({
                 'amount': payment.amount,
                 'date_time': payment.payment_date.strftime('%B %d, %Y, %I:%M %p'),
@@ -622,6 +649,7 @@ def payment_form_view(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return render(request, 'payment/payment_form.html', {'booking': booking})
+
 
 
 

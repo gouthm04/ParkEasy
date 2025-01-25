@@ -37,9 +37,9 @@
   </div>
 
   <div class="main-content">
-    <h1>Welcome, {{ user_name }}!</h1>
+    <h1>Welcome, {{ request.user.username }}!</h1>
     <h2>ParkEasy Dashboard</h2>
-
+    
     <!-- Notification Icon -->
     <div class="notification-icon">
       <a href="{% url 'notifications_page' %}">

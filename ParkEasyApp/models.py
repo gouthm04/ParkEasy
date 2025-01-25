@@ -153,6 +153,8 @@ class Notification(models.Model):
         ('EXTENSION_REQUEST', 'Time Extension Request'),
         ('GRACE_PERIOD', 'Grace Period Expiry'),
         ('USER_REGISTRATION', 'New User Registration'),  # Added this line
+        ('ADMIN_PAYMENT', 'Admin Payment Notification'),
+        ('NEW_PARKING_SPACE', 'New Parking Space Created'),
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # user to whom the notification belongs
@@ -163,6 +165,7 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username} - {self.notification_type}"
+
 
 
 

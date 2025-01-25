@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% load static %}
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Notifications</title>
     <link rel="stylesheet" href="{% static 'css/notification.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+
 <body>
-    <!-- Dashboard Icon Link -->
-    <a href="{% url 'dashboard' %}" class="dashboard-link" title="Go to Dashboard">
-        <img src="{% static 'images/dashboard-icon.png' %}">
+    <!-- Dashboard Icon -->
+    <!-- Dashboard Icon -->
+    <a href="{% if user.is_superuser %}{% url 'admin_dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}"
+        class="dashboard-link" title="Go to Dashboard">
+        <i class="fas fa-tachometer-alt"></i> <!-- Font Awesome dashboard icon -->
     </a>
 
+
     <h1>Your Notifications</h1>
-    
+
     <!-- Check if there are no notifications -->
     {% if notifications.count == 0 %}
-        <h5>No notifications to show.</h5>
+    <h5>No notifications to show.</h5>
     {% else %}
-        <ul class="notification-list">
-            {% for notification in notifications %}
-                <li class="{% if not notification.is_read %}unread{% endif %}">
-                    <p>{{ notification.message }}</p>
-                    <small>{{ notification.created_at }}</small>
-                    <br>
-                    {% if not notification.is_read %}
-                        <a href="{% url 'mark_as_read' notification.id %}">Mark as read</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+    <ul class="notification-list">
+        {% for notification in notifications %}
+        <li class="{% if not notification.is_read %}unread{% endif %}">
+            <p>{{ notification.message }}</p>
+            <small>{{ notification.created_at }}</small>
+            <br>
+            {% if not notification.is_read %}
+            <a href="{% url 'mark_as_read' notification.id %}">Mark as read</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
     {% endif %}
 </body>
+
 </html>

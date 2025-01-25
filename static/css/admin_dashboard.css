@@ -12,7 +12,7 @@
 /* Sidebar Styling */
 .sidebar {
     width: 25%; /* Set sidebar width to 25% */
-    background-color: #333;
+    background-color: #000000;
     color: white;
     height: 100vh; /* Full height */
     padding-top: 20px;
@@ -29,7 +29,7 @@
 
 .sidebar-item {
     padding: 10px;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #000000;
 }
 
 .sidebar-item a,
@@ -39,7 +39,7 @@
     text-decoration: none;
     display: block;
     width: 100%;
-    background-color: #333;
+    background-color: #000000;
     border: none;
     text-align: left;
     cursor: pointer;
@@ -54,7 +54,7 @@
 /* Sidebar Footer (Help & Support, Log Out) */
 .sidebar-footer {
     margin-top: auto; /* Pushes the footer to the bottom */
-    border-top: 1px solid #444; /* Adds a border to the top of the footer */
+    border-top: 1px solid #000000; /* Adds a border to the top of the footer */
     transition: margin-top 0.3s ease; /* Smooth transition for footer margin change */
 }
 
@@ -62,7 +62,7 @@
     padding: 10px 20px;
     text-decoration: none;
     display: block;
-    background-color: #333;
+    background-color: #000000;
     color: white;
     text-align: left;
     cursor: pointer;
@@ -78,7 +78,7 @@
     width: 75%; /* Ensure main content takes the remaining 75% */
     padding: 20px;
     background-color: #ffffff;
-    color: #333333;
+    color: #000000;
     height: 100vh; /* Full height */
     display: flex;
     flex-direction: column;
@@ -103,7 +103,7 @@
 
 .dashboard-section {
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

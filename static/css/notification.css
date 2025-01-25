@@ -86,6 +86,7 @@ h1 {
 }
 
 
+
 /* Dashboard icon link */
 .dashboard-link {
     position: absolute; /* Allows positioning relative to the page */
@@ -108,9 +109,9 @@ h1 {
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3); /* More shadow on hover */
 }
 
-/* Dashboard icon image */
-.dashboard-link img {
-    width: 24px; /* Icon image width */
-    height: 24px; /* Icon image height */
-    filter: invert(1); /* Makes the image white (useful for dark icons) */
+/* Font Awesome Icon Styling */
+.dashboard-link i {
+    color: white; /* Icon color */
+    font-size: 24px; /* Icon size */
 }
+
