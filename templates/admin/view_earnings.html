@@ -7,21 +7,31 @@
         <h1 style="text-align: center; margin-bottom: 20px;">Earnings Dashboard</h1>
 
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-            <div style="background-color: #007bff; color: white; padding: 20px; border-radius: 8px; width: 32%; text-align: center;">
+            <div
+                style="background-color: #007bff; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
                 <h2>Total Earnings</h2>
-                <p style="font-size: 24px;">{{ total_earnings }}</p>
+                <p style="font-size: 24px;">{{ total_earnings|floatformat:2 }}</p>
             </div>
-            <div style="background-color: #28a745; color: white; padding: 20px; border-radius: 8px; width: 32%; text-align: center;">
+            <div
+                style="background-color: #28a745; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
+                <h2>Yearly Earnings</h2>
+                <p style="font-size: 24px;">{{ yearly_earnings|floatformat:2 }}</p>
+            </div>
+            <div
+                style="background-color: #ffc107; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
                 <h2>Monthly Earnings</h2>
-                <p style="font-size: 24px;">{{ monthly_earnings }}</p>
+                <p style="font-size: 24px;">{{ monthly_earnings|floatformat:2 }}</p>
             </div>
-            <div style="background-color: #ffc107; color: white; padding: 20px; border-radius: 8px; width: 32%; text-align: center;">
-                <h2></h2>
-                <p style="font-size: 24px;"></p>
+            <div
+                style="background-color: #17a2b8; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
+                <h2>Daily Earnings</h2>
+                <p style="font-size: 24px;">{{ daily_earnings|floatformat:2 }}</p>
             </div>
         </div>
 
-        <div style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+
+        <div
+            style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
             <h2 style="text-align: center; margin-bottom: 20px;">Earnings Over Time</h2>
             <canvas id="earningsChart" style="width: 100%; height: 400px;"></canvas>
         </div>
@@ -30,43 +40,32 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Pass the earnings data as a JSON object -->
 <script id="earnings-data" type="application/json">
     {{ earnings_data|safe }}
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Fetch the earnings data from the script tag
-        const earningsData = JSON.parse(document.getElementById('earnings-data').textContent);
-        console.log("Earnings Data:", earningsData); // Debugging output
-        
-        const ctx = document.getElementById('earningsChart').getContext('2d');
-        const earningsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-                datasets: [{
-                    label: 'Earnings',
-                    data: earningsData,
-                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                    borderColor: 'rgba(0, 123, 255, 1)',
-                    borderWidth: 2,
-                    fill: true,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        beginAtZero: true
-                    },
-                    y: {
-                        beginAtZero: true
-                    }
+    const earningsData = JSON.parse('{{ earnings_data|escapejs }}');
+    const ctx = document.getElementById('earningsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Update dynamically if needed
+            datasets: [{
+                label: 'Monthly Earnings',
+                data: earningsData,
+                borderColor: '#007bff',
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
     });
 </script>
 

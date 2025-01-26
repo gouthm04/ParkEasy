@@ -237,13 +237,46 @@ def edit_parking_space_view(request, space_id):
 
 
 # Delete Parking Space View
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
+from .models import ParkingSpace, Notification
+
 @login_required
 def delete_parking_space_view(request, space_id):
+    # Get the ParkEasyUser object for the current user
     parkeasy_user = request.user.parkeasyuser
+
+    # Fetch the parking space to delete
     parking_space = get_object_or_404(ParkingSpace, id=space_id, host=parkeasy_user)
+
     if request.method == 'POST':
+        # Store details for notification before deletion
+        parking_space_name = parking_space.name  # Assuming the ParkingSpace model has a 'name' field
+        host_username = request.user.username
+
+        # Delete the parking space
         parking_space.delete()
+
+        # Notify the user who deleted their parking space
+        Notification.objects.create(
+            user=request.user,
+            message=f"Your parking space '{parking_space_name}' has been successfully deleted.",
+            notification_type='PARKING_DELETED'
+        )
+
+        # Notify the admin about the deletion
+        admin_user = User.objects.get(is_superuser=True)  # Assuming the admin is a superuser
+        Notification.objects.create(
+            user=admin_user,
+            message=f"Parking space '{parking_space_name}' hosted by {host_username} has been deleted.",
+            notification_type='PARKING_DELETED'
+        )
+
+        # Display a success message to the user
+        messages.success(request, f"Parking space '{parking_space_name}' has been deleted successfully.")
         return redirect('my_listed_parking_spaces')
+
     return render(request, 'parking/delete_parking_space.html', {'parking_space': parking_space})
 
 
@@ -299,56 +332,46 @@ def terms_conditions(request):
 
 
 
-from django.urls import reverse
 from django.shortcuts import render, redirect
-from django.contrib import messages
-import logging
-
-logger = logging.getLogger(__name__)
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.urls import reverse
-from django.utils.timezone import make_aware
-from datetime import datetime
-from decimal import Decimal
 from .forms import BookingForm
-from .models import ParkingSpace, Booking
+from .models import ParkingSpace, Booking, Payment, ParkEasyUser
+from django.urls import reverse
 
-# Function to handle booking creation
-@login_required
 def create_booking_view(request, parking_space_id):
-    # Fetch parking space and user
     parking_space = ParkingSpace.objects.get(id=parking_space_id)
-    
-    try:
-        parkeasy_user = ParkEasyUser.objects.get(user=request.user)
-    except ParkEasyUser.DoesNotExist:
-        messages.error(request, "User profile is incomplete. Please contact support.")
-        return redirect('profile')
-
-    form = BookingForm(request.POST or None, user=parkeasy_user, parking_space=parking_space)
+    user = ParkEasyUser.objects.get(user=request.user)  # The driver (user) making the booking
+    form = BookingForm(request.POST or None, user=user, parking_space=parking_space)
 
     if form.is_valid():
         cleaned_data = form.cleaned_data
-        price_paid = cleaned_data['price_paid']  # Get the calculated price
-
-        # Create the booking instance and save it
+        price_paid = cleaned_data['price_paid']
+        
+        # Ensure host is correctly assigned (the parking space's owner)
+        host = parking_space.host  # Correct reference to 'host' field
+        
         booking = form.save(commit=False)
         booking.parking_space = parking_space
-        booking.user = parkeasy_user
-        booking.price_paid = price_paid  # Store the calculated price
-        booking.status = "tentative"  # Example status for incomplete payment
+        booking.user = user  # The driver (booking user)
+        booking.host = host  # The parking space owner (host) will receive the earnings
+        booking.price_paid = price_paid
+        booking.status = "booked"
         booking.save()
 
-        # Redirect to payment form with booking ID and price_paid
-        payment_url = reverse('payment_form')  # Ensure reverse() works correctly
+        # Create payment instance, linked to the booking
+        payment = Payment.objects.create(
+            booking=booking,
+            amount=price_paid,
+            payment_status="pending"
+        )
+
+        payment_url = reverse('payment_form')
         return redirect(f"{payment_url}?booking_id={booking.id}&price_paid={price_paid}")
 
-    return render(request, 'booking/create_booking.html', {
-        'parking_space': parking_space,
-        'form': form
-    })
+    return render(request, 'booking/create_booking.html', {'parking_space': parking_space, 'form': form})
+
+
+
+
 
 
 
@@ -422,32 +445,72 @@ def my_bookings_view(request):
 
 
 
-# Earnings View
-def earnings_view(request):
-    total_earnings = Booking.objects.aggregate(total=Sum('price_paid'))['total']
-    current_year = now().year
+from django.shortcuts import render
+from django.db.models import Sum
+from django.utils.timezone import now
+import json
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from .models import ParkEasyUser, Booking, Payment
 
+def earnings_view(request):
+    user = request.user
+
+    # Fetch the corresponding ParkEasyUser instance for the logged-in user
+    parkeasy_user = get_object_or_404(ParkEasyUser, user=user)
+    
+    # Ensure filtering only the bookings of the logged-in user (parkeasy_user) as a host
+    total_earnings = round(Booking.objects.filter(host=parkeasy_user).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
+    
+    # Admin earnings from payments (ensure correct payment object filtering)
+    admin_earnings = round(Payment.objects.aggregate(total=Sum('admin_commission'))['total'] or 0.0, 2)
+    
+    # Current year and month for further calculations
+    current_year = now().year
+    current_month = now().month
+
+    # Calculate yearly earnings for the current year for the host
+    yearly_earnings = round(Booking.objects.filter(
+        host=parkeasy_user,
+        booking_time__year=current_year
+    ).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
+
+    # Calculate daily earnings (earnings for today)
+    daily_earnings = round(Booking.objects.filter(
+        host=parkeasy_user,
+        booking_time__date=now().date()
+    ).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
+
+    # Calculate monthly earnings for the past 6 months for the host
     monthly_earnings = []
     for month_offset in range(6):  
-        month = (now().month - 1 - month_offset) % 12 + 1
-        year = current_year if now().month - 1 - month_offset >= 0 else current_year - 1
+        month = (current_month - 1 - month_offset) % 12 + 1
+        year = current_year if current_month - 1 - month_offset >= 0 else current_year - 1
 
         earnings = Booking.objects.filter(
+            host=parkeasy_user,
             booking_time__year=year,
             booking_time__month=month
         ).aggregate(total=Sum('price_paid'))['total']
         
-        monthly_earnings.append(float(earnings) if earnings else 0.0)
+        monthly_earnings.append(round(float(earnings) if earnings else 0.0, 2))
 
     earnings_data = json.dumps(monthly_earnings)
 
+    # Add all calculated earnings to the context
     context = {
+        'total_earnings': total_earnings,
+        'admin_earnings': admin_earnings,
+        'yearly_earnings': yearly_earnings,
+        'daily_earnings': daily_earnings,
+        'monthly_earnings': sum(monthly_earnings),
         'earnings_data': earnings_data,
-        'total_earnings': float(total_earnings) if total_earnings else 0.0,
-        'monthly_earnings': sum(monthly_earnings) or 0.0,
     }
     
     return render(request, 'admin/view_earnings.html', context)
+
+
+
 
 
 
@@ -530,7 +593,7 @@ def delete_booking(request, booking_id):
     if request.method == 'POST':
         booking.delete()  # Delete the booking object
         return redirect('manage_bookings')  # Redirect to the bookings management page
-    return render(request, 'delete_booking_confirmation.html', {'booking': booking})  # Optional: Show confirmation page
+    return render(request, 'delete_booking_confirmation.html', {'booking': booking})  
 
 
 
@@ -556,20 +619,42 @@ def edit_user(request, user_id):
     return render(request, 'admin/edit_user.html', {'form': form, 'user': user})
 
 
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import user_passes_test
+from .models import Notification
 import logging
 
 logger = logging.getLogger(__name__)  # Set up logging
 
+# Modify the view to add notification creation
 @user_passes_test(is_superuser)
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
     if request.method == "POST":
+        # Delete the user
         user.delete()
-        messages.success(request, f"User '{user.username}' deleted successfully.")
+
+        # Create a notification for the admin about the deletion
+        notification_message = f"User '{user.username}' has been deleted by {request.user.username}."
+        admin_user = User.objects.get(is_superuser=True)  # Assuming the admin is a superuser
+        Notification.objects.create(
+            user=admin_user,
+            message=notification_message,
+            notification_type='USER_DELETION'  # New notification type for user deletion
+        )
+
+        # Log the deletion
         logger.info(f"User '{user.username}' (ID: {user.id}) was deleted by admin {request.user.username}.")
+
+        # Success message and redirect
+        messages.success(request, f"User '{user.username}' deleted successfully.")
         return redirect('manage_users')
+
     return render(request, 'admin/confirm_delete_user.html', {'user': user})
+
 
 
 from django.contrib.auth.decorators import login_required
@@ -776,6 +861,22 @@ def mark_notification_as_read(request, notification_id):
     return redirect('notifications_page')
 
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages  # Import messages
+from .models import Notification
 
+@login_required
+def delete_notification(request, notification_id):
+    # Get the specific notification to delete
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    
+    # Delete the notification
+    notification.delete()
+
+    # Add success message for the delete action
+    messages.success(request, 'Notification deleted successfully.')
+
+    # Redirect to the notifications page
+    return redirect('notifications_page')
 
 

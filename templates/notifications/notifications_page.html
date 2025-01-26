@@ -11,31 +11,38 @@
 </head>
 
 <body>
+    
+
     <!-- Dashboard Icon -->
     <a href="{% if user.is_superuser %}{% url 'admin_dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}"
         class="dashboard-link" title="Go to Dashboard">
         <i class="fas fa-users-cog"></i> <!-- Font Awesome dashboard icon -->
     </a>
 
-
     <h1>Your Notifications</h1>
 
     <!-- Check if there are no notifications -->
     {% if notifications.count == 0 %}
-    <h5>No notifications to show.</h5>
+    <br><br>
+        <h5 style="text-align: center;">No notifications to show.</h5>
     {% else %}
-    <ul class="notification-list">
-        {% for notification in notifications %}
-        <li class="{% if not notification.is_read %}unread{% endif %}">
-            <p>{{ notification.message }}</p>
-            <small>{{ notification.created_at }}</small>
-            <br>
-            {% if not notification.is_read %}
-            <a href="{% url 'mark_as_read' notification.id %}">Mark as read</a>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
+        <ul class="notification-list">
+            {% for notification in notifications %}
+            <li class="{% if not notification.is_read %}unread{% endif %}">
+                <p>{{ notification.message }}</p>
+                <!-- Dummy Delete Icon -->
+                <a href="{% url 'delete_notification' notification.id %}" class="delete-notification"
+                    title="Delete notification">
+                    <i class="fas fa-trash"></i>
+                </a>
+                <small>{{ notification.created_at }}</small>
+                <br>
+                {% if not notification.is_read %}
+                    <a href="{% url 'mark_as_read' notification.id %}">Mark as read</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
     {% endif %}
 </body>
 

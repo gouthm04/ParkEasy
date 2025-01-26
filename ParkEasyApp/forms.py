@@ -63,6 +63,7 @@ from django import forms
 from .models import Booking
 from datetime import datetime
 from django.utils.timezone import make_aware
+from decimal import Decimal
 
 class BookingForm(forms.ModelForm):
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
@@ -72,12 +73,12 @@ class BookingForm(forms.ModelForm):
     
     class Meta:
         model = Booking
-        fields = ['start_date', 'start_time', 'end_date', 'end_time']  # Remove 'payment_method'
+        fields = ['start_date', 'start_time', 'end_date', 'end_time']
 
     def __init__(self, *args, user=None, parking_space=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user = user  # Store the user for later use
-        self.parking_space = parking_space  # Store the parking space for later use
+        self.user = user
+        self.parking_space = parking_space
 
     def clean(self):
         cleaned_data = super().clean()
@@ -93,16 +94,13 @@ class BookingForm(forms.ModelForm):
             if start_datetime >= end_datetime:
                 raise forms.ValidationError("End time must be after the start time.")
 
-            cleaned_data['start_datetime'] = start_datetime
-            cleaned_data['end_datetime'] = end_datetime
-
-            # Calculate duration and price
             duration_in_hours = (end_datetime - start_datetime).total_seconds() / 3600
             price_per_hour = Decimal(self.parking_space.price_per_hour)
             total_price = round(Decimal(duration_in_hours) * price_per_hour, 2)
             cleaned_data['price_paid'] = total_price
 
         return cleaned_data
+
 
 
 

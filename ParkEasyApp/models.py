@@ -68,6 +68,9 @@ class Booking(models.Model):
     duration = models.DurationField()
     price_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     payment_method = models.CharField(max_length=255, null=True, blank=True)
+    
+    host = models.ForeignKey('ParkEasyUser', related_name='host_earnings', on_delete=models.CASCADE,null=True)
+    
     status = models.CharField(
         max_length=20,
         choices=[('booked', 'Booked'), ('completed', 'Completed'), ('cancelled', 'Cancelled')],
@@ -104,9 +107,9 @@ from django.utils.timezone import now
 
 class Payment(models.Model):
     booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
-    payment_date = models.DateTimeField(default=now)  # Use default for manual date handling
-    
+    amount = models.DecimalField(max_digits=10, decimal_places=2)  # Updated max digits for larger amounts
+    admin_commission = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)  # Admin's share
+    payment_date = models.DateTimeField(default=now)
     payment_method = models.CharField(
         max_length=50,
         choices=[('stripe', 'Stripe'), ('paypal', 'PayPal'), ('card', 'Credit/Debit Card')],
@@ -117,6 +120,12 @@ class Payment(models.Model):
         choices=[('pending', 'Pending'), ('paid', 'Paid'), ('failed', 'Failed')],
         default='pending'
     )
+
+    def save(self, *args, **kwargs):
+        # Calculate admin commission (e.g., 10% of the payment amount)
+        admin_commission_percentage = 10  # Admin's commission rate in percentage
+        self.admin_commission = round(self.amount * admin_commission_percentage / 100, 2)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Payment of ₹{self.amount} for Booking ID {self.booking.id}"
@@ -155,6 +164,8 @@ class Notification(models.Model):
         ('USER_REGISTRATION', 'New User Registration'),  # Added this line
         ('ADMIN_PAYMENT', 'Admin Payment Notification'),
         ('NEW_PARKING_SPACE', 'New Parking Space Created'),
+        ('USER_DELETION', 'User Deletion'),  # New notification type for user deletion
+        ('PARKING_DELETED', 'Parking Space Deleted'),  # New notification type
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # user to whom the notification belongs

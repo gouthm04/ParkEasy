@@ -97,7 +97,7 @@ h1 {
     justify-content: center;
     width: 50px; /* Adjust size of the link area */
     height: 50px; /* Same as width for a square link */
-    background-color: #007bff; /* Background color for the icon */
+    background-color: #000000; /* Background color for the icon */
     border-radius: 50%; /* Makes the link circular */
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
     transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover animation */
@@ -117,4 +117,17 @@ h1 {
 
 .fas{
     color: black;
+}
+
+.delete-notification {
+    position: relative;
+    top:0px;
+    float: right;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.delete-notification:hover {
+    color: darkred;
 }
