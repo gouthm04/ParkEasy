@@ -10,7 +10,6 @@ body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     background-color: #f4f4f4;
-    
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -21,108 +20,75 @@ h2 {
     text-align: center;
     font-size: 2rem;
     color: #333;
-    margin-bottom: 70px !important;  /* Increased s pace below the header */
+    margin-bottom: 30px;
 }
 
+/* Card Styling */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
 
 /* Parking Space Details Styling */
 .parking-space-details {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;  /* Adds space between the details and image */
-    margin: 20px;
-    max-width: 1200px;  /* To limit the max width */
-    width: 100%;
-    margin: 0 auto;  /* Center the container */
-    align-items: center;
+    gap: 20px;
 }
 
 /* Details Section (Text side 60%) */
 .details {
-    flex: 0 0 60%;  /* This makes the details take 60% of the container */
+    flex: 0 0 60%;
     font-size: 1.1rem;
-    color: #000000;
+    color: #333;
 }
 
 .details p {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    line-height: 1.5;
 }
 
 /* Image Section (Image side 40%) */
 .image {
-    flex: 0 0 40%;  /* This makes the image take 40% of the container */
-    max-width: 100%;
+    margin-top: 33px;
+    flex: 0 0 35%; /* Adjusted to make room for both sections */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* This centers the image vertically */
+    padding-right: 20px;  /* Add spacing between the image and the card right edge */
+    height: auto;
 }
 
 .image img {
-    width: 100%;   /* Make the image responsive */
+    width: 100%;
     height: auto;
+    max-height: 100%; /* Ensure the image doesn't overflow its container */
     border-radius: 8px;
     display: block;
-    margin: 0 auto; /* Center the image horizontally */
-}
-
-/* Button Styling */
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 4px;
-    text-decoration: none;
-    text-align: center;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn:hover {
-    opacity: 0.9;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
     h2 {
         font-size: 1.5rem;
     }
 
-    p {
-        font-size: 1rem;
-    }
-
-    .btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
     .parking-space-details {
-        flex-direction: column;  /* Stacks details and image vertically on smaller screens */
+        flex-direction: column;
         align-items: center;
+    }
+
+    .details, .image {
+        width: 100%;
     }
 
     .image {
         margin-top: 20px; /* Adds space between image and details */
-        width: 100%;  /* Full width image */
-    }
-
-    .details {
-        width: 100%;  /* Full width for details in smaller screens */
     }
 }

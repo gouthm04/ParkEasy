@@ -14,29 +14,33 @@
 <body>
     {% block content %}
     <h2>Parking Space Details</h2>
-    <div class="parking-space-details">
-        <!-- Details Section -->
-        <div class="details">
-            <p><strong>Name:</strong> {{ parking_space.name }}</p>
-            <p><strong>Location:</strong> {{ parking_space.location }}</p>
-            <p><strong>Price per Hour:</strong> ₹{{ parking_space.price_per_hour }}</p>
-            <p><strong>Amenities:</strong> {{ parking_space.amenities|default:"None" }}</p>
-            <p><strong>Availability:</strong>
-                {% if parking_space.availability %}
-                Available
-                {% else %}
-                Not Available
-                {% endif %}
-            </p>
-        </div>
+    <div class="card">
+        <div class="parking-space-details">
+            <!-- Details Section -->
+            <div class="details">
+                <p><strong>Name:</strong> {{ parking_space.name }}</p>
+                <p><strong>Location:</strong> {{ parking_space.location }}</p>
+                <p><strong>Price per Hour:</strong> ₹{{ parking_space.price_per_hour }}</p>
+                <p><strong>Hosted By:</strong> {{ parking_space.host.user.username }} </p>
+                <p><strong>Amenities:</strong> {{ parking_space.amenities|default:"None" }}</p>
+                <p><strong>Availability:</strong>
+                    {% if parking_space.availability %}
+                    Available
+                    {% else %}
+                    Not Available
+                    {% endif %}
+                </p>
+                <p><strong>Contact:</strong> {{ parking_space.host.user.email }}</p>
+            </div>
 
-        <!-- Image Section -->
-        <div class="image">
-            {% if parking_space.image %}
-            <img src="{{ parking_space.image.url }}" alt="{{ parking_space.name }}">
-            {% else %}
-            <img src="{% static 'images/placeholder.png' %}" alt="No Image Available">
-            {% endif %}
+            <!-- Image Section -->
+            <div class="image">
+                {% if parking_space.image %}
+                <img src="{{ parking_space.image.url }}" alt="{{ parking_space.name }}">
+                {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="No Image Available">
+                {% endif %}
+            </div>
         </div>
     </div>
     {% endblock %}

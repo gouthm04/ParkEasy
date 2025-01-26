@@ -108,9 +108,20 @@ from .models import ParkingSpace
 
 def parking_space_list_view(request):
     query = request.GET.get('q', '')
-    parking_spaces = ParkingSpace.objects.filter(
-        Q(location__icontains=query) & Q(availability=True) & ~Q(host__user=request.user)
-    ).order_by('-created_at')
+    
+    # Check if the user is logged in before filtering by user
+    if request.user.is_authenticated:
+        parking_spaces = ParkingSpace.objects.filter(
+            Q(location__icontains=query) & 
+            Q(availability=True) & 
+            ~Q(host__user=request.user)
+        ).order_by('-created_at')
+    else:
+        # If not logged in, exclude the `host__user=request.user` filter
+        parking_spaces = ParkingSpace.objects.filter(
+            Q(location__icontains=query) & 
+            Q(availability=True)
+        ).order_by('-created_at')
     
     # Render the template with the filtered parking spaces and the query
     return render(request, 'parking/parking_space_list.html', {
@@ -336,7 +347,9 @@ from django.shortcuts import render, redirect
 from .forms import BookingForm
 from .models import ParkingSpace, Booking, Payment, ParkEasyUser
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='login')
 def create_booking_view(request, parking_space_id):
     parking_space = ParkingSpace.objects.get(id=parking_space_id)
     user = ParkEasyUser.objects.get(user=request.user)  # The driver (user) making the booking
