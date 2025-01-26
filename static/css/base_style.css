@@ -19,19 +19,21 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 400px; /* Ensure body takes full height of viewport */
+    min-height: 400px;
+    /* Ensure body takes full height of viewport */
 }
 
 /* Wrapper for header and main content */
 .wrapper {
-    flex: 1; /* Fills remaining space between header and footer */
+    flex: 1;
+    /* Fills remaining space between header and footer */
     display: flex;
     flex-direction: column;
 }
 
 /* Header Styles */
 header {
-    width: 100%;
+    width: 105%;
     background-color: black;
     color: white;
     padding: 15px 50px;
@@ -42,6 +44,8 @@ header {
     position: sticky;
     top: 0;
     z-index: 10;
+    margin-left: -20px;
+    margin-top: -20px;
 }
 
 /* Logo Styles */
@@ -227,10 +231,17 @@ header nav ul li.dropdown:hover .fas {
 
 /* Footer Styles */
 footer {
-    background-color: #333;
-    color: rgba(255, 255, 255, 0.826);
+    background-color: #000000;
+    color: rgb(255, 255, 255);
     text-align: center;
     padding: 10px;
-    margin-top: auto; /* Ensures footer stays at the bottom */
-    width: 100%; /* Ensures footer spans full width */
+    /* margin-top: auto; */
+    /* Ensures footer stays at the bottom */
+    width: 103%;
+    /* Ensures footer spans full width */
+    margin-left: -21px;
+}
+footer p{
+    margin-top: 14px;
+    color: rgba(255, 255, 255, 0.726);
 }

@@ -9,7 +9,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background-color: #f9f9f9;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -21,64 +21,102 @@ body {
     text-align: center;
     font-size: 2rem;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 /* Search Form Styling */
 .search-form {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
-    margin-left: 34%;
+    margin-bottom: 30px;
+    gap: 10px;
 }
 
 .search-form .form-control {
-    width: 300px; /* Adjustable width */
+    width: 300px;
     padding: 10px;
     font-size: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    height: 42px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    height: auto;
+    transition: border-color 0.3s ease;
 }
 
-.search-form .btn {
+.search-form .form-control:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Search button using the new button style */
+.search-form button {
+    display: inline-block;
+    border-radius: 5px;
     background-color: #000000;
-    color: white;
-    height: 42px;
-    padding: 10px 20px;
-    font-size: 1rem;
     border: none;
-    border-radius: 4px;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 15px;
+    padding: 11px;
+    width: 130px;
+    transition: all 0.5s;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-left: 10px; /* Proper alignment with input */
+    height: 47px;
 }
 
-.search-form .btn:hover {
-    background-color: #000000;
+.search-form button:focus {
+    outline: 2px dashed #007bff;
+    outline-offset: 2px;
+}
+
+.search-form button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.search-form button span:after {
+    content: '»';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -15px;
+    transition: 0.5s;
+}
+
+.search-form button:hover span {
+    padding-right: 15px;
+}
+
+.search-form button:hover span:after {
+    opacity: 1;
+    right: 0;
 }
 
 /* Parking Space Grid Layout */
 .parking-space-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    padding: 10px;
+    padding: 0 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* Parking Space Card Styling */
 .parking-space-card {
-    background: white;
-    padding: 15px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 20px;
     text-align: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .parking-space-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 .space-link {
@@ -86,8 +124,12 @@ body {
     color: inherit;
 }
 
+.space-link:hover {
+    text-decoration: none;
+}
+
 .space-link h3 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     margin-bottom: 10px;
     color: #333;
 }
@@ -97,30 +139,64 @@ body {
     color: #555;
 }
 
+/* Button Group Styling */
+.button-group {
+    margin-top: 15px;
+}
+
+.button-group .btn {
+    display: inline-block;
+    border-radius: 8px;
+    background-color: #000000;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 15px;
+    padding: 12px 16px;
+    min-width: 130px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.button-group .btn:focus {
+    outline: 2px dashed #007bff;
+    outline-offset: 2px;
+}
+
+.button-group .btn span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button-group .btn span:after {
+    content: '»';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -15px;
+    transition: 0.5s;
+    color: #000000;
+}
+
+.button-group .btn:hover span {
+    padding-right: 15px;
+}
+
+.button-group .btn:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
 /* Empty Message Styling */
 .empty-message {
     text-align: center;
-    color: #666;
+    color: #888;
     font-size: 1.2rem;
-    margin-top: 20px;
-}
-
-
-/* Book Button Styling */
-.book-btn {
-    display: block;
-    margin: 10px auto 0; /* Center button and add margin */
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: white;
-    background-color: #000000;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.book-btn:hover {
-    background-color: #000000;
-    transform: scale(1.05);
+    margin-top: 30px;
 }
