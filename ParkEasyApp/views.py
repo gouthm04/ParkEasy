@@ -444,81 +444,85 @@ def my_bookings_view(request):
     return render(request, 'booking/my_bookings.html', {'page_obj': page_obj})
 
 
-
 from django.shortcuts import render
 from django.db.models import Sum
 from django.utils.timezone import now
 import json
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from .models import ParkEasyUser, Booking, Payment
+from .models import ParkEasyUser, Booking, Payment, ParkingSpace
 
 def earnings_view(request):
     user = request.user
 
-    # Fetch the corresponding ParkEasyUser instance for the logged-in user
-    parkeasy_user = get_object_or_404(ParkEasyUser, user=user)
-    
-    # Ensure filtering only the bookings of the logged-in user (parkeasy_user) as a host
-    total_earnings = round(Booking.objects.filter(host=parkeasy_user).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
-    
-    # Admin earnings from payments (ensure correct payment object filtering)
-    admin_earnings = round(Payment.objects.aggregate(total=Sum('admin_commission'))['total'] or 0.0, 2)
-    
-    # Current year and month for further calculations
-    current_year = now().year
-    current_month = now().month
-
-    # Calculate yearly earnings for the current year for the host
-    yearly_earnings = round(Booking.objects.filter(
-        host=parkeasy_user,
-        booking_time__year=current_year
-    ).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
-
-    # Calculate daily earnings (earnings for today)
-    daily_earnings = round(Booking.objects.filter(
-        host=parkeasy_user,
-        booking_time__date=now().date()
-    ).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
-
-    # Calculate monthly earnings for the past 6 months for the host
-    monthly_earnings = []
-    for month_offset in range(6):  
-        month = (current_month - 1 - month_offset) % 12 + 1
-        year = current_year if current_month - 1 - month_offset >= 0 else current_year - 1
-
-        earnings = Booking.objects.filter(
-            host=parkeasy_user,
-            booking_time__year=year,
-            booking_time__month=month
-        ).aggregate(total=Sum('price_paid'))['total']
+    # Common data for both Admin and Hosts
+    if user.is_superuser:
+        # Admin earnings from payments (admin commission)
+        admin_earnings = round(Payment.objects.aggregate(total=Sum('admin_commission'))['total'] or 0.0, 2)
         
-        monthly_earnings.append(round(float(earnings) if earnings else 0.0, 2))
-
-    earnings_data = json.dumps(monthly_earnings)
-
-    # Add all calculated earnings to the context
-    context = {
-        'total_earnings': total_earnings,
-        'admin_earnings': admin_earnings,
-        'yearly_earnings': yearly_earnings,
-        'daily_earnings': daily_earnings,
-        'monthly_earnings': sum(monthly_earnings),
-        'earnings_data': earnings_data,
-    }
+        # Admin earnings from bookings (total revenue)
+        total_revenue = Booking.objects.filter(status='Completed').aggregate(total_revenue=Sum('price_paid'))['total_revenue'] or 0.0
+        
+        # Adding total_earnings to context for Admin
+        context = {
+            'admin_earnings': admin_earnings,
+            'total_earnings': total_revenue,  # Added total_earnings
+            'total_users': get_user_model().objects.count(),
+            'total_parking_spaces': ParkingSpace.objects.count(),
+            'total_bookings': Booking.objects.count(),
+            'yearly_earnings': 0.0,
+            'daily_earnings': 0.0,
+            'monthly_earnings': 0.0,
+            'earnings_data': '[]',  # Placeholder for earnings chart (can be ignored for Admin)
+        }
     
+    else:
+        # Fetch ParkEasyUser instance for the logged-in user (host)
+        parkeasy_user = get_object_or_404(ParkEasyUser, user=user)
+        
+        # Host-specific earnings
+        total_earnings = round(Booking.objects.filter(host=parkeasy_user).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
+        admin_earnings = round(Payment.objects.aggregate(total=Sum('admin_commission'))['total'] or 0.0, 2)
+        
+        # Calculate yearly, daily, and monthly earnings
+        current_year = now().year
+        yearly_earnings = round(Booking.objects.filter(
+            host=parkeasy_user,
+            booking_time__year=current_year
+        ).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
+
+        daily_earnings = round(Booking.objects.filter(
+            host=parkeasy_user,
+            booking_time__date=now().date()
+        ).aggregate(total=Sum('price_paid'))['total'] or 0.0, 2)
+
+        # Calculate monthly earnings for the past 6 months
+        monthly_earnings = []
+        current_month = now().month
+        for month_offset in range(6):  
+            month = (current_month - 1 - month_offset) % 12 + 1
+            year = current_year if current_month - 1 - month_offset >= 0 else current_year - 1
+
+            earnings = Booking.objects.filter(
+                host=parkeasy_user,
+                booking_time__year=year,
+                booking_time__month=month
+            ).aggregate(total=Sum('price_paid'))['total']
+            
+            monthly_earnings.append(round(float(earnings) if earnings else 0.0, 2))
+
+        earnings_data = json.dumps(monthly_earnings)
+
+        context = {
+            'total_earnings': total_earnings,
+            'admin_earnings': admin_earnings,
+            'yearly_earnings': yearly_earnings,
+            'daily_earnings': daily_earnings,
+            'monthly_earnings': sum(monthly_earnings),
+            'earnings_data': earnings_data,
+        }
+
     return render(request, 'admin/view_earnings.html', context)
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -529,8 +533,6 @@ from django.db.models import Sum
 from .models import ParkingSpace, Booking, Notification, User
 
 # In your admin_dashboard view
-from .models import ParkEasyUser
-
 @user_passes_test(is_superuser)
 def admin_dashboard(request):
     total_users = User.objects.count()
@@ -539,6 +541,9 @@ def admin_dashboard(request):
     total_revenue = Booking.objects.filter(status='Completed').aggregate(total_revenue=Sum('price_paid'))['total_revenue'] or 0
 
     unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count()
+
+    # Admin earnings from payments (ensure correct filtering of payments)
+    admin_earnings = round(Payment.objects.aggregate(total=Sum('admin_commission'))['total'] or 0.0, 2)
 
     # Get the ParkEasyUser object for the logged-in user
     parkeasy_user = ParkEasyUser.objects.get(user=request.user)
@@ -549,11 +554,13 @@ def admin_dashboard(request):
         'total_parking_spaces': total_parking_spaces,
         'total_bookings': total_bookings,
         'total_revenue': total_revenue,
+        'admin_earnings': admin_earnings,  # Add admin earnings to context
         'unread_notifications_count': unread_notifications_count,
         'user_role': user_role,  # Pass the role to the template
     }
 
     return render(request, 'admin/admin_dashboard.html', context)
+
 
 
 

@@ -5,33 +5,26 @@
 <div style="padding: 20px; background-color: #f4f4f4; min-height: 100vh;">
     <div style="max-width: 1200px; margin: 0 auto;">
         <h1 style="text-align: center; margin-bottom: 20px;">Earnings Dashboard</h1>
-
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-            <div
-                style="background-color: #007bff; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
+            <div style="background-color: #007bff; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
                 <h2>Total Earnings</h2>
                 <p style="font-size: 24px;">{{ total_earnings|floatformat:2 }}</p>
             </div>
-            <div
-                style="background-color: #28a745; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
+            <div style="background-color: #28a745; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
                 <h2>Yearly Earnings</h2>
                 <p style="font-size: 24px;">{{ yearly_earnings|floatformat:2 }}</p>
             </div>
-            <div
-                style="background-color: #ffc107; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
+            <div style="background-color: #ffc107; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
                 <h2>Monthly Earnings</h2>
                 <p style="font-size: 24px;">{{ monthly_earnings|floatformat:2 }}</p>
             </div>
-            <div
-                style="background-color: #17a2b8; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
+            <div style="background-color: #17a2b8; color: white; padding: 20px; border-radius: 8px; width: 24%; text-align: center;">
                 <h2>Daily Earnings</h2>
                 <p style="font-size: 24px;">{{ daily_earnings|floatformat:2 }}</p>
             </div>
         </div>
 
-
-        <div
-            style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
             <h2 style="text-align: center; margin-bottom: 20px;">Earnings Over Time</h2>
             <canvas id="earningsChart" style="width: 100%; height: 400px;"></canvas>
         </div>
