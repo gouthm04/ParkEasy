@@ -247,23 +247,43 @@ def edit_parking_space_view(request, space_id):
 
 
 
-# Delete Parking Space View
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from .models import ParkingSpace, Notification
+from django.contrib.auth.models import User
 
 @login_required
 def delete_parking_space_view(request, space_id):
-    # Get the ParkEasyUser object for the current user
-    parkeasy_user = request.user.parkeasyuser
+    # Allow superusers to bypass host check
+    if request.user.is_superuser:
+        parking_space = get_object_or_404(ParkingSpace, id=space_id)
+    else:
+        parkeasy_user = request.user.parkeasyuser
+        parking_space = get_object_or_404(ParkingSpace, id=space_id, host=parkeasy_user)
 
-    # Fetch the parking space to delete
-    parking_space = get_object_or_404(ParkingSpace, id=space_id, host=parkeasy_user)
+    # If the user is a superuser, delete the parking space immediately without confirmation
+    if request.user.is_superuser:
+        parking_space_name = parking_space.name
+        host_username = parking_space.host.user.username  # Assuming `host` has a `user` attribute
 
+        # Delete the parking space
+        parking_space.delete()
+
+        # Notify the admin about the deletion
+        Notification.objects.create(
+            user=request.user,
+            message=f"Parking space '{parking_space_name}' hosted by {host_username} has been deleted.",
+            notification_type='PARKING_DELETED'
+        )
+
+        # Display a success message to the superuser
+        messages.success(request, f"Parking space '{parking_space_name}' has been deleted successfully.")
+        return redirect('manage_parking_spaces')
+
+    # For non-superusers, show a confirmation page
     if request.method == 'POST':
-        # Store details for notification before deletion
-        parking_space_name = parking_space.name  # Assuming the ParkingSpace model has a 'name' field
+        parking_space_name = parking_space.name
         host_username = request.user.username
 
         # Delete the parking space
@@ -277,7 +297,7 @@ def delete_parking_space_view(request, space_id):
         )
 
         # Notify the admin about the deletion
-        admin_user = User.objects.get(is_superuser=True)  # Assuming the admin is a superuser
+        admin_user = User.objects.get(is_superuser=True)
         Notification.objects.create(
             user=admin_user,
             message=f"Parking space '{parking_space_name}' hosted by {host_username} has been deleted.",
@@ -289,6 +309,7 @@ def delete_parking_space_view(request, space_id):
         return redirect('my_listed_parking_spaces')
 
     return render(request, 'parking/delete_parking_space.html', {'parking_space': parking_space})
+
 
 
 
@@ -606,14 +627,18 @@ def edit_booking(request, booking_id):
 
     return render(request, 'edit_booking.html', {'booking': booking})
 
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404, redirect, render
 
-@user_passes_test(is_superuser)
+@user_passes_test(lambda u: u.is_superuser)  # Ensure user is a superuser
 def delete_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
-    if request.method == 'POST':
-        booking.delete()  # Delete the booking object
-        return redirect('manage_bookings')  # Redirect to the bookings management page
-    return render(request, 'delete_booking_confirmation.html', {'booking': booking})  
+    booking = get_object_or_404(Booking, id=booking_id)  # Fetch booking or return 404
+    if request.method == 'POST':  # If POST request, delete the booking
+        booking.delete()
+        return redirect('manage_bookings')  # Redirect to bookings management page
+    # Render confirmation template for GET request
+    return render(request, 'admin/delete_booking_confirmation.html', {'booking': booking})
+
 
 
 
